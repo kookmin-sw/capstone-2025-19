@@ -54,4 +54,11 @@ public class Item : MonoBehaviour
         dropItem.SetActive(false);
     }
 
+    public void LoadItem(PlayerInventory.InventoryItem inventoryItem)
+    {
+        this.itemData = Resources.Load<ItemData>($"ItemData/{inventoryItem.itemName}");
+        this.quantity = inventoryItem.quantity;
+        this.itemDurability = inventoryItem.durability;
+    }
+
 }

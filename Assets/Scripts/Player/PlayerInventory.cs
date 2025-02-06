@@ -14,6 +14,7 @@ public class PlayerInventory : MonoBehaviour
     private FirebaseFirestore db;
 
 
+
     [System.Serializable]
     public class InventoryItem
     {
@@ -33,6 +34,13 @@ public class PlayerInventory : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
         // Firestore에서 인벤토리 불러오기
         LoadInventoryFromFirestore();
+        LoadItem();
+
+    }
+    private void OnApplicationQuit()
+    {
+        //InventoryController.Instance.inventoryItem; // <- Item 이 담긴 List임
+        //이 Item 들을 InventoryItem으로 변환해서 FireBase에 저장하면 됨
     }
 
     public void LoadInventoryFromFirestore()
@@ -71,7 +79,6 @@ public class PlayerInventory : MonoBehaviour
 
                 inventory.Add(item);
             }
-
             Debug.Log("인벤토리 불러오기 완료! 아이템 개수: " + inventory.Count);
             // UI 갱신 등
         });
@@ -278,45 +285,15 @@ public class PlayerInventory : MonoBehaviour
         Debug.Log("[Sync] 인벤토리 동기화 완료!");
     }
 
+    private void LoadItem()
+    {
+        foreach(InventoryItem inventoryItem in inventory)
+        {
+            InventoryController.Instance.LoadInventoryItem(inventoryItem);
+        }
+    }
 
 
-    //if (existing != null)
-    //{
 
-    //    // 새로 추가
-    //    DocumentReference newDocRef = db.Collection("Users")
-    //        .Document(user.UserId)
-    //        .Collection("Inventory")
-    //        .Document(); // AutoID
-
-    //    Dictionary<string, object> data = new Dictionary<string, object>()
-    //    {
-    //        {"itemName", itemName},
-    //        {"quantity", addQuantity},
-    //        {"durability", addDurability}
-    //    };
-
-    //    newDocRef.SetAsync(data).ContinueWithOnMainThread(task =>
-    //    {
-    //        if (task.IsFaulted)
-    //        {
-    //            Debug.LogError("Failed to add new item: " + task.Exception);
-    //        }
-    //        else
-    //        {
-    //            // 로컬 리스트에 추가
-    //            InventoryItem newItem = new InventoryItem()
-    //            {
-    //                itemDocId = newDocRef.Id,
-    //                itemName = itemName,
-    //                quantity = addQuantity,
-    //                durability = addDurability
-    //            };
-    //            inventory.Add(newItem);
-
-    //            Debug.Log($"New item added: {itemName} x {addQuantity}, dur={addDurability}");
-    //            // UI 갱신
-    //        }
-    //    });
-    //}
+    
 }

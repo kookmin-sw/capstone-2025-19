@@ -5,8 +5,13 @@ using UnityEngine;
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
+    public enum ItemType
+    {
+        Potion,
+        Weapon,
 
-    
+    }
+    public ItemType itemType_;
 
     public Sprite itemIcon;
     public string itemType;

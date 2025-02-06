@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Progress;
 
-public class InventoryController : MonoBehaviour
+public class InventoryController : Singleton<InventoryController>
 {
     CanvasGroup canvasGroup;
     [SerializeField] TestPlayerMovement player;
@@ -21,9 +21,13 @@ public class InventoryController : MonoBehaviour
     ItemPanel selectedItemPanel;
 
     DropItem testDropITem;
+
+
+    [HideInInspector]
+    public List<Item> inventory = new List<Item>();
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
 
-    private void Awake()
+    protected override void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
         //TODO 아이템 저장하기 전에 new List 하기
@@ -163,5 +167,12 @@ public class InventoryController : MonoBehaviour
                 dropItemPanel.InsertItem(dropItem.item.itemIcon.GetComponent<ItemIcon>());
             }
         }
+    }
+
+    public void LoadInventoryItem(PlayerInventory.InventoryItem inventoryItem)
+    {
+        Debug.Log($"아이템 로드중... {inventoryItem.itemName}");
+        //TODO create itemIcon
+        //TODO insert InventoryPanel
     }
 }

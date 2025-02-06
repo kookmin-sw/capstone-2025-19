@@ -5,7 +5,12 @@ using UnityEngine;
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
+
+    
+
     public Sprite itemIcon;
+    public string itemType;
+
     public float size;
     public float Weight;
 

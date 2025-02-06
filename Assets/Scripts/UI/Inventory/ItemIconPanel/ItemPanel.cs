@@ -22,14 +22,11 @@ public class ItemPanel : MonoBehaviour
 
     public virtual void InsertItem(ItemIcon itemIcon)
     {
-        Debug.Log($"Remove item test1");
         DropItemPanel dropItemPanel = itemIcon.itemPanel as DropItemPanel;
         if (dropItemPanel != null)
         {
-            Debug.Log($"Remove item test2");
             dropItemPanel.RemoveDropItem(itemIcon.item);
         }
-        Debug.Log($"Remove item test3");
         itemIcon.transform.SetParent(scrollRect.content);
         itemIcon.itemIconParent = itemIconParent;
         itemIcon.itemPanel = this;

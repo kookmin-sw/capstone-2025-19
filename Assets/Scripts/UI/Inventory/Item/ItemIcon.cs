@@ -31,6 +31,6 @@ public class ItemIcon : MonoBehaviour
         this.item = item;
         itemIconImage.sprite = item.itemData.itemIcon;
         itemNameText.text = item.itemData.name;
-        
+        item.itemIcon = this.gameObject;
     }
 }

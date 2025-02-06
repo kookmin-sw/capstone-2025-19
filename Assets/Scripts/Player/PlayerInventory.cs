@@ -28,9 +28,9 @@ public class PlayerInventory : MonoBehaviour
 
     void Start()
     {
+
         auth = FirebaseAuth.DefaultInstance;
         db = FirebaseFirestore.DefaultInstance;
-
         // Firestore에서 인벤토리 불러오기
         LoadInventoryFromFirestore();
     }
@@ -87,7 +87,7 @@ public class PlayerInventory : MonoBehaviour
         //    Debug.LogError("No logged-in user.");
         //    return;
         //}
-
+        Debug.Log($"itemType {itemType}");
         if (itemType.Equals("Equipment")) 
         {
             //장비의 경우 개별로 저장하는 방식 -> 논의 필요
@@ -125,6 +125,7 @@ public class PlayerInventory : MonoBehaviour
                 {
                     itemDocId = uniqueId,
                     itemName = itemName,
+                    itemType = itemType,
                     quantity = addQuantity,
                     durability = addDurability
                 };
@@ -156,20 +157,21 @@ public class PlayerInventory : MonoBehaviour
                 printLIst(inventory);
             }
         }
-        else if (other.CompareTag("portal"))
+        else if (other.CompareTag("Portal"))
         {
             //Inventory에서 변동된 것을 DB에 수정,삭제,추가
-            StartCoroutine("InventorySynchronizeToDB()");
+            StartCoroutine("InventorySynchronizeToDB");
         }
 
-        
+
     }
 
     private void printLIst(List<InventoryItem> inventory)
     {
+        Debug.Log("trigger test4");
         foreach (InventoryItem item in inventory) 
         {
-            Debug.Log("현재 list에 저장된 아이템 : "+item.itemName);
+            Debug.Log($"현재 list에 저장된 아이템 : {item.itemName} , {item.quantity}");
         }
     }
 

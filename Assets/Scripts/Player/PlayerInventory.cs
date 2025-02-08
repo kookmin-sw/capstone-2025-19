@@ -7,13 +7,12 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using System;
 using Unity.VisualScripting;
+using static PlayerInventory;
 
 public class PlayerInventory : MonoBehaviour
 {
     private FirebaseAuth auth;
     private FirebaseFirestore db;
-
-
 
     [System.Serializable]
     public class InventoryItem
@@ -24,23 +23,27 @@ public class PlayerInventory : MonoBehaviour
         public int quantity;
         public float durability;
     }
-
+    //InventoryController의 Inventory 변환용
     public List<InventoryItem> inventory = new List<InventoryItem>();
 
     void Start()
     {
-
         auth = FirebaseAuth.DefaultInstance;
         db = FirebaseFirestore.DefaultInstance;
-        // Firestore에서 인벤토리 불러오기
+        // Firestore에서 인벤토리 불러오기 및 InventoryController의 Inventory에 저장
         LoadInventoryFromFirestore();
-        LoadItem();
 
     }
     private void OnApplicationQuit()
     {
-        //InventoryController.Instance.inventoryItem; // <- Item 이 담긴 List임
+        //InventoryController.Instance.inventory; // <- Item 이 담긴 List임
+        foreach(Item item in InventoryController.Instance.inventory)
+        {
+            //Item들을 변환용 Inventory에 저장
+            itemToInventoryItem(item);
+        }
         //이 Item 들을 InventoryItem으로 변환해서 FireBase에 저장하면 됨
+        StartCoroutine("InventorySynchronizeToDB");
     }
 
     public void LoadInventoryFromFirestore()
@@ -77,23 +80,15 @@ public class PlayerInventory : MonoBehaviour
                 item.quantity = System.Convert.ToInt32(dict["quantity"]);
                 item.durability = float.Parse(dict["durability"].ToString());
 
-                inventory.Add(item);
+                InventoryController.Instance.LoadInventoryItem(item);
             }
             Debug.Log("인벤토리 불러오기 완료! 아이템 개수: " + inventory.Count);
-            // UI 갱신 등
         });
     }
 
-    // Player에서 유지하고 있는 자체 List인 Inventory에 인벤토리 상황 업데이트
-    // 아직 firestore에 동기화 X
-    public void AddOrUpdateItem(string itemName,string itemType, int addQuantity, float addDurability)
+
+    public void AddItemToInventory(string itemName,string itemType, int addQuantity, float addDurability)
     {
-        //var user = auth.CurrentUser;
-        //if (user == null)
-        //{
-        //    Debug.LogError("No logged-in user.");
-        //    return;
-        //}
         Debug.Log($"itemType {itemType}");
         if (itemType.Equals("Equipment")) 
         {
@@ -141,44 +136,11 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public void DeleteItem(string itemName, int addQuantity)
+    private void itemToInventoryItem(Item item)
     {
-        InventoryItem existing = inventory.Find(i => i.itemName == itemName);
-        existing.quantity -= addQuantity;
-        if(existing.quantity == 0)
+        if(item != null)
         {
-            inventory.Remove(existing);
-            Debug.Log("아이템 "+existing.itemName+"이 "+existing.quantity+"개 제거되었습니다.");
-        }
-    }
-
-    // Inventory를 firebase에 동기화
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("DropItem"))
-        {
-            Item itemComp = other.GetComponent<Item>();
-            if (itemComp != null) 
-            {
-                AddOrUpdateItem(itemComp.itemData.name, itemComp.itemData.itemType, itemComp.quantity, itemComp.itemDurability);
-                printLIst(inventory);
-            }
-        }
-        else if (other.CompareTag("Portal"))
-        {
-            //Inventory에서 변동된 것을 DB에 수정,삭제,추가
-            StartCoroutine("InventorySynchronizeToDB");
-        }
-
-
-    }
-
-    private void printLIst(List<InventoryItem> inventory)
-    {
-        Debug.Log("trigger test4");
-        foreach (InventoryItem item in inventory) 
-        {
-            Debug.Log($"현재 list에 저장된 아이템 : {item.itemName} , {item.quantity}");
+            AddItemToInventory(item.itemData.name, item.itemData.itemType, item.quantity, item.itemDurability);
         }
     }
 
@@ -285,15 +247,35 @@ public class PlayerInventory : MonoBehaviour
         Debug.Log("[Sync] 인벤토리 동기화 완료!");
     }
 
-    private void LoadItem()
-    {
-        foreach(InventoryItem inventoryItem in inventory)
-        {
-            InventoryController.Instance.LoadInventoryItem(inventoryItem);
-        }
-    }
+    //public void DeleteItem(string itemName, int addQuantity)
+    //{
+    //    InventoryItem existing = inventory.Find(i => i.itemName == itemName);
+    //    existing.quantity -= addQuantity;
+    //    if(existing.quantity == 0)
+    //    {
+    //        inventory.Remove(existing);
+    //        Debug.Log("아이템 "+existing.itemName+"이 "+existing.quantity+"개 제거되었습니다.");
+    //    }
+    //}
+
+    //private void printLIst(List<InventoryItem> inventory)
+    //{
+    //    Debug.Log("trigger test4");
+    //    foreach (InventoryItem item in inventory) 
+    //    {
+    //        Debug.Log($"현재 list에 저장된 아이템 : {item.itemName} , {item.quantity}");
+    //    }
+    //}
+
+    //private void LoadItem()
+    //{
+    //    foreach(InventoryItem inventoryItem in inventory)
+    //    {
+    //        InventoryController.Instance.LoadInventoryItem(inventoryItem);
+    //    }
+    //}
 
 
 
-    
+
 }

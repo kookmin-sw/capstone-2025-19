@@ -1,9 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class DropItem : MonoBehaviour
 {
+    PhotonView photonView;
     public Item item;
     public GameObject go { get; set; }
 
@@ -12,6 +14,10 @@ public class DropItem : MonoBehaviour
     private void Init()
     {
         _collider = GetComponent<Collider>();
+        if( _collider == null)
+        {
+            _collider = GetComponentInChildren<Collider>();
+        }
         if (item == null)
         {
             item = GetComponent<Item>();
@@ -19,6 +25,7 @@ public class DropItem : MonoBehaviour
             go = gameObject;
         }
         item.dropItem = this.gameObject;
+        photonView = GetComponent<PhotonView>();
     }
 
     private void OnEnable()
@@ -36,7 +43,10 @@ public class DropItem : MonoBehaviour
 
     public void SetItem(Item item)
     {
+        Debug.Log("test");
+        Debug.Log(item);
         this.item = item;
+        Debug.Log(this.item);
         item.dropItem = this.gameObject;
     }
     public void SetModel()
@@ -45,6 +55,18 @@ public class DropItem : MonoBehaviour
         {
             Debug.LogError($"{this.gameObject.name} is null");
             Init();
+        }
+    }
+    public void DestoryItem()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("마스터 클라이언트에게 삭제 요청");
+            photonView.RPC("DestroyObjectRPC", RpcTarget.MasterClient);
+        }
+        else
+        {
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 
@@ -70,5 +92,24 @@ public class DropItem : MonoBehaviour
     public void ActiveCollider(bool value)
     {
         _collider.enabled = value;
+    }
+    public void SetDisableRPC()
+    {
+        photonView.RPC("DisableItemRPC", RpcTarget.All, photonView.ViewID);
+    }
+
+    int CheckViewID()
+    {
+        return photonView.ViewID;
+    }
+
+    [PunRPC]
+    void DestroyObjectRPC()
+    {
+        if (PhotonNetwork.IsMasterClient) 
+        {
+            Debug.Log("마스터 클라이언트가 아이템 삭제");
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 }

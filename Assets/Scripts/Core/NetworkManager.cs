@@ -86,6 +86,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         connectionInfoText.text = "Load Completed";
         // 모든 룸 참가자들이 Main 씬을 로드하게 함
         //PhotonNetwork.LoadLevel("Main");
-        PhotonNetwork.LoadLevel("InventoryTestScene");
+        PhotonNetwork.LoadLevel("DropItemTestScene");
     }
 }

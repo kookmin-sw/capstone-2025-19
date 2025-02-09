@@ -9,5 +9,6 @@ public class InventoryPanel : ItemPanel
     {
         base.InsertItem(itemIcon);
         InventoryController.Instance.inventory.Add(itemIcon.GetComponent<ItemIcon>().item);
+        Debug.Log($"InsertItem count : {InventoryController.Instance.inventory.Count}");
     }
 }

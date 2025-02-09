@@ -71,6 +71,7 @@ GameObject:
   - component: {fileID: 4915681085543357100}
   - component: {fileID: 1045008879114701583}
   - component: {fileID: 7783412864130029386}
+  - component: {fileID: 3612766965626284904}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Player
@@ -241,6 +242,19 @@ MonoBehaviour:
   state: 0
   moveSpeed: 5
   rotationSpeed: 720
+--- !u!114 &3612766965626284904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4564258525225787404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ac4fd893f092944b046994ec140446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventory: []
 --- !u!1 &7660449023471712464
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,7 @@ public class Item : MonoBehaviour
     public GameObject activeWeapon = null;
 
     public int quantity = 1;
-    public float itemDurability;
+    public float itemDurability = 1f;
 
     public void SetActiveTrueItemIcon()
     {

@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+#if UNITY_EDITOR
 using static UnityEditor.Progress;
+#endif
 
 public class InventoryController : Singleton<InventoryController>
 {
-    CanvasGroup canvasGroup;
-    [SerializeField] TestPlayerMovement player;
+    [SerializeField] CanvasGroup canvasGroup;
+    public TestPlayerMovement player;
     [SerializeField] GameObject itemIconPrefab;
 
     [SerializeField] InventoryPanel inventoryPanel;
@@ -16,27 +19,31 @@ public class InventoryController : Singleton<InventoryController>
     public List<Item> dropItemList;
     [SerializeField] List<ItemData> itemDataList;
 
-    [SerializeField] Transform itemIconParent;
+    [SerializeField] public Transform itemIconParent;
 
     ItemPanel selectedItemPanel;
+    ItemIcon selectedItemIcon;
 
     DropItem testDropITem;
+
 
 
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
+    public ItemIcon SelectedItemIcon { get => selectedItemIcon; set { selectedItemIcon = value; } }
 
     protected override void Awake()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
         //TODO 아이템 저장하기 전에 new List 하기
-        inventoryList = new List<ItemIcon>();
+        base.Awake();
+        
     }
     // Start is called before the first frame update
     void Start()
     {
         TestItemIcon();
+        SetInventoryCanvas();
     }
 
     // Update is called once per frame
@@ -46,15 +53,6 @@ public class InventoryController : Singleton<InventoryController>
         {
             Debug.Log($"test {testDropITem.item.name}");
         }*/
-    }
-
-    public void EnableInventory()
-    {
-        canvasGroup.alpha = 1;
-    }
-    public void DisableInventory()
-    {
-        canvasGroup.alpha = 0;
     }
 
 
@@ -79,11 +77,14 @@ public class InventoryController : Singleton<InventoryController>
         }
         else
         {
-            GameObject dropItemGo = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{item.itemData.name}"));
-            dropItemGo.transform.position = player.transform.position; //아이템 버릴 곳
+            GameObject dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{item.itemData.name}", player.dropItemPosition.position, Quaternion.identity);
+            //GameObject dropItemGo = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{item.itemData.name}"));
+            //dropItemGo.transform.position = player.transform.position; //아이템 버릴 곳
+            Debug.Log($"test dropItem Create {item.itemData}");
             DropItem dropItem = dropItemGo.GetComponent<DropItem>();
             dropItem.SetItem(item);
             testDropITem = dropItem;
+            Debug.Log($"create dropItem {dropItem.item}");
         }
     }
     public void RemoveItemIcon(Item item)
@@ -96,11 +97,9 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void RemoveDropItem(Item item)
     {
-        Debug.Log($"remove item test1 {item.dropItem}");
-
+        dropItemList.Remove(item);
         if (item.dropItem != null)
         {
-            Debug.Log($"remove item test2 {item.dropItem}");
             item.SetActiveFalseDropItem();
         }
     }
@@ -142,7 +141,9 @@ public class InventoryController : Singleton<InventoryController>
 
     public void ExitDropItem(DropItem dropItem)
     {
-        if (dropItem.item != null)
+        Debug.Log(testDropITem);
+        Debug.Log(testDropITem.item);
+        if (dropItem.item?.itemData != null)
         {
             if (dropItemList.Contains(dropItem.item))
             {
@@ -155,6 +156,7 @@ public class InventoryController : Singleton<InventoryController>
             }
             
         }
+        Debug.Log("5");
     }
     public void EnterDropItem(DropItem dropItem)
     {
@@ -174,5 +176,27 @@ public class InventoryController : Singleton<InventoryController>
         Debug.Log($"아이템 로드중... {inventoryItem.itemName}");
         //TODO create itemIcon
         //TODO insert InventoryPanel
+    }
+
+    public void SetPlayer(TestPlayerMovement player)
+    {
+        if(this.player == null)
+        {
+            this.player = player;
+            SetInventoryCanvas();
+        }
+    }
+
+    public void SetInventoryCanvas()
+    {
+        if (player == null) { return; }
+        if(player.state == TestPlayerMovement.PlayerState.Inventory)
+        {
+            canvasGroup.alpha = 1;
+        }
+        else
+        {
+            canvasGroup.alpha = 0;
+        }
     }
 }

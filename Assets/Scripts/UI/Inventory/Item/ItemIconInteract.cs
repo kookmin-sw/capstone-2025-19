@@ -6,24 +6,25 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(ItemIcon))]
 public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerDownHandler
 {
-    ItemIcon itemIconSlot;
+    ItemIcon itemIcon;
     RectTransform rectTransform;
     [SerializeField] GameObject itemIconAlphaPrefab;
     
 
     void Awake()
     {
-        itemIconSlot = GetComponent<ItemIcon>();
+        itemIcon = GetComponent<ItemIcon>();
         //rectTransform = GetComponent<RectTransform>();
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
         GameObject itemIconAlpha = Instantiate(itemIconAlphaPrefab);
         ItemIconAlpha alpha = itemIconAlpha.GetComponent<ItemIconAlpha>();
-        alpha.SetItem(itemIconSlot.item);
+        alpha.SetItem(itemIcon.item);
         rectTransform = itemIconAlpha.GetComponent<RectTransform>();
-        itemIconAlpha.transform.SetParent(itemIconSlot.itemIconParent);
+        itemIconAlpha.transform.SetParent(InventoryController.Instance.itemIconParent);
         itemIconAlpha.transform.position = transform.position;
+        InventoryController.Instance.SelectedItemIcon = itemIcon;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -33,9 +34,10 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if(itemIconSlot.inventoryController != null)
+        InventoryController.Instance.SelectedItemIcon = null;
+        if(InventoryController.Instance.SelectedItemPanel != null)
         {
-            itemIconSlot.inventoryController.InsertItemToSelectedItemPanel(itemIconSlot);
+            InventoryController.Instance.SelectedItemPanel.InsertItem(itemIcon);
         }
         Destroy(rectTransform.gameObject);
         rectTransform = null;
@@ -45,4 +47,15 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     {
         //TODO 더블 클릭이든 클릭 유지 이든. 아이템 분배 기능
     }
+
+    void OnDisable()
+    {
+        if(rectTransform != null)
+        {
+            Destroy(rectTransform.gameObject);
+            rectTransform = null;
+        }
+    }
+
+
 }

@@ -51,8 +51,14 @@ public class Item : MonoBehaviour
         dropItem.SetActive(false);*/
         DropItem dropItem_ = dropItem.GetComponent<DropItem>();
         dropItem_.item = null;
-        dropItem.SetActive(false);
+        dropItem = null;
+        dropItem_.DestoryItem();
+        //dropItem.SetActive(false);
     }
+    /*public void SetActiveFalseRPCDropItem()
+    {
+        
+    }*/
 
     public void LoadItem(PlayerInventory.InventoryItem inventoryItem)
     {

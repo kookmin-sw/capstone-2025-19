@@ -6,27 +6,27 @@ public class DropItemPanel : ItemPanel
 {
     public override void InsertItem(ItemIcon itemIcon)
     {
-        if (!inventoryController.dropItemList.Contains(itemIcon.item))
+        if (!InventoryController.Instance.dropItemList.Contains(itemIcon.item))
         {
-            inventoryController.dropItemList.Add(itemIcon.item);
-            inventoryController.CreateDropItem(itemIcon.item);
-            base.InsertItem(itemIcon);
+            InventoryController.Instance.dropItemList.Add(itemIcon.item);
+            InventoryController.Instance.CreateDropItem(itemIcon.item);
         }
+        base.InsertItem(itemIcon);
     }
     public override void TakeOutItem(Item item)
     {
-        if (inventoryController.dropItemList.Contains(item))
+        if (InventoryController.Instance.dropItemList.Contains(item))
         {
             base.TakeOutItem(item);
-            inventoryController.dropItemList.Remove(item);
-            inventoryController.RemoveDropItem(item);
+            InventoryController.Instance.dropItemList.Remove(item);
+            InventoryController.Instance.RemoveDropItem(item);
         }
     }
 
-    public void RemoveDropItem(Item item)
+    /*public void RemoveDropItem(Item item)
     {
-        inventoryController.RemoveDropItem(item);
-    }
+        InventoryController.Instance.RemoveDropItem(item);
+    }*/
     
 
     

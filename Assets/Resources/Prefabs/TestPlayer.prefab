@@ -69,7 +69,6 @@ GameObject:
   - component: {fileID: 856145824054563068}
   - component: {fileID: 2211711305180497075}
   - component: {fileID: 4915681085543357100}
-  - component: {fileID: 3915054849467842945}
   - component: {fileID: 1045008879114701583}
   - component: {fileID: 7783412864130029386}
   m_Layer: 0
@@ -94,6 +93,7 @@ Transform:
   m_Children:
   - {fileID: 8878429131039945601}
   - {fileID: 3839580429883781118}
+  - {fileID: 2677152151712310863}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107157753293946362
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4564258525225787404}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4564258525225787404}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
@@ -204,20 +204,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3915054849467842945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4564258525225787404}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f143b9450133f7f47be3422f3300c7f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rotationSpeed: 720
 --- !u!95 &1045008879114701583
 Animator:
   serializedVersion: 5
@@ -251,10 +237,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88b6b87b902c522439156e83058e5f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropItemPosition: {fileID: 2677152151712310863}
   state: 0
-  inventoryController: {fileID: 0}
   moveSpeed: 5
   rotationSpeed: 720
+--- !u!1 &7660449023471712464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2677152151712310863}
+  m_Layer: 0
+  m_Name: DropItemTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2677152151712310863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660449023471712464}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.712, z: 0.629}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8895491034888473774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7465159555981612279
 PrefabInstance:
   m_ObjectHideFlags: 0

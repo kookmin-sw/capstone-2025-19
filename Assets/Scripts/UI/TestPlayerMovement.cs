@@ -1,10 +1,12 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TestPlayerMovement : MonoBehaviour
 {
+    [SerializeField] public Transform dropItemPosition;
     public enum PlayerState
     {
         Inventory,
@@ -12,8 +14,8 @@ public class TestPlayerMovement : MonoBehaviour
 
     }
     public PlayerState state;
-    [SerializeField] InventoryController inventoryController;
 
+    PhotonView photonView;
 
     public float moveSpeed = 5f;
     public float rotationSpeed = 720f;
@@ -23,7 +25,7 @@ public class TestPlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        
+        photonView = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -35,7 +37,7 @@ public class TestPlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        //if (!photonView.IsMine) return;
+        if (!photonView.IsMine) return;
         UpdateAnimator();
         Move();
     }
@@ -70,41 +72,41 @@ public class TestPlayerMovement : MonoBehaviour
         float forwardSpeed = transform.InverseTransformDirection(velocity).z;
         //print(forwardSpeed.ToString("F2"));
         anim.SetFloat("forwardSpeed", forwardSpeed);
-        //photonView.RPC("SyncAnimator", RpcTarget.Others, forwardSpeed);
+        photonView.RPC("SyncAnimator", RpcTarget.Others, forwardSpeed);
     }
-
-    [PunRPC]
-    private void SyncAnimator(float forwardSpeed)
-    {
-        anim.SetFloat("forwardSpeed", forwardSpeed);
-    }
-
-    private void FixedUpdate()
-    {
-        //if (!photonView.IsMine) return;
-
-        rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
-    }
-
     private void ChangeState(PlayerState state)
     {
         switch (state)
         {
             case PlayerState.Idle:
-                Debug.Log("InventoryState test");
-                inventoryController.DisableInventory();
                 this.state = PlayerState.Idle;
+                InventoryController.Instance.SetInventoryCanvas();
                 break;
             case PlayerState.Inventory:
-                Debug.Log("InventoryState test");
-                inventoryController.EnableInventory();
                 this.state = PlayerState.Inventory;
+                InventoryController.Instance.SetInventoryCanvas();
                 break;
             default:
                 break;
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("DropItem"))
+        {
 
+            //TODO 인벤토리에 ItemIcon넣기
+            if (other.GetComponent<DropItem>() == null)
+            {
+                InventoryController.Instance.EnterDropItem(other.transform.parent.GetComponent<DropItem>());
+            }
+            else
+            {
+                InventoryController.Instance.EnterDropItem(other.GetComponent<DropItem>());
+            }
+
+        }
+    }
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
     {
@@ -113,33 +115,31 @@ public class TestPlayerMovement : MonoBehaviour
             //TODO 인벤토리에 ItemIcon 빼기
             if (other.GetComponent<DropItem>() == null)
             {
-                inventoryController.ExitDropItem(other.transform.parent.GetComponent<DropItem>());
+                InventoryController.Instance.ExitDropItem(other.transform.parent.GetComponent<DropItem>());
             }
             else
             {
-                inventoryController.ExitDropItem(other.GetComponent<DropItem>());
+                InventoryController.Instance.ExitDropItem(other.GetComponent<DropItem>());
             }
-            
+
         }
+    }
+    [PunRPC]
+    private void SyncAnimator(float forwardSpeed)
+    {
+        anim.SetFloat("forwardSpeed", forwardSpeed);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void FixedUpdate()
     {
-        if (other.CompareTag("DropItem"))
-        {
-            
-            //TODO 인벤토리에 ItemIcon넣기
-            if (other.GetComponent<DropItem>() == null)
-            {
-                inventoryController.EnterDropItem(other.transform.parent.GetComponent<DropItem>());
-            }
-            else
-            {
-                inventoryController.EnterDropItem(other.GetComponent<DropItem>());
-            }
-                
-        }
+        if (!photonView.IsMine) return;
+
+        rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
     }
+
+    
+
+    
 
 
 }

@@ -16,9 +16,9 @@
                 },
                 {
                     "name": "Camera",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "c3281ba2-bed6-4b9e-b84e-8f5a25a16c46",
-                    "expectedControlType": "",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -99,6 +99,45 @@
                     "processors": "NormalizeVector2",
                     "groups": "",
                     "action": "Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Player Actions",
+            "id": "078abc95-2492-45fd-9f19-2dc4e75d4c65",
+            "actions": [
+                {
+                    "name": "Roll",
+                    "type": "Button",
+                    "id": "60faaca2-8c75-46b2-9acc-41b0bc41fe57",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "60adcd2a-649d-46f6-8b60-734fba304912",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Roll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9f4fdcef-f994-4933-b02d-328328be93ab",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Roll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

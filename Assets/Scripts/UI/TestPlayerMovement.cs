@@ -7,6 +7,7 @@ using UnityEngine;
 public class TestPlayerMovement : MonoBehaviour
 {
     [SerializeField] public Transform dropItemPosition;
+    [SerializeField] Collider triggerCollider;
     public enum PlayerState
     {
         Inventory,
@@ -33,6 +34,10 @@ public class TestPlayerMovement : MonoBehaviour
     private void Start()
     {
         ChangeState(PlayerState.Idle);
+        if (!photonView.IsMine)
+        {
+            triggerCollider.enabled = false;
+        }
     }
 
     private void Update()
@@ -105,11 +110,17 @@ public class TestPlayerMovement : MonoBehaviour
                 InventoryController.Instance.EnterDropItem(other.GetComponent<DropItem>());
             }
 
+        }else if (other.CompareTag("Test"))
+        {
+            other.GetComponent<TestClass>().SetUpdate(InventoryController.Instance.testID);
+            //other.GetComponent<TestClass>().testID = InventoryController.Instance.testID;
+            Debug.Log($"testPhoton {other.GetComponent<TestClass>().testID.ID}");
         }
     }
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log("Trigger exit");
         if (other.CompareTag("DropItem"))
         {
             //TODO 인벤토리에 ItemIcon 빼기

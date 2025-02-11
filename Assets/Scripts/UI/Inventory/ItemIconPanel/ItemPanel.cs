@@ -31,7 +31,7 @@ public class ItemPanel : MonoBehaviour
         InventoryPanel thiItemPanel = this as InventoryPanel;
         if (dropItemPanel != null && thisItemPanel == null)
         {
-            InventoryController.Instance.RemoveDropItem(itemIcon.item);
+            InventoryController.Instance.RemoveDropItem(itemIcon.dropItem.GetComponent<DropItem>());
             //dropItemPanel.RemoveDropItem(itemIcon.item);
         }
         else if(inventoryPanel != null && thisItemPanel == null)

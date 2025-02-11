@@ -160,7 +160,7 @@ public class PlayerInventory : MonoBehaviour
             Item itemComp = other.GetComponent<Item>();
             if (itemComp != null) 
             {
-                AddOrUpdateItem(itemComp.itemData.name, itemComp.itemData.itemType, itemComp.quantity, itemComp.itemDurability);
+                AddOrUpdateItem(itemComp.itemData.name, itemComp.itemData.itemType, itemComp.quantity, itemComp.durability);
                 printLIst(inventory);
             }
         }

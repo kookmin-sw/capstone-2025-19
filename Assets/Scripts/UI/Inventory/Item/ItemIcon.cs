@@ -1,38 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine;
 using TMPro;
-#if UNITY_EDITOR
-using static UnityEditor.Progress;
-#endif
+using UnityEngine;
+using UnityEngine.UI;
+using System;
 
 public class ItemIcon : MonoBehaviour
 {
-    public Transform itemIconParent;
-    public InventoryController inventoryController;
+    [SerializeField] TextMeshProUGUI itemNameText;
+    [SerializeField] Image itemImage;
     public Item item;
+    public GameObject dropItem = null;
     public ItemPanel itemPanel;
-    [SerializeField] private Image itemIconImage;
-    [SerializeField] private TextMeshProUGUI itemNameText;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     public void SetItem(Item item)
     {
         this.item = item;
-        itemIconImage.sprite = item.itemData.itemIcon;
-        itemNameText.text = item.itemData.name;
-        item.itemIcon = this.gameObject;
+        itemNameText.text = this.item.itemData.name;
+        itemImage.sprite = this.item.itemData.itemIcon;
+    }
+
+    public void RemoveItemIcon()
+    {
+        dropItem = null;
+        GetComponent<ItemIconInteract>().DestroyItemAlpha();
+        Destroy(gameObject);
+    }
+
+    
+}
+[Serializable]
+public class Item
+{
+    public ItemData itemData;
+    public int quantity = 1;
+    public float durability = 1f;
+
+    /*    public GameObject itemIcon = null;
+        public GameObject dropItem = null;*/
+
+
+    public Item(ItemData itemData, int quantity, float durability)
+    {
+        this.itemData = itemData;
+        this.quantity = quantity;
+        this.durability = durability;
     }
 }
+
+
+

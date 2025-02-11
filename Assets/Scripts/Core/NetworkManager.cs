@@ -18,6 +18,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         // 접속에 필요한 정보(게임 버전) 설정
         PhotonNetwork.GameVersion = gameVersion;
+
+
+
+        //동기화 필요 클래스 등록
+        PhotomCustomTypes.Register();
+
+
+
+
         // 설정한 정보를 가지고 마스터 서버 접속 시도
         PhotonNetwork.ConnectUsingSettings();
 

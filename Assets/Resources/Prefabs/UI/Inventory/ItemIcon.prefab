@@ -89,8 +89,7 @@ GameObject:
   - component: {fileID: 3827350444158985181}
   - component: {fileID: 6457911355868811149}
   - component: {fileID: 8868066145535721176}
-  - component: {fileID: -3747973494403614190}
-  - component: {fileID: 37759540844572643}
+  - component: {fileID: 6157024515327220372}
   m_Layer: 5
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -168,12 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc6bd58fc5b895d48ac2cd9ae3b7a6b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemIconParent: {fileID: 0}
-  inventoryController: {fileID: 0}
-  item: {fileID: 0}
-  itemIconImage: {fileID: 2057654976682457825}
   itemNameText: {fileID: 2543144535622518705}
---- !u!114 &-3747973494403614190
+  itemImage: {fileID: 2057654976682457825}
+  dropItem: {fileID: 0}
+  itemPanel: {fileID: 0}
+--- !u!114 &6157024515327220372
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,29 +180,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4143098894977619850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7987f1ec83c766b4ab9500ccba36c7da, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a6bd6e3b83128c4998b1077f8aae9ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemIconAlphaPrefab: {fileID: 5007950210298320016, guid: f5e75ec74dea8cf47bf2c3315cc2a317,
     type: 3}
---- !u!114 &37759540844572643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4143098894977619850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24fb7abbb95f5554eb28af8dd3c222bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemData: {fileID: 0}
-  dropItem: {fileID: 0}
-  itemIcon: {fileID: 0}
-  activeWeapon: {fileID: 0}
-  quantity: 1
-  itemDurability: 0
 --- !u!1 &5511546376958750232
 GameObject:
   m_ObjectHideFlags: 0

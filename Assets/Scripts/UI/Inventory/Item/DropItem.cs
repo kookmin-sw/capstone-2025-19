@@ -1,115 +1,131 @@
-Ôªøusing System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Windows;
+using System.Runtime.CompilerServices;
+
 
 public class DropItem : MonoBehaviour
 {
+    public GameObject itemIcon = null;
     PhotonView photonView;
-    public Item item;
-    public GameObject go { get; set; }
+    public int quantity = 1;
+    public float durability = 1f;
+    public ItemData itemData;
 
-    private Collider _collider;
-
-    private void Init()
+    public void Start()
     {
-        _collider = GetComponent<Collider>();
-        if( _collider == null)
-        {
-            _collider = GetComponentInChildren<Collider>();
-        }
-        if (item == null)
-        {
-            item = GetComponent<Item>();
-            item.dropItem = this.gameObject;
-            go = gameObject;
-        }
-        item.dropItem = this.gameObject;
-        photonView = GetComponent<PhotonView>();
+        Init();
     }
-
     private void OnEnable()
     {
         Init();
-        StartCoroutine(EnableColliderAfterDelay(_collider, 0.1f));
     }
 
-    IEnumerator EnableColliderAfterDelay(Collider collider, float delay)
+    private void Init()
     {
-        yield return new WaitForSeconds(delay);
-        collider.enabled = true;
+        photonView = GetComponent<PhotonView>();
     }
-
 
     public void SetItem(Item item)
     {
-        Debug.Log("test");
-        Debug.Log(item);
-        this.item = item;
-        Debug.Log(this.item);
-        item.dropItem = this.gameObject;
-    }
-    public void SetModel()
-    {
-        if (item == null)
+        string itemData = ChangeData(item);
+        if (PhotonNetwork.IsMasterClient)//∏∂Ω∫≈Õ ≈¨∂Û¿Ãæ∆Æ¿œ ∞ÊøÏ
         {
-            Debug.LogError($"{this.gameObject.name} is null");
-            Init();
+            UpdateItem(item);
+            DebugText.Instance.Debug($"{itemData} masterClient");
+            photonView.RPC("UpdateItemPhoton", RpcTarget.OthersBuffered, itemData);
         }
-    }
-    public void DestoryItem()
-    {
-        if (!PhotonNetwork.IsMasterClient)
+        else// ±‚∫ª ≈¨∂Û¿Ãæ∆Æ¿œ ∞ÊøÏ
         {
-            Debug.Log("ÎßàÏä§ÌÑ∞ ÌÅ¥ÎùºÏù¥Ïñ∏Ìä∏ÏóêÍ≤å ÏÇ≠Ï†ú ÏöîÏ≤≠");
-            photonView.RPC("DestroyObjectRPC", RpcTarget.MasterClient);
+            DebugText.Instance.Debug($"{itemData} client");
+            photonView.RPC("RequestUpdateItemPhoton", RpcTarget.MasterClient, itemData);//∏∂Ω∫≈Õ ≈¨∂Û¿Ãæ∆Æø°∞‘ ∫Ø∞Ê ø‰√ª
+        }
+        
+    }
+
+    /*public void SetItem(Item item)
+    {
+        string itemData = ChangeData(item);
+        if (!photonView.IsMine)
+        {
+            photonView.RPC("")
+        }
+    }*/
+
+    public void RemoveDropItem()
+    {
+        itemIcon = null;
+        if (!photonView.IsMine)
+        {
+            photonView.RPC("RequestDestroyDropItem", RpcTarget.MasterClient, photonView.ViewID);
         }
         else
         {
             PhotonNetwork.Destroy(gameObject);
         }
     }
-
-    /*private void OnTriggerEnter(Collider other)
+    /*[PunRPC]
+    private void UpdateItemPhoton_(Item item)
     {
-        Debug.Log($"collider {item.name}");
-        if (other.CompareTag("Player"))
-        {
-
-            //InventoryController.Instance.CreateDropItemToInventory(item);
-        }
+        quantity = item.quantity;
+        durability = item.durability;
     }
-    private void OnTriggerExit(Collider other)
+    [PunRPC]
+    private void RequestUpdateItemPhoton_(Item item)
     {
-        if (other.CompareTag("Player"))
+        if (PhotonNetwork.IsMasterClient) // ∏∂Ω∫≈Õø°º≠ Ω««‡
         {
-            if (!gameObject.activeSelf) { return; }
-            //item.itemIcon.GetComponent<ItemIcon>().NullItemGrid();
-            //InventoryController.Instance.RemoveItemIcon(item);
+            UpdateItemPhoton_(item);
+            photonView.RPC("UpdateItemPhoton", RpcTarget.AllBuffered, item);
         }
     }*/
-
-    public void ActiveCollider(bool value)
+    [PunRPC]
+    void RequestDestroyDropItem(int viewID)
     {
-        _collider.enabled = value;
-    }
-    public void SetDisableRPC()
-    {
-        photonView.RPC("DisableItemRPC", RpcTarget.All, photonView.ViewID);
-    }
-
-    int CheckViewID()
-    {
-        return photonView.ViewID;
+        if (PhotonNetwork.IsMasterClient) // ∏∂Ω∫≈Õ∏∏ Ω««‡ ∞°¥…
+        {
+            PhotonView targetView = PhotonView.Find(viewID);
+            if (targetView != null)
+            {
+                PhotonNetwork.Destroy(targetView.gameObject);
+            }
+        }
     }
 
     [PunRPC]
-    void DestroyObjectRPC()
+    public void RequestUpdateItemPhoton(string itemData)
     {
-        if (PhotonNetwork.IsMasterClient) 
+        if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("ÎßàÏä§ÌÑ∞ ÌÅ¥ÎùºÏù¥Ïñ∏Ìä∏Í∞Ä ÏïÑÏù¥ÌÖú ÏÇ≠Ï†ú");
-            PhotonNetwork.Destroy(gameObject);
+            DebugText.Instance.Debug($"itemData requestUpdateItemPhoton {itemData}");
+            //string itemData = ChangeData(item); // µ•¿Ã≈Õ∏¶ πÆ¿⁄ø≠∑Œ ∫Ø»Ø
+            photonView.RPC("UpdateItemPhoton", RpcTarget.AllBuffered, itemData);
         }
     }
+
+    [PunRPC]
+    private void UpdateItemPhoton(string itemData)
+    {
+        string[] data = itemData.Split('|'); // πÆ¿⁄ø≠¿ª ∫–«“«œø© ∞™ √ﬂ√‚
+        this.itemData = ItemDatabase.Instance.GetItemDataByName(data[0]);
+        quantity = int.Parse(data[1]);
+        durability = float.Parse(data[2]);
+        Debug.Log(data[0]);
+        Debug.Log(this.itemData);
+    }
+
+    private void UpdateItem(Item item)
+    {
+        this.itemData = item.itemData;
+        quantity = item.quantity;
+        durability = item.durability;
+    }
+
+    private string ChangeData(Item item)
+    {
+        return string.Join("|", item.itemData.name, item.quantity, item.durability);
+    }
+
 }

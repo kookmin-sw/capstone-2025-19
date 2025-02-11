@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
 
 [RequireComponent(typeof(ItemIcon))]
 public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerDownHandler
@@ -9,22 +11,19 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     ItemIcon itemIcon;
     RectTransform rectTransform;
     [SerializeField] GameObject itemIconAlphaPrefab;
-    
+    GameObject itemIconAlpha;
 
     void Awake()
     {
         itemIcon = GetComponent<ItemIcon>();
-        //rectTransform = GetComponent<RectTransform>();
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        GameObject itemIconAlpha = Instantiate(itemIconAlphaPrefab);
-        ItemIconAlpha alpha = itemIconAlpha.GetComponent<ItemIconAlpha>();
+        rectTransform = Instantiate(itemIconAlphaPrefab, InventoryController.Instance.itemIconParent).GetComponent<RectTransform>();
+        rectTransform.transform.position = transform.position;
+        ItemIconAlpha alpha = rectTransform.GetComponent<ItemIconAlpha>();
         alpha.SetItem(itemIcon.item);
-        rectTransform = itemIconAlpha.GetComponent<RectTransform>();
-        itemIconAlpha.transform.SetParent(InventoryController.Instance.itemIconParent);
-        itemIconAlpha.transform.position = transform.position;
-        InventoryController.Instance.SelectedItemIcon = itemIcon;
+        
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -34,7 +33,6 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        InventoryController.Instance.SelectedItemIcon = null;
         if(InventoryController.Instance.SelectedItemPanel != null)
         {
             InventoryController.Instance.SelectedItemPanel.InsertItem(itemIcon);
@@ -42,13 +40,7 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         Destroy(rectTransform.gameObject);
         rectTransform = null;
     }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        //TODO 더블 클릭이든 클릭 유지 이든. 아이템 분배 기능
-    }
-
-    void OnDisable()
+    public void DestroyItemAlpha()
     {
         if(rectTransform != null)
         {
@@ -57,5 +49,10 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         }
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        //TODO 더블클릭 시 여러 기능 추가
+    }
 
+    
 }

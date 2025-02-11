@@ -72,7 +72,7 @@ public class SignUpManger : MonoBehaviour
                     {
                         Debug.Log("Firestore에 유저 정보 저장 완료!");
 
-                        SceneManager.LoadScene("Login");
+                        SceneManager.LoadScene("Village");
                     }
                 });
             }

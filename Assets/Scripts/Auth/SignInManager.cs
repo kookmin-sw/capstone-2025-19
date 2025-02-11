@@ -85,7 +85,7 @@ public class SignInManager : MonoBehaviour
             {
                 User = task.Result.User;
                 Debug.Log(User.Email);
-                SceneManager.LoadScene("Login");
+                SceneManager.LoadScene("Village");
             }
         });
     }

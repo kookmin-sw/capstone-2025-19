@@ -36,7 +36,7 @@ public class PlayerInventory : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        Debug.Log($"OnApplicationQuit, count : {InventoryController.Instance.inventory.Count}");
+        //Debug.Log($"OnApplicationQuit, count : {InventoryController.Instance.inventory.Count}");
         //InventoryController.Instance.inventory; // <- Item 이 담긴 List임
         foreach(Item item in InventoryController.Instance.inventory)
         {
@@ -82,9 +82,9 @@ public class PlayerInventory : MonoBehaviour
                 item.quantity = System.Convert.ToInt32(dict["quantity"]);
                 item.durability = float.Parse(dict["durability"].ToString());
 
-                InventoryController.Instance.LoadInventoryItem(item);
+                //InventoryController.Instance.LoadInventoryItem(item);
             }
-            Debug.Log("인벤토리 불러오기 완료! 아이템 개수: " + InventoryController.Instance.inventory.Count);
+            //Debug.Log("인벤토리 불러오기 완료! 아이템 개수: " + InventoryController.Instance.inventory.Count);
         });
     }
 

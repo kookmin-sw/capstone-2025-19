@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class AnimatorHandler : MonoBehaviour
 {
+    PlayerManager playerManager;
     public Animator anim;
-    public InputHandler inputHandler;
-    public PlayerLocomotion playerLocomotion;
+    InputHandler inputHandler;
+    PlayerLocomotion playerLocomotion;
     int vertical;
     int horizontal;
     public bool canRotate;
     
     public void Initialize()
     {
+        playerManager = GetComponent<PlayerManager>();
         anim = GetComponent<Animator>();
         inputHandler = GetComponentInParent<InputHandler>();
         playerLocomotion = GetComponentInParent<PlayerLocomotion>();
@@ -20,7 +22,7 @@ public class AnimatorHandler : MonoBehaviour
         horizontal = Animator.StringToHash("Horizontal");
     }
 
-    public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement)
+    public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement, bool isSprinting)
     {
         #region Vertical
         float v = 0;
@@ -74,6 +76,12 @@ public class AnimatorHandler : MonoBehaviour
         }
         #endregion
 
+        if (isSprinting)
+        {
+            v = 2;
+            h = horizontalMovement;
+        }
+
         anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
         anim.SetFloat(horizontal, h, 0.1f, Time.deltaTime);
     }
@@ -97,7 +105,7 @@ public class AnimatorHandler : MonoBehaviour
 
     private void OnAnimatorMove()
     {
-        if (!inputHandler.isInteracting) return;
+        if (!playerManager.isInteracting) return;
 
         float delta = Time.deltaTime;
         playerLocomotion.rigidbody.drag = 0;

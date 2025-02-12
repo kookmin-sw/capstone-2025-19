@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
@@ -7,40 +7,43 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using System;
 using Unity.VisualScripting;
+using static PlayerInventory;
 
 public class PlayerInventory : MonoBehaviour
 {
     private FirebaseAuth auth;
     private FirebaseFirestore db;
 
-
-
     [System.Serializable]
     public class InventoryItem
     {
-        public string itemDocId;      // Firestore ¹®¼­ ID (AutoID or UniqueID)
+        public string itemDocId;      
         public string itemType;
         public string itemName;
         public int quantity;
         public float durability;
     }
-
+    
     public List<InventoryItem> inventory = new List<InventoryItem>();
 
     void Start()
     {
-
         auth = FirebaseAuth.DefaultInstance;
         db = FirebaseFirestore.DefaultInstance;
-        // Firestore¿¡¼­ ÀÎº¥Åä¸® ºÒ·¯¿À±â
+        
         LoadInventoryFromFirestore();
-        LoadItem();
 
     }
     private void OnApplicationQuit()
     {
-        //InventoryController.Instance.inventoryItem; // <- Item ÀÌ ´ã±ä ListÀÓ
-        //ÀÌ Item µéÀ» InventoryItemÀ¸·Î º¯È¯ÇØ¼­ FireBase¿¡ ÀúÀåÇÏ¸é µÊ
+        
+        foreach (Item item in InventoryController.Instance.inventory)
+        {
+            
+            itemToInventoryItem(item);
+        }
+
+        InventorySynchronizeToDB();
     }
 
     public void LoadInventoryFromFirestore()
@@ -48,9 +51,10 @@ public class PlayerInventory : MonoBehaviour
         var user = auth.CurrentUser;
         if (user == null)
         {
-            Debug.LogError("À¯Àú°¡ null");
+            Debug.LogError("User is null");
             return;
         }
+        Debug.Log($"userName : {user.UserId}");
 
         CollectionReference inventoryRef = db.Collection("Users")
                                              .Document(user.UserId)
@@ -71,33 +75,25 @@ public class PlayerInventory : MonoBehaviour
                 Dictionary<string, object> dict = doc.ToDictionary();
 
                 InventoryItem item = new InventoryItem();
-                item.itemDocId = doc.Id; // ¹®¼­ ID
+                item.itemDocId = doc.Id; 
                 item.itemType = dict["itemType"].ToString();
                 item.itemName = dict["itemName"].ToString();
                 item.quantity = System.Convert.ToInt32(dict["quantity"]);
                 item.durability = float.Parse(dict["durability"].ToString());
 
-                inventory.Add(item);
+                InventoryController.Instance.LoadInventoryItem(item);
             }
-            Debug.Log("ÀÎº¥Åä¸® ºÒ·¯¿À±â ¿Ï·á! ¾ÆÀÌÅÛ °³¼ö: " + inventory.Count);
-            // UI °»½Å µî
+            
         });
     }
 
-    // Player¿¡¼­ À¯ÁöÇÏ°í ÀÖ´Â ÀÚÃ¼ ListÀÎ Inventory¿¡ ÀÎº¥Åä¸® »óÈ² ¾÷µ¥ÀÌÆ®
-    // ¾ÆÁ÷ firestore¿¡ µ¿±âÈ­ X
-    public void AddOrUpdateItem(string itemName,string itemType, int addQuantity, float addDurability)
+
+    public void AddItemToInventory(string itemName, string itemType, int addQuantity = 1, float addDurability = 1f)
     {
-        //var user = auth.CurrentUser;
-        //if (user == null)
-        //{
-        //    Debug.LogError("No logged-in user.");
-        //    return;
-        //}
         Debug.Log($"itemType {itemType}");
-        if (itemType.Equals("Equipment")) 
+        if (itemType.Equals("Equipment"))
         {
-            //ÀåºñÀÇ °æ¿ì °³º°·Î ÀúÀåÇÏ´Â ¹æ½Ä -> ³íÀÇ ÇÊ¿ä
+            
             for (int i = 0; i < addQuantity; i++)
             {
                 string uniqueId = System.Guid.NewGuid().ToString();
@@ -106,28 +102,27 @@ public class PlayerInventory : MonoBehaviour
                 {
                     itemDocId = uniqueId,
                     itemName = itemName,
-                    quantity = 1,           // Àåºñ´Â º¸Åë 1°³ ´ÜÀ§
+                    quantity = 1,           
                     durability = addDurability
                 };
                 inventory.Add(newEquip);
             }
         }
         else
-        //Æ÷¼Ç·ù ÀÌ±â ¶§¹®¿¡ Durability°¡ º°·Î ÇÊ¿ä ¾øÀ½.
         {
-            // 1) ·ÎÄÃ ÀÎº¥Åä¸®¿¡¼­ µ¿ÀÏ ÀÌ¸§ÀÇ ¾ÆÀÌÅÛ Ã£±â
+            
             InventoryItem existing = inventory.Find(i => i.itemName == itemName);
             if (existing != null)
             {
-                // ÀÌ¹Ì ÀÎº¥Åä¸®¿¡ ÀÖÀ¸¸é ¼ö·® °»½Å
+                
                 existing.quantity += addQuantity;
             }
             else
             {
-                //°íÀ¯ itemId
+                
                 string uniqueId = System.Guid.NewGuid().ToString();
 
-                // ·ÎÄÃ ¸®½ºÆ®¿¡ Ãß°¡
+                
                 InventoryItem newItem = new InventoryItem()
                 {
                     itemDocId = uniqueId,
@@ -136,164 +131,110 @@ public class PlayerInventory : MonoBehaviour
                     quantity = addQuantity,
                     durability = addDurability
                 };
+                Debug.Log($"AddItem : {newItem.itemName}, {newItem.durability}");
                 inventory.Add(newItem);
             }
         }
     }
 
-    public void DeleteItem(string itemName, int addQuantity)
+    private void itemToInventoryItem(Item item)
     {
-        InventoryItem existing = inventory.Find(i => i.itemName == itemName);
-        existing.quantity -= addQuantity;
-        if(existing.quantity == 0)
-        {
-            inventory.Remove(existing);
-            Debug.Log("¾ÆÀÌÅÛ "+existing.itemName+"ÀÌ "+existing.quantity+"°³ Á¦°ÅµÇ¾ú½À´Ï´Ù.");
-        }
+        AddItemToInventory(item.itemData.name, item.itemData.itemType, item.quantity, item.durability);
     }
 
-    // Inventory¸¦ firebase¿¡ µ¿±âÈ­
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("DropItem"))
-        {
-            Item itemComp = other.GetComponent<Item>();
-            if (itemComp != null) 
-            {
-                AddOrUpdateItem(itemComp.itemData.name, itemComp.itemData.itemType, itemComp.quantity, itemComp.durability);
-                printLIst(inventory);
-            }
-        }
-        else if (other.CompareTag("Portal"))
-        {
-            //Inventory¿¡¼­ º¯µ¿µÈ °ÍÀ» DB¿¡ ¼öÁ¤,»èÁ¦,Ãß°¡
-            StartCoroutine("InventorySynchronizeToDB");
-        }
-
-
-    }
-
-    private void printLIst(List<InventoryItem> inventory)
-    {
-        Debug.Log("trigger test4");
-        foreach (InventoryItem item in inventory) 
-        {
-            Debug.Log($"ÇöÀç list¿¡ ÀúÀåµÈ ¾ÆÀÌÅÛ : {item.itemName} , {item.quantity}");
-        }
-    }
-
-    private IEnumerator InventorySynchronizeToDB()
+    public void InventorySynchronizeToDB()
     {
         var user = auth.CurrentUser;
-        if (user == null) yield break;  // ·Î±×ÀÎ ¾È µÆÀ¸¸é Áß´Ü
-
-        CollectionReference inventoryRef = db.Collection("Users")
-                                             .Document(user.UserId)
-                                             .Collection("Inventory");
-
-        // 1) Firestore¿¡¼­ ÇöÀç ÀÎº¥Åä¸®(¹®¼­ ¸ñ·Ï) ºÒ·¯¿À±â
-        var loadTask = inventoryRef.GetSnapshotAsync();
-        yield return new WaitUntil(() => loadTask.IsCompleted); // Task ¿Ï·á ´ë±â
-
-        if (loadTask.IsFaulted)
+        if (user == null)
         {
-            Debug.LogError("Failed to load DB inventory: " + loadTask.Exception);
-            yield break;
+            Debug.LogError("No logged-in user.");
+            return;
         }
 
-        QuerySnapshot snapshot = loadTask.Result;
+        CollectionReference inventoryRef = db.Collection("Users")
+            .Document(user.UserId)
+            .Collection("Inventory");
 
-        // DB ¹®¼­µéÀ» Ã³¸®Çß´ÂÁö ÃßÀûÇÏ±â À§ÇØ
-        HashSet<string> processedDocIds = new HashSet<string>();
-
-        // 2) Firestore¿¡ ÀÖ´Â ¹®¼­µé ¼øÈ¸ ¡æ ·ÎÄÃ¿¡ ¾ø´Â ¾ÆÀÌÅÛÀº »èÁ¦ or ·ÎÄÃ µ¥ÀÌÅÍ·Î ¾÷µ¥ÀÌÆ®
-        foreach (DocumentSnapshot doc in snapshot.Documents)
+        
+        inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(loadTask =>
         {
-            string docId = doc.Id;
-            // ·ÎÄÃ ÀÎº¥Åä¸®¿¡¼­ °°Àº docId¸¦ °¡Áø ¾ÆÀÌÅÛÀ» Ã£´Â´Ù
-            InventoryItem localItem = inventory.Find(i => i.itemDocId == docId);
-
-            if (localItem == null)
+            if (loadTask.IsFaulted)
             {
-                // ·ÎÄÃ¿¡´Â ¾ø´Âµ¥ DB¸¸ Á¸Àç ¡æ »èÁ¦
-                Debug.Log($"[Sync] DB¿¡¸¸ Á¸ÀçÇÏ´Â ¾ÆÀÌÅÛ {docId} ¡æ »èÁ¦ Ã³¸®");
-                inventoryRef.Document(docId).DeleteAsync();
+                Debug.LogError("Failed to load DB inventory: " + loadTask.Exception);
+                return;
             }
-            else
-            {
-                // ·ÎÄÃ¿¡µµ ÀÖÀ¸¹Ç·Î, ºÎºÐ ¾÷µ¥ÀÌÆ®(È¤Àº Set)·Î ÃÖ½Å »óÅÂ ¹Ý¿µ
-                processedDocIds.Add(docId);
 
-                if (localItem.quantity <= 0)
+            QuerySnapshot snapshot = loadTask.Result;
+            HashSet<string> processedDocIds = new HashSet<string>();
+
+            
+            foreach (DocumentSnapshot doc in snapshot.Documents)
+            {
+                string docId = doc.Id;
+                InventoryItem localItem = inventory.Find(i => i.itemDocId == docId);
+
+                if (localItem == null)
                 {
-                    // ¼ö·®ÀÌ 0ÀÌÇÏ¸é »èÁ¦
-                    Debug.Log($"[Sync] {docId}ÀÇ ¼ö·®ÀÌ 0 ÀÌÇÏ ¡æ »èÁ¦");
+                    
                     inventoryRef.Document(docId).DeleteAsync();
                 }
                 else
                 {
-                    // ³ª¸ÓÁö ÇÊµåµé(itemType, itemName µî)µµ DB¿¡ ¸ÂÃç ÀúÀå
-                    Dictionary<string, object> updateData = new Dictionary<string, object>() {
-                    { "itemType", localItem.itemType },
-                    { "itemName", localItem.itemName },
-                    { "quantity", localItem.quantity },
-                    { "durability", localItem.durability }
-                };
+                    processedDocIds.Add(docId);
+                    if (localItem.quantity <= 0)
+                    {
+                        inventoryRef.Document(docId).DeleteAsync();
+                    }
+                    else
+                    {
+                        Dictionary<string, object> updateData = new Dictionary<string, object>()
+                    {
+                        {"itemType", localItem.itemType},
+                        {"itemName", localItem.itemName},
+                        {"quantity", localItem.quantity},
+                        {"durability", localItem.durability}
+                    };
 
-                    // SetAsync(..., SetOptions.MergeAll) ¡æ ¾ø´Â ÇÊµå´Â Ãß°¡, ÀÖ´Â ÇÊµå´Â °»½Å
-                    inventoryRef.Document(docId).SetAsync(updateData, SetOptions.MergeAll)
-                        .ContinueWithOnMainThread(t =>
-                        {
-                            if (t.IsFaulted)
-                                Debug.LogError("Update failed: " + t.Exception);
-                            else
-                                Debug.Log($"[Sync] ¾ÆÀÌÅÛ °»½Å: {docId} => qty={localItem.quantity}, dur={localItem.durability}");
-                        });
+                        inventoryRef.Document(docId)
+                                    .SetAsync(updateData, SetOptions.MergeAll)
+                                    .ContinueWithOnMainThread(t =>
+                                    {
+                                        if (t.IsFaulted)
+                                            Debug.LogError("Update failed: " + t.Exception);
+                                        else
+                                            Debug.Log($"[Sync] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {docId} => qty={localItem.quantity}, dur={localItem.durability}");
+                                    });
+                    }
                 }
             }
-        }
 
-        // 3) ·ÎÄÃ¿¡ ÀÖ´Âµ¥ DB¿¡´Â ¾ø¾ú´ø ¾ÆÀÌÅÛ(»õ ¾ÆÀÌÅÛ) ¡æ »õ ¹®¼­ »ý¼º
-        foreach (InventoryItem localItem in inventory)
-        {
-            // ÀÌ¹Ì Ã³¸®ÇÑ docId´Â ³Ñ¾î°¨
-            if (!processedDocIds.Contains(localItem.itemDocId))
+            
+            foreach (InventoryItem localItem in inventory)
             {
-                // »õ ¹®¼­ »ý¼º
-                Debug.Log($"[Sync] ·ÎÄÃ¿¡¸¸ ÀÖ´Â ¾ÆÀÌÅÛ {localItem.itemDocId} ¡æ »õ·Î DB¿¡ Ãß°¡");
-                DocumentReference newDocRef = inventoryRef.Document(localItem.itemDocId);
-
-                // ÇÊµå ±¸¼º
-                Dictionary<string, object> newData = new Dictionary<string, object>()
-            {
-                { "itemType", localItem.itemType },
-                { "itemName", localItem.itemName },
-                { "quantity", localItem.quantity },
-                { "durability", localItem.durability }
-            };
-
-                newDocRef.SetAsync(newData).ContinueWithOnMainThread(t =>
+                if (!processedDocIds.Contains(localItem.itemDocId))
                 {
-                    if (t.IsFaulted)
-                        Debug.LogError("New item add failed: " + t.Exception);
-                    else
-                        Debug.Log($"[Sync] »õ ¾ÆÀÌÅÛ »ý¼º: {localItem.itemDocId}, {localItem.itemName}, qty={localItem.quantity}");
-                });
+                    DocumentReference newDocRef = inventoryRef.Document(localItem.itemDocId);
+                    Dictionary<string, object> newData = new Dictionary<string, object>()
+                {
+                    {"itemType", localItem.itemType},
+                    {"itemName", localItem.itemName},
+                    {"quantity", localItem.quantity},
+                    {"durability", localItem.durability}
+                };
+
+                    newDocRef.SetAsync(newData).ContinueWithOnMainThread(t =>
+                    {
+                        if (t.IsFaulted)
+                            Debug.LogError("New item add failed: " + t.Exception);
+                        else
+                            Debug.Log("Sync ì™„ë£Œ");
+                            
+                    });
+                }
             }
-        }
 
-        Debug.Log("[Sync] ÀÎº¥Åä¸® µ¿±âÈ­ ¿Ï·á!");
+            Debug.Log("[Sync! (No Coroutine)");
+        });
     }
 
-    private void LoadItem()
-    {
-        foreach(InventoryItem inventoryItem in inventory)
-        {
-            InventoryController.Instance.LoadInventoryItem(inventoryItem);
-        }
-    }
-
-
-
-    
 }

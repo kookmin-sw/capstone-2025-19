@@ -120,7 +120,6 @@ public class TestPlayerMovement : MonoBehaviour
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Trigger exit");
         if (other.CompareTag("DropItem"))
         {
             //TODO 인벤토리에 ItemIcon 빼기
@@ -147,6 +146,8 @@ public class TestPlayerMovement : MonoBehaviour
 
         rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
     }
+
+    
 
     
 

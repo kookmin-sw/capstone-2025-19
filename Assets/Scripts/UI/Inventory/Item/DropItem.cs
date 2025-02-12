@@ -45,6 +45,8 @@ public class DropItem : MonoBehaviour
         
     }
 
+    
+
     /*public void SetItem(Item item)
     {
         string itemData = ChangeData(item);
@@ -54,16 +56,60 @@ public class DropItem : MonoBehaviour
         }
     }*/
 
-    public void RemoveDropItem()
+    public void RemoveDropItem_()
     {
         itemIcon = null;
         if (!photonView.IsMine)
         {
-            photonView.RPC("RequestDestroyDropItem", RpcTarget.MasterClient, photonView.ViewID);
+            photonView.RPC("RequestDestroyDropItem", photonView.Owner, photonView.ViewID);
         }
         else
         {
-            PhotonNetwork.Destroy(gameObject);
+            photonView.RPC("RemoveItemIcon", RpcTarget.AllBuffered, photonView.ViewID);
+            
+        }
+        
+    }
+
+    private IEnumerator SetRemoveDropItem()
+    {
+        Debug.Log("test1");
+        yield return new WaitForSeconds(0.1f);
+        Debug.Log("test2");
+        RemoveDropItem_();
+    }
+
+    public void RemoveDropItem()
+    {
+        itemIcon = null;
+        StartCoroutine(SetRemoveDropItem());
+        if (!photonView.IsMine)
+        {
+            photonView.RPC("RequestDeactivateDropItem", photonView.Owner, photonView.ViewID);
+        }
+        else
+        {
+            photonView.RPC("DeactivateDropItem", RpcTarget.AllBuffered, photonView.ViewID);
+        }
+
+        
+    }
+    [PunRPC]
+    void DeactivateDropItem(int viewID)
+    {
+        PhotonView targetView = PhotonView.Find(viewID);
+        if (targetView != null)
+        {
+            targetView.gameObject.SetActive(false);
+        }
+    }
+    [PunRPC]
+    void RequestDeactivateDropItem(int viewID)
+    {
+        PhotonView targetView = PhotonView.Find(viewID);
+        if (targetView != null && targetView.IsMine) //  소유자만 실행
+        {
+            photonView.RPC("DeactivateDropItem", RpcTarget.AllBuffered, viewID);
         }
     }
     /*[PunRPC]
@@ -84,13 +130,33 @@ public class DropItem : MonoBehaviour
     [PunRPC]
     void RequestDestroyDropItem(int viewID)
     {
-        if (PhotonNetwork.IsMasterClient) // 마스터만 실행 가능
+        /*if (PhotonNetwork.IsMasterClient) // 마스터만 실행 가능
         {
             PhotonView targetView = PhotonView.Find(viewID);
             if (targetView != null)
             {
+                if(!targetView.IsMine)
+                {
+                    Debug.Log("owner test1");
+                    targetView.TransferOwnership(PhotonNetwork.LocalPlayer);
+                }
+
+                Debug.Log($"owner test2 {targetView.IsMine}");
                 PhotonNetwork.Destroy(targetView.gameObject);
             }
+        }*/
+        PhotonView targetView = PhotonView.Find(viewID);
+        if (targetView != null)
+        {
+            if (targetView.IsMine)
+            {
+                //PhotonNetwork.Destroy(targetView.gameObject);
+                //targetView.RPC("RemoveItemIcon", RpcTarget.AllBuffered, viewID);
+                PhotonNetwork.Destroy(gameObject);
+            }
+
+            Debug.Log($"owner test2 {targetView.IsMine}");
+            
         }
     }
 
@@ -112,8 +178,18 @@ public class DropItem : MonoBehaviour
         this.itemData = ItemDatabase.Instance.GetItemDataByName(data[0]);
         quantity = int.Parse(data[1]);
         durability = float.Parse(data[2]);
-        Debug.Log(data[0]);
-        Debug.Log(this.itemData);
+
+    }
+    [PunRPC]
+    private void RemoveItemIcon(int viewID)
+    {
+        Debug.Log("7");
+        DebugText.Instance.Debug($"RemoveItemIcon {itemIcon}");
+        if(itemIcon != null)
+        {
+            Debug.Log("8");
+            InventoryController.Instance.RemoveItemIcon(this);
+        }
     }
 
     private void UpdateItem(Item item)
@@ -126,6 +202,14 @@ public class DropItem : MonoBehaviour
     private string ChangeData(Item item)
     {
         return string.Join("|", item.itemData.name, item.quantity, item.durability);
+    }
+
+    private IEnumerator DestroyAfterUIUpdate()
+    {
+        Debug.Log("9");
+        yield return new WaitForSeconds(0.5f); // UI 업데이트를 위해 잠시 대기
+        PhotonNetwork.Destroy(gameObject);
+        Debug.Log("10");
     }
 
 }

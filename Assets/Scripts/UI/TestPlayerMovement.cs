@@ -120,6 +120,7 @@ public class TestPlayerMovement : MonoBehaviour
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
     {
+        DebugText.Instance.Debug("trigger exit test");
         if (other.CompareTag("DropItem"))
         {
             //TODO 인벤토리에 ItemIcon 빼기

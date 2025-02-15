@@ -6,8 +6,7 @@ public class DropItemPanel : ItemPanel
 {
     public override void InsertItem(ItemIcon itemIcon)
     {
-        
-        if (itemIcon.dropItem == null ||!InventoryController.Instance.dropItemList.Contains(itemIcon.dropItem.GetComponent<DropItem>()))
+        if (itemIcon.dropItem ==null || !InventoryController.Instance.dropItemList.Contains(itemIcon.dropItem.GetComponent<DropItem>()))
         {
             InventoryController.Instance.CreateDropItem(itemIcon);
             InventoryController.Instance.dropItemList.Add(itemIcon.dropItem.GetComponent<DropItem>());

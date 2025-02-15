@@ -73,12 +73,24 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void CreateDropItem(ItemIcon itemIcon)
     {
-        GameObject dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", player.dropItemPosition.position, Quaternion.identity);
-        itemIcon.dropItem = dropItemGo;
-        DropItem dropItem = dropItemGo.GetComponent<DropItem>();
-        dropItem.itemIcon = itemIcon.gameObject;
-        
-        dropItem.SetItem(itemIcon.item);
+        GameObject dropItemGo;
+        if (itemIcon.dropItem == null)
+        {
+            dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", player.dropItemPosition.position, Quaternion.identity);
+            itemIcon.dropItem = dropItemGo;
+            DropItem dropItem = dropItemGo.GetComponent<DropItem>();
+            dropItem.itemIcon = itemIcon.gameObject;
+            dropItem.SetItem(itemIcon.item);
+        }
+        else
+        {
+            dropItemGo = itemIcon.dropItem.gameObject;
+            DropItem dropItem = dropItemGo.GetComponent<DropItem>();
+            dropItem.itemIcon = itemIcon.gameObject;
+            dropItem.SetItem(itemIcon.item);
+            dropItem.ActivateDropItem(player.dropItemPosition);
+        }
+
     }
     public void SetDropItemToItemIcon(ItemIcon itemIcon)
     {
@@ -101,6 +113,7 @@ public class InventoryController : Singleton<InventoryController>
     {
         dropItem.RemoveDropItem();
     }
+    
 
     /*public void CreateDropItem_(Item item)
     {

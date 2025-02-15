@@ -28,13 +28,13 @@ public class ItemPanel : MonoBehaviour
         DropItemPanel dropItemPanel = itemIcon.itemPanel as DropItemPanel;
         DropItemPanel thisItemPanel = this as DropItemPanel;
         InventoryPanel inventoryPanel = itemIcon.itemPanel as InventoryPanel;
-        InventoryPanel thiItemPanel = this as InventoryPanel;
+        InventoryPanel thisItemPanel_ = this as InventoryPanel;
         if (dropItemPanel != null && thisItemPanel == null)
         {
             InventoryController.Instance.RemoveDropItem(itemIcon.dropItem.GetComponent<DropItem>());
             //dropItemPanel.RemoveDropItem(itemIcon.item);
         }
-        else if(inventoryPanel != null && thisItemPanel == null)
+        else if(inventoryPanel != null && thisItemPanel_ == null)
         {
             InventoryController.Instance.inventory.Remove(itemIcon.item);
         }

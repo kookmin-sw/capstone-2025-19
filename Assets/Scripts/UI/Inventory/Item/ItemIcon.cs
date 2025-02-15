@@ -21,6 +21,7 @@ public class ItemIcon : MonoBehaviour
         this.item = item;
         itemNameText.text = this.item.itemData.name;
         itemImage.sprite = this.item.itemData.itemIcon;
+        Debug.Log($"ItemIcon SetItem {this.item.quantity} {this.item.durability}");
     }
 
     public void RemoveItemIcon()

@@ -19,26 +19,35 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        rectTransform = Instantiate(itemIconAlphaPrefab, InventoryController.Instance.itemIconParent).GetComponent<RectTransform>();
-        rectTransform.transform.position = transform.position;
-        ItemIconAlpha alpha = rectTransform.GetComponent<ItemIconAlpha>();
-        alpha.SetItem(itemIcon.item);
+        if(PlayerState.Instance.state == PlayerState.State.Inventory)
+        {
+            rectTransform = Instantiate(itemIconAlphaPrefab, InventoryController.Instance.itemIconParent).GetComponent<RectTransform>();
+            rectTransform.transform.position = transform.position;
+            ItemIconAlpha alpha = rectTransform.GetComponent<ItemIconAlpha>();
+            alpha.SetItem(itemIcon.item);
+        }
+        
         
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.anchoredPosition += eventData.delta;
+        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+            rectTransform.anchoredPosition += eventData.delta;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if(InventoryController.Instance.SelectedItemPanel != null)
+        if (PlayerState.Instance.state == PlayerState.State.Inventory)
         {
-            InventoryController.Instance.SelectedItemPanel.InsertItem(itemIcon);
+            if (InventoryController.Instance.SelectedItemPanel != null)
+            {
+                InventoryController.Instance.SelectedItemPanel.InsertItem(itemIcon);
+            }
+            Destroy(rectTransform.gameObject);
+            rectTransform = null;
         }
-        Destroy(rectTransform.gameObject);
-        rectTransform = null;
+            
     }
     public void DestroyItemAlpha()
     {

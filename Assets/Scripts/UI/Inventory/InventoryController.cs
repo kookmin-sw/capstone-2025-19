@@ -21,6 +21,8 @@ public class InventoryController : Singleton<InventoryController>
 
     [SerializeField] public Transform itemIconParent;
 
+
+    public PlayerTest playerTest;
     ItemPanel selectedItemPanel;
     ItemIcon selectedItemIcon;
 
@@ -76,7 +78,17 @@ public class InventoryController : Singleton<InventoryController>
         GameObject dropItemGo;
         if (itemIcon.dropItem == null)
         {
-            dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", player.dropItemPosition.position, Quaternion.identity);
+            if(SceneController.Instance.GetCurrentSceneName() == "Village")
+            {
+                GameObject dropItemPrefab = Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}");
+                dropItemGo = Instantiate(dropItemPrefab);
+                Destroy(dropItemGo.GetComponent<PhotonRigidbodyView>());
+                Destroy(dropItemGo.GetComponent<PhotonView>());
+            }
+            else
+            {
+                dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", playerTest.dropItemPosition.position, Quaternion.identity);
+            }
             itemIcon.dropItem = dropItemGo;
             DropItem dropItem = dropItemGo.GetComponent<DropItem>();
             dropItem.itemIcon = itemIcon.gameObject;
@@ -94,7 +106,7 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void SetDropItemToItemIcon(ItemIcon itemIcon)
     {
-        GameObject dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", player.dropItemPosition.position, Quaternion.identity);
+        GameObject dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", playerTest.dropItemPosition.position, Quaternion.identity);
         DropItem dropItem = dropItemGo.GetComponent<DropItem>();
         dropItem.SetItem(itemIcon.item);
         dropItem.itemIcon = itemIcon.gameObject;
@@ -249,8 +261,8 @@ public class InventoryController : Singleton<InventoryController>
 
     public void SetInventoryCanvas()
     {
-        if (player == null) { return; }
-        if(player.state == TestPlayerMovement.PlayerState.Inventory)
+        //if (player == null) { return; }
+        if(PlayerState.Instance.state == PlayerState.State.Inventory)
         {
             canvasGroup.alpha = 1;
         }

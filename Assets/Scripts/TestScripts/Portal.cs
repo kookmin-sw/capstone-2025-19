@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Portal : MonoBehaviour
 {
     // Start is called before the first frame update
+    [SerializeField] string sceneName;
     void Start()
     {
         
@@ -15,7 +16,8 @@ public class Portal : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SceneManager.LoadScene("Login");
+            if(sceneName == null) { Debug.LogError("sceneName is null");return; }
+            SceneManager.LoadScene(sceneName);
         }
     }
 }

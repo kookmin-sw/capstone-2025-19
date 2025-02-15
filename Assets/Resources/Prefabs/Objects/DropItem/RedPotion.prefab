@@ -99,6 +99,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6184657207957240916}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1dfc4df30c9c1ab48addffcd6ed7f61a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8902699790290353022}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1dfc4df30c9c1ab48addffcd6ed7f61a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2408639286650479091}
   m_SourcePrefab: {fileID: 100100000, guid: 1dfc4df30c9c1ab48addffcd6ed7f61a, type: 3}
 --- !u!1 &7588505138505625155 stripped
 GameObject:
@@ -172,3 +180,42 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-8902699790290353022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7588505138505625155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64179f3720bbfe947b7724caa67b7c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 0
+  m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &-2408639286650479091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7588505138505625155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: -8902699790290353022}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

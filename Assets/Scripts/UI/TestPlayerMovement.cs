@@ -8,13 +8,7 @@ public class TestPlayerMovement : MonoBehaviour
 {
     [SerializeField] public Transform dropItemPosition;
     [SerializeField] Collider triggerCollider;
-    public enum PlayerState
-    {
-        Inventory,
-        Idle,
-
-    }
-    public PlayerState state;
+    
 
     PhotonView photonView;
 
@@ -33,7 +27,7 @@ public class TestPlayerMovement : MonoBehaviour
     }
     private void Start()
     {
-        ChangeState(PlayerState.Idle);
+        
         if (!photonView.IsMine)
         {
             triggerCollider.enabled = false;
@@ -51,9 +45,10 @@ public class TestPlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (state == PlayerState.Inventory) { ChangeState(PlayerState.Idle); } else if (state == PlayerState.Idle) { ChangeState(PlayerState.Inventory); }
+            if (PlayerState.Instance.state == PlayerState.State.Inventory) { PlayerState.Instance.ChangeState(PlayerState.State.Idle); } 
+            else if (PlayerState.Instance.state == PlayerState.State.Idle) { PlayerState.Instance.ChangeState(PlayerState.State.Inventory); }
         }
-        if (state == PlayerState.Inventory) { return; }
+        if (PlayerState.Instance.state == PlayerState.State.Inventory) { return; }
         float horizontal = 0f;
         float vertical = 0f;
         
@@ -79,22 +74,7 @@ public class TestPlayerMovement : MonoBehaviour
         anim.SetFloat("forwardSpeed", forwardSpeed);
         photonView.RPC("SyncAnimator", RpcTarget.Others, forwardSpeed);
     }
-    private void ChangeState(PlayerState state)
-    {
-        switch (state)
-        {
-            case PlayerState.Idle:
-                this.state = PlayerState.Idle;
-                InventoryController.Instance.SetInventoryCanvas();
-                break;
-            case PlayerState.Inventory:
-                this.state = PlayerState.Inventory;
-                InventoryController.Instance.SetInventoryCanvas();
-                break;
-            default:
-                break;
-        }
-    }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("DropItem"))

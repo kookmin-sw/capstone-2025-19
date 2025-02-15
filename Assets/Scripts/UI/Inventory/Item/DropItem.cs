@@ -30,19 +30,28 @@ public class DropItem : MonoBehaviour
 
     public void SetItem(Item item)
     {
-        string itemData = ChangeData(item);
-        DebugText.Instance.Debug($"set item {itemData}");
-        if (PhotonNetwork.IsMasterClient)//마스터 클라이언트일 경우
+        
+        if(SceneController.Instance.GetCurrentSceneName() != "Village")
+        {
+            string itemData = ChangeData(item);
+            DebugText.Instance.Debug($"set item {itemData}");
+            if (PhotonNetwork.IsMasterClient)//마스터 클라이언트일 경우
+            {
+                UpdateItem(item);
+                DebugText.Instance.Debug($"Set Item {itemData} masterClient");
+                photonView.RPC("UpdateItemPhoton", RpcTarget.OthersBuffered, itemData);
+            }
+            else// 기본 클라이언트일 경우
+            {
+                DebugText.Instance.Debug($"Set item {itemData} client");
+                photonView.RPC("RequestUpdateItemPhoton", RpcTarget.MasterClient, itemData);//마스터 클라이언트에게 변경 요청
+            }
+        }
+        else
         {
             UpdateItem(item);
-            DebugText.Instance.Debug($"Set Item {itemData} masterClient");
-            photonView.RPC("UpdateItemPhoton", RpcTarget.OthersBuffered, itemData);
         }
-        else// 기본 클라이언트일 경우
-        {
-            DebugText.Instance.Debug($"Set item {itemData} client");
-            photonView.RPC("RequestUpdateItemPhoton", RpcTarget.MasterClient, itemData);//마스터 클라이언트에게 변경 요청
-        }
+        
         
     }
     private void UpdateItem(Item item)
@@ -88,15 +97,24 @@ public class DropItem : MonoBehaviour
     public void RemoveDropItem()
     {
         itemIcon = null;
-        if (!photonView.IsMine)
+        if (SceneController.Instance.GetCurrentSceneName() != "Village")
         {
-            photonView.RPC("RequestDeactivateDropItem", photonView.Owner, photonView.ViewID);
+            if (!photonView.IsMine)
+            {
+                photonView.RPC("RequestDeactivateDropItem", photonView.Owner, photonView.ViewID);
+            }
+            else
+            {
+                photonView.RPC("DeactivateDropItem", RpcTarget.AllBuffered, photonView.ViewID);
+
+            }
         }
         else
         {
-            photonView.RPC("DeactivateDropItem", RpcTarget.AllBuffered, photonView.ViewID);
-            
+            InventoryController.Instance.dropItemList.Remove(this);
+            gameObject.SetActive(false);
         }
+        
         
     }
 
@@ -130,15 +148,23 @@ public class DropItem : MonoBehaviour
     public void ActivateDropItem(Transform position)
     {
         this.gameObject.transform.position = position.transform.position;
-        if (!photonView.IsMine)
+        if(SceneController.Instance.GetCurrentSceneName() != "Village")
         {
-            photonView.RPC("RequestActivateDropItemphoton", photonView.Owner, photonView.ViewID);
+            if (!photonView.IsMine)
+            {
+                photonView.RPC("RequestActivateDropItemphoton", photonView.Owner, photonView.ViewID);
+            }
+            else
+            {
+                photonView.RPC("ActiavateDropItemPhoton", RpcTarget.AllBuffered, photonView.ViewID);
+
+            }
         }
         else
         {
-            photonView.RPC("ActiavateDropItemPhoton", RpcTarget.AllBuffered, photonView.ViewID);
-
+            gameObject.SetActive(true);
         }
+        
     }
     [PunRPC]
     void ActiavateDropItemPhoton(int viewID)

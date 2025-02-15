@@ -16,67 +16,67 @@ public class SignUpManger : MonoBehaviour
     public InputField nickname;
     public Button signUpButton;
 
-    //public static FirebaseApp firebaseApp;
-    public static FirebaseAuth firebaseAuth;
-    public static FirebaseFirestore firebaseFirestore;
-
-    public static FirebaseUser User;
 
     // Start is called before the first frame update
     void Start()
     {
-        firebaseAuth = FirebaseAuth.DefaultInstance;
-        firebaseFirestore = FirebaseFirestore.DefaultInstance;
+        InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
+    }
+
+    void CheckFirebaseReady()
+    {
+        if (FirebaseManager.Instance != null && FirebaseManager.Instance.IsReady)
+        {
+            CancelInvoke(nameof(CheckFirebaseReady));
+        }
     }
 
     public void SignUp()
     {
-        firebaseAuth.CreateUserWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
+        if (!FirebaseManager.Instance.IsReady)
         {
-            if (task.IsFaulted)
-            {
-                Debug.LogError(task.Exception.ToString());
-            }
-            else if (task.IsCanceled)
-            {
-                Debug.LogError("task is canceled");
-            }
-            else
-            {
-                User = task.Result.User;
-                Debug.Log($"회원가입 성공! UID: {User.UserId}, Email: {User.Email}");
+            Debug.LogError("Firebase not ready!");
+            return;
+        }
+        var auth = FirebaseManager.Instance.Auth;
+        var db = FirebaseManager.Instance.Db;
 
-                DocumentReference userDocRef = firebaseFirestore
-                .Collection("Users")
-                .Document(User.UserId);
+        auth.CreateUserWithEmailAndPasswordAsync(email.text, password.text)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.LogError(task.Exception);
+                    return;
+                }
 
+                FirebaseUser newUser = task.Result.User;
+                Debug.Log($"회원가입 성공! UID: {newUser.UserId}");
+
+                // Firestore에 유저 정보 생성
+                DocumentReference docRef = db.Collection("Users").Document(newUser.UserId);
                 Dictionary<string, object> userData = new Dictionary<string, object>()
                 {
-                    {"email", email.text},
-                    {"nickname", nickname.text},
-                    {"level", 1},
-                    {"exp", 0},
+                    { "email", email.text },
+                    { "nickname", nickname.text },
+                    { "level", 1 },
+                    { "exp", 0 }
                 };
 
-                userDocRef.SetAsync(userData).ContinueWithOnMainThread(task =>
+                docRef.SetAsync(userData).ContinueWithOnMainThread(writeTask =>
                 {
-                    if (task.IsFaulted)
+                    if (writeTask.IsFaulted)
                     {
-                        Debug.LogError($"Firestore 저장 실패: {task.Exception}");
-                    }
-                    else if (task.IsCanceled)
-                    {
-                        Debug.LogError("Firestore 저장 취소됨");
+                        Debug.LogError("Firestore save failed: " + writeTask.Exception);
                     }
                     else
                     {
                         Debug.Log("Firestore에 유저 정보 저장 완료!");
-
                         SceneManager.LoadScene("Village");
                     }
                 });
-            }
-        });
+            });
+
     }
 
     // Update is called once per frame

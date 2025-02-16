@@ -46,9 +46,40 @@ public class CameraHandler : MonoBehaviour
         HandleCameraCollisions(delta);
     }
 
+    private Vector2 mouseAcceleration = Vector2.zero;
+    private Vector2 currentMouseInput = Vector2.zero;
     public void HandleCameraRotation(float delta, float mouseXInput, float mouseYInput)
     {
-        lookAngle += (mouseXInput * lookSpeed) / delta;
+        // 마우스 입력값 업데이트 (이전 입력값과 비교하여 가속 적용)
+        currentMouseInput.x = Mathf.Lerp(currentMouseInput.x, mouseXInput, delta * 5f);  // Lerp로 부드러운 가속
+        currentMouseInput.y = Mathf.Lerp(currentMouseInput.y, mouseYInput, delta * 5f);
+
+        // 마우스 속도 증가 (가속 적용)
+        mouseAcceleration.x += (currentMouseInput.x * lookSpeed) * delta;
+        mouseAcceleration.y += (currentMouseInput.y * pivotSpeed) * delta;
+
+        // 가속도 기반 회전값 업데이트
+        lookAngle += mouseAcceleration.x;
+        pivotAngle -= mouseAcceleration.y;
+
+        // 최소/최대 각도 제한
+        pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
+
+        // Y축 회전 (좌우)
+        Vector3 rotation = Vector3.zero;
+        rotation.y = lookAngle;
+        Quaternion targetRotation = Quaternion.Euler(rotation);
+        myTransform.rotation = targetRotation;
+
+        // X축 회전 (상하)
+        rotation = Vector3.zero;
+        rotation.x = pivotAngle;
+        targetRotation = Quaternion.Euler(rotation);
+        cameraPivotTransform.localRotation = targetRotation;
+
+        // 감속 적용 (자연스럽게 움직임 멈추도록)
+        mouseAcceleration *= 0.9f;  // 감속도 0.9 -> 90% 유지, 점진적으로 줄어듦
+        /*lookAngle += (mouseXInput * lookSpeed) / delta;
         pivotAngle -= (mouseYInput * pivotSpeed) / delta;
         pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
 
@@ -61,7 +92,7 @@ public class CameraHandler : MonoBehaviour
         rotation.x = pivotAngle;
 
         targetRotation = Quaternion.Euler(rotation);
-        cameraPivotTransform.localRotation = targetRotation;
+        cameraPivotTransform.localRotation = targetRotation;*/
     }
     
     private void HandleCameraCollisions(float delta)

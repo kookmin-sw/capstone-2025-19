@@ -60,7 +60,8 @@ public class SignUpManger : MonoBehaviour
                     { "email", email.text },
                     { "nickname", nickname.text },
                     { "level", 1 },
-                    { "exp", 0 }
+                    { "exp", 0 },
+                    { "money",0 },
                 };
 
                 docRef.SetAsync(userData).ContinueWithOnMainThread(writeTask =>

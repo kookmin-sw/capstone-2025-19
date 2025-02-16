@@ -68,6 +68,24 @@ public class PlayerInventory : MonoBehaviour
         }
         Debug.Log($"userName : {user.UserId}");
 
+        //money 동기화
+        //DocumentReference moneyRef = db.Collection("Users")
+        //                                     .Document(user.UserId);
+
+        //moneyRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        //{
+        //    if (task.IsFaulted)
+        //    {
+        //        Debug.LogError("Failed to load inventory: " + task.Exception);
+        //        return;
+        //    }
+
+        //    var snapshot = task.Result;
+
+            
+        //});
+
+
         CollectionReference inventoryRef = db.Collection("Users")
                                              .Document(user.UserId)
                                              .Collection("Inventory");

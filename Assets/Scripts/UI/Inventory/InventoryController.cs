@@ -32,6 +32,7 @@ public class InventoryController : Singleton<InventoryController>
 
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
+    public int money = 0;
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
     public ItemIcon SelectedItemIcon { get => selectedItemIcon; set { selectedItemIcon = value; } }
 
@@ -292,5 +293,21 @@ public class InventoryController : Singleton<InventoryController>
         item.quantity += 1;
         DebugText.Instance.Debug($"{item.itemData.name} quantity is {item.quantity}");
     }
-    
+
+    //Util
+    public int GetItemCount(string itemName)
+    {
+        int totalCount = 0;
+        foreach (Item item in inventory)
+        {
+            // 아이템 이름이 quest.target과 같은지 확인
+            if (item.itemData.name == itemName)
+            {
+                // quantity만큼 더해줌
+                totalCount += item.quantity;
+            }
+        }
+        return totalCount;
+    }
+
 }

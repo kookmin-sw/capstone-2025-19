@@ -33,13 +33,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         var localPlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
         var spawnPosition = spawnPositions[localPlayerIndex % spawnPositions.Length];
 
-        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition.position, Quaternion.identity);
+
+        GameObject player = PhotonNetwork.Instantiate("Prefabs/TestPlayer", spawnPosition.position, Quaternion.identity);
+        InventoryController.Instance.SetPlayer(player.GetComponent<TestPlayerMovement>());
         virtualCamera.Follow = player.transform;
         virtualCamera.LookAt = player.transform;
     }
 
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene("Lobby");
+        SceneController.Instance.LoadScene("Lobby");
     }
 }

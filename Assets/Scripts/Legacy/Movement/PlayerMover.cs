@@ -52,7 +52,7 @@ public class PlayerMover : MonoBehaviourPun
         photonView.RPC("SyncAnimator", RpcTarget.Others, forwardSpeed);
     }
 
-    [PunRPC]
+    /*[PunRPC]
     private void SyncAnimator(float forwardSpeed)
     {
         anim.SetFloat("forwardSpeed", forwardSpeed);
@@ -63,5 +63,5 @@ public class PlayerMover : MonoBehaviourPun
         if (!photonView.IsMine) return;
 
         rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
-    }
+    }*/
 }

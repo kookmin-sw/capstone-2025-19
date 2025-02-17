@@ -54,6 +54,7 @@ public class PlayerInventory : MonoBehaviour
         }
 
         InventorySynchronizeToDB();
+        moneySynchronizeToDB();
     }
 
     public void LoadInventoryFromFirestore()
@@ -68,22 +69,29 @@ public class PlayerInventory : MonoBehaviour
         }
         Debug.Log($"userName : {user.UserId}");
 
-        //money 동기화
-        //DocumentReference moneyRef = db.Collection("Users")
-        //                                     .Document(user.UserId);
-
-        //moneyRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        //{
-        //    if (task.IsFaulted)
-        //    {
-        //        Debug.LogError("Failed to load inventory: " + task.Exception);
-        //        return;
-        //    }
-
-        //    var snapshot = task.Result;
-
-            
-        //});
+        // money 동기화: Firestore에 저장된 money를 불러와 InventoryController에 반영
+        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
+        moneyRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load money: " + task.Exception);
+                return;
+            }
+            var snapshot = task.Result;
+            if (snapshot.Exists && snapshot.ContainsField("money"))
+            {
+                // Firestore에서는 숫자 데이터가 long 또는 double로 저장될 수 있음.
+                int money = Convert.ToInt32(snapshot.GetValue<long>("money"));
+                InventoryController.Instance.money = money;
+                Debug.Log("Money loaded: " + money);
+            }
+            else
+            {
+                Debug.Log("No money field in user document. Setting money to 0.");
+                InventoryController.Instance.money = 0;
+            }
+        });
 
 
         CollectionReference inventoryRef = db.Collection("Users")
@@ -170,6 +178,33 @@ public class PlayerInventory : MonoBehaviour
     private void itemToInventoryItem(Item item)
     {
         AddItemToInventory(item.itemData.name, item.itemData.itemType, item.quantity, item.durability);
+    }
+
+    // money 값을 DB에 동기화
+    public void moneySynchronizeToDB()
+    {
+        var auth = FirebaseManager.Instance.Auth;
+        var db = FirebaseManager.Instance.Db;
+        var user = auth.CurrentUser;
+        if (user == null)
+        {
+            Debug.LogError("No logged-in user.");
+            return;
+        }
+
+        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
+        Dictionary<string, object> moneyData = new Dictionary<string, object>()
+        {
+            {"money", InventoryController.Instance.money}
+        };
+
+        moneyRef.SetAsync(moneyData, SetOptions.MergeAll).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+                Debug.LogError("Failed to sync money: " + task.Exception);
+            else
+                Debug.Log("Money synchronized to DB: " + InventoryController.Instance.money);
+        });
     }
 
     public void InventorySynchronizeToDB()

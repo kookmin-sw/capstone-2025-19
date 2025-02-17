@@ -6,11 +6,10 @@ using Firebase;
 using Firebase.Auth;
 using UnityEngine.SceneManagement;
 using Firebase.Extensions;
+using Firebase.Firestore;
 
 public class SignInManager : MonoBehaviour
 {
-
-    public bool IsFirebaseReady { get; private set; }
     public bool IsSignInOnProgress { get; private set; }
 
 
@@ -19,36 +18,23 @@ public class SignInManager : MonoBehaviour
     public Button loginButton;
     public Button signUpButton;
 
-    public static FirebaseApp firebaseApp;
-    public static FirebaseAuth firebaseAuth;
-
-    public static FirebaseUser User;
 
     void Start()
     {
         loginButton.interactable = false;
 
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        // 일정 주기로 Firebase가 준비되었는지 검사
+        InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
+    }
+
+    void CheckFirebaseReady()
+    {
+        // FirebaseManager 싱글턴이 있는지 + IsReady인지 체크
+        if (FirebaseManager.Instance != null && FirebaseManager.Instance.IsReady)
         {
-            var result = task.Result;
-            if (result != DependencyStatus.Available)
-            {
-                Debug.LogError(result.ToString());
-                IsFirebaseReady = false;
-            }
-            else
-            {
-                Debug.Log("Firebase is ready to use!");
-                IsFirebaseReady = true;
-
-                firebaseApp = FirebaseApp.DefaultInstance;
-                firebaseAuth = FirebaseAuth.DefaultInstance;
-
-                loginButton.interactable = true;
-            }
-
-            loginButton.interactable = IsFirebaseReady;
-        });
+            loginButton.interactable = true;
+            CancelInvoke(nameof(CheckFirebaseReady));
+        }
     }
 
     public void goToSignUp()
@@ -58,41 +44,31 @@ public class SignInManager : MonoBehaviour
 
     public void SignIn()
     {
-        if (!IsFirebaseReady || IsSignInOnProgress || User != null)
+        if (!FirebaseManager.Instance.IsReady)
         {
+            Debug.LogError("Firebase is not ready yet!");
             return;
         }
 
-        IsSignInOnProgress = true;
-        loginButton.interactable = false;
+        var auth = FirebaseManager.Instance.Auth;
 
-        firebaseAuth.SignInWithEmailAndPasswordAsync(email.text, password.text).ContinueWithOnMainThread(task =>
-        {
-            Debug.Log($"Sign in status : {task.Status}");
+        auth.SignInWithEmailAndPasswordAsync(email.text, password.text)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("Sign in failed: " + task.Exception);
+                }
+                else
+                {
+                    var user = task.Result.User;
+                    Debug.Log($"Sign in success! UID: {user.UserId}");
+                    SceneManager.LoadScene("Village");
+                }
+            });
 
-            IsSignInOnProgress = false;
-            loginButton.interactable = true;
 
-            if (task.IsFaulted)
-            {
-                Debug.LogError(task.Exception);
-            }
-            else if (task.IsCanceled)
-            {
-                Debug.LogError("Sign-in canceled");
-            }
-            else
-            {
-                User = task.Result.User;
-                Debug.Log(User.Email);
-                SceneManager.LoadScene("Village");
-            }
-        });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

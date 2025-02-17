@@ -10,5 +10,9 @@ public class InventoryPanel : ItemPanel
         base.InsertItem(itemIcon);
         InventoryController.Instance.inventory.Add(itemIcon.GetComponent<ItemIcon>().item);
         Debug.Log($"InsertItem count : {InventoryController.Instance.inventory.Count}");
+
+        //QuestManager에게 알려주기
+        Debug.Log("In InsertItem");
+        QuestManager.Instance.OnItemAcquired();
     }
 }

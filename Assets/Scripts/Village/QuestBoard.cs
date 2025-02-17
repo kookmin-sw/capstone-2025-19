@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class QuestBoard : MonoBehaviour
 {
-    [SerializeField] GameObject QuestCanvas;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        QuestCanvas.SetActive(false);
+        QuestManager.Instance.QuestCanvas.SetActive(false);
     }
 
     //캐릭터가 퀘스트 보드에 가까이 갔을 때
@@ -17,7 +17,7 @@ public class QuestBoard : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            QuestCanvas.SetActive(true);
+            QuestManager.Instance.QuestCanvas.SetActive(true);
         }
         
     }
@@ -26,7 +26,7 @@ public class QuestBoard : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            QuestCanvas.SetActive(false);
+            QuestManager.Instance.QuestCanvas.SetActive(false);
         }
     }
 

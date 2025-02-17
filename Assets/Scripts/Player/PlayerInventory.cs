@@ -11,8 +11,6 @@ using static PlayerInventory;
 
 public class PlayerInventory : MonoBehaviour
 {
-    private FirebaseAuth auth;
-    private FirebaseFirestore db;
 
     [System.Serializable]
     public class InventoryItem
@@ -28,12 +26,24 @@ public class PlayerInventory : MonoBehaviour
 
     void Start()
     {
-        auth = FirebaseAuth.DefaultInstance;
-        db = FirebaseFirestore.DefaultInstance;
+
+        // 일정 주기로 Firebase가 준비되었는지 검사
+        InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
         
         LoadInventoryFromFirestore();
 
     }
+
+    void CheckFirebaseReady()
+    {
+        // FirebaseManager 싱글턴이 있는지 + IsReady인지 체크
+        if (FirebaseManager.Instance != null && FirebaseManager.Instance.IsReady)
+        {
+            CancelInvoke(nameof(CheckFirebaseReady));
+            Debug.Log("In PlayerInventory, Firebase is Ok");
+        }
+    }
+
     private void OnApplicationQuit()
     {
         
@@ -44,10 +54,13 @@ public class PlayerInventory : MonoBehaviour
         }
 
         InventorySynchronizeToDB();
+        moneySynchronizeToDB();
     }
 
     public void LoadInventoryFromFirestore()
     {
+        var auth = FirebaseManager.Instance.Auth;
+        var db = FirebaseManager.Instance.Db;
         var user = auth.CurrentUser;
         if (user == null)
         {
@@ -55,6 +68,31 @@ public class PlayerInventory : MonoBehaviour
             return;
         }
         Debug.Log($"userName : {user.UserId}");
+
+        // money 동기화: Firestore에 저장된 money를 불러와 InventoryController에 반영
+        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
+        moneyRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load money: " + task.Exception);
+                return;
+            }
+            var snapshot = task.Result;
+            if (snapshot.Exists && snapshot.ContainsField("money"))
+            {
+                // Firestore에서는 숫자 데이터가 long 또는 double로 저장될 수 있음.
+                int money = Convert.ToInt32(snapshot.GetValue<long>("money"));
+                InventoryController.Instance.money = money;
+                Debug.Log("Money loaded: " + money);
+            }
+            else
+            {
+                Debug.Log("No money field in user document. Setting money to 0.");
+                InventoryController.Instance.money = 0;
+            }
+        });
+
 
         CollectionReference inventoryRef = db.Collection("Users")
                                              .Document(user.UserId)
@@ -75,7 +113,7 @@ public class PlayerInventory : MonoBehaviour
                 Dictionary<string, object> dict = doc.ToDictionary();
 
                 InventoryItem item = new InventoryItem();
-                item.itemDocId = doc.Id; 
+                item.itemDocId = doc.Id;
                 item.itemType = dict["itemType"].ToString();
                 item.itemName = dict["itemName"].ToString();
                 item.quantity = System.Convert.ToInt32(dict["quantity"]);
@@ -83,7 +121,7 @@ public class PlayerInventory : MonoBehaviour
 
                 InventoryController.Instance.LoadInventoryItem(item);
             }
-            
+
         });
     }
 
@@ -142,8 +180,37 @@ public class PlayerInventory : MonoBehaviour
         AddItemToInventory(item.itemData.name, item.itemData.itemType, item.quantity, item.durability);
     }
 
+    // money 값을 DB에 동기화
+    public void moneySynchronizeToDB()
+    {
+        var auth = FirebaseManager.Instance.Auth;
+        var db = FirebaseManager.Instance.Db;
+        var user = auth.CurrentUser;
+        if (user == null)
+        {
+            Debug.LogError("No logged-in user.");
+            return;
+        }
+
+        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
+        Dictionary<string, object> moneyData = new Dictionary<string, object>()
+        {
+            {"money", InventoryController.Instance.money}
+        };
+
+        moneyRef.SetAsync(moneyData, SetOptions.MergeAll).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+                Debug.LogError("Failed to sync money: " + task.Exception);
+            else
+                Debug.Log("Money synchronized to DB: " + InventoryController.Instance.money);
+        });
+    }
+
     public void InventorySynchronizeToDB()
     {
+        var auth = FirebaseManager.Instance.Auth;
+        var db = FirebaseManager.Instance.Db;
         var user = auth.CurrentUser;
         if (user == null)
         {

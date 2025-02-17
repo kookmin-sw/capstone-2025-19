@@ -26,7 +26,7 @@ public class PlayerManager : MonoBehaviour
         playerLocomotion = GetComponent<PlayerLocomotion>();
     }
 
-        private void FixedUpdate()
+    private void FixedUpdate()
     {
         float delta = Time.fixedDeltaTime;
 
@@ -54,7 +54,8 @@ public class PlayerManager : MonoBehaviour
     {
         inputHandler.rollFlag = false;
         inputHandler.sprintFlag = false;
-        isSprinting = inputHandler.b_Input;
+        inputHandler.rb_Input = false;
+        inputHandler.rt_Input = false;
 
         if (isInAir)
         {

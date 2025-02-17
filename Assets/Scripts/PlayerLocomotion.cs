@@ -30,7 +30,6 @@ public class PlayerLocomotion : MonoBehaviour
     [SerializeField] float movementSpeed = 5;
     [SerializeField] float rotationSpeed = 10;
     [SerializeField] float sprintSpeed = 7;
-    [SerializeField] float rollSpeed = 7;
     [SerializeField] float fallingSpeed = 80;
 
     private void Start()
@@ -84,7 +83,7 @@ public class PlayerLocomotion : MonoBehaviour
 
         float speed = movementSpeed;
 
-        if(inputHandler.sprintFlag)
+        if(inputHandler.sprintFlag && inputHandler.moveAmount > 0.5f)
         {
             speed = sprintSpeed;
             playerManager.isSprinting = true;
@@ -92,7 +91,17 @@ public class PlayerLocomotion : MonoBehaviour
         }
         else
         {
-            moveDirection *= speed;
+            if(inputHandler.moveAmount < 0.5f)
+            {
+                moveDirection *= movementSpeed;
+                playerManager.isSprinting = false;
+            }
+            else
+            {
+                moveDirection *= speed;
+                playerManager.isSprinting = false;
+            }
+            
         }
         
 

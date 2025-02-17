@@ -24,20 +24,20 @@ public class MainCamera : MonoBehaviour
     float rotationY = 0f;
     private Vector2 currentRotation;
     private Vector2 rotationVelocity;
-    public float rotationSmoothTime = 0.1f; // ºÎµå·¯¿î È¸Àü ¼Óµµ
+    public float rotationSmoothTime = 0.1f; // ï¿½Îµå·¯ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½Óµï¿½
 
     void Update()
     {
         if (virtualCamera == null || player == null) return;
-        // ¸¶¿ì½º ÀÔ·Â ¹Þ±â
+        // ï¿½ï¿½ï¿½ì½º ï¿½Ô·ï¿½ ï¿½Þ±ï¿½
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-        Debug.Log($"test {mouseX} {mouseY}");
+        // Debug.Log($"test {mouseX} {mouseY}");
 
-        // ¸¶¿ì½º ÀÌµ¿¿¡ µû¶ó È¸Àü Àû¿ë
+        // ï¿½ï¿½ï¿½ì½º ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         rotationY += mouseX;
         rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -30f, 60f);  // À§/¾Æ·¡ °¢µµ Á¦ÇÑ
+        rotationX = Mathf.Clamp(rotationX, -30f, 60f);  // ï¿½ï¿½/ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         currentRotation = Vector2.SmoothDamp(
             currentRotation,
@@ -46,12 +46,12 @@ public class MainCamera : MonoBehaviour
             rotationSmoothTime
         );
 
-        // **ÇÃ·¹ÀÌ¾îÀÇ È¸Àü Á¶ÀÛ (YÃà)**
+        // **ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Yï¿½ï¿½)**
         //player.rotation = Quaternion.Euler(0f, currentRotation.y, 0f);
         player.rotation = Quaternion.Euler(0f, currentRotation.y, 0f);
 
-        // Ä«¸Þ¶ó È¸Àü Àû¿ë
+        // Ä«ï¿½Þ¶ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         player.rotation = Quaternion.Euler(rotationX, rotationY, 0f);
-        Debug.Log(player.rotation);
+        //Debug.Log(player.rotation);
     }
 }

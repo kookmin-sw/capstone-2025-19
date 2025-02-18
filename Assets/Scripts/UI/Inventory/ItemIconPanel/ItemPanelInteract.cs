@@ -9,7 +9,7 @@ public class ItemPanelInteract : MonoBehaviour, IPointerEnterHandler, IPointerEx
     ItemPanel itemPanel;
     public void OnPointerEnter(PointerEventData eventData)
     {
-       InventoryController.Instance.SelectedItemPanel = itemPanel;
+        InventoryController.Instance.SelectedItemPanel = itemPanel;
     }
 
     public void OnPointerExit(PointerEventData eventData)

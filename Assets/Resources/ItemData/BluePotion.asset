@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105dc701a5f2f4544a2504101dc53d92, type: 3}
   m_Name: BluePotion
   m_EditorClassIdentifier: 
+  itemType_: 0
   itemIcon: {fileID: 21300000, guid: bc1310cf9d188fd4b884477f3b5f50a9, type: 3}
   itemType: Potion
-  size: 0
-  Weight: 0
+  size: 5
+  Weight: 0.4
   isUse: 0
-  isContainer: 0
-  maxQuantity: 0
+  containerValue: 0
+  maxQuantity: 10
   price: 0
-  maxItemDurability: 0
+  maxItemDurability: 10

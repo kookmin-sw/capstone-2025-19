@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.UI;
+using System;
+
+
 #if UNITY_EDITOR
 using static UnityEditor.Progress;
 #endif
@@ -12,14 +16,19 @@ public class InventoryController : Singleton<InventoryController>
     public TestPlayerMovement player;
     [SerializeField] GameObject itemIconPrefab;
 
-    [SerializeField] InventoryPanel inventoryPanel;
-    [SerializeField] DropItemPanel dropItemPanel;
+    [SerializeField] public InventoryPanel inventoryPanel;
+    [SerializeField] public DropItemPanel dropItemPanel;
+    [SerializeField] public BackpackPanel backpackPanel;
 
     List<ItemIcon> inventoryList;
     public List<DropItem> dropItemList;
     [SerializeField] List<ItemData> itemDataList;
 
     [SerializeField] public Transform itemIconParent;
+    [SerializeField] Slider inventoryLoadRateSlider;
+
+    [SerializeField] public Transform popupParent;
+
 
 
     public PlayerTest playerTest;
@@ -32,6 +41,9 @@ public class InventoryController : Singleton<InventoryController>
 
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
+    [HideInInspector]
+    public float currentInventoryLoadValue = 0f;
+
     public int money = 0;
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
     public ItemIcon SelectedItemIcon { get => selectedItemIcon; set { selectedItemIcon = value; } }
@@ -47,6 +59,24 @@ public class InventoryController : Singleton<InventoryController>
     {
         TestItemIcon();
         SetInventoryCanvas();
+        SetInventoryLoadRate();
+    }
+
+    public void SetInventoryLoadRate()
+    {
+        
+        foreach(Item item in inventory)
+        {
+            
+            if(currentInventoryLoadValue + item.quantity * item.itemData.Weight > backpackPanel.GetItemIcon().item.itemData.containerValue)
+            {
+                //TODO 넣을 수 있는 만큼 넣기 Drop item
+                dropItemPanel.InsertItem(item.itemIcon);
+                continue;
+            }
+            currentInventoryLoadValue += item.quantity * item.itemData.Weight;
+        }
+        backpackPanel.SetBackpack();
     }
 
     // Update is called once per frame
@@ -73,6 +103,7 @@ public class InventoryController : Singleton<InventoryController>
         itemIcon.dropItem = dropItem.gameObject;
         Item item = new Item(dropItem.itemData, dropItem.quantity, dropItem.durability);
         itemIcon.SetItem(item);
+        itemIconGo.name = $"{item.itemData.name}_ItemIcon";
     }
     public void CreateDropItem(ItemIcon itemIcon)
     {
@@ -81,15 +112,17 @@ public class InventoryController : Singleton<InventoryController>
         {
             if(SceneController.Instance.GetCurrentSceneName() == "Village")
             {
-                GameObject dropItemPrefab = Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}");
+                GameObject dropItemPrefab = Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}_DropItem");
                 dropItemGo = Instantiate(dropItemPrefab);
+                dropItemGo.name = $"{itemIcon.item.itemData.name}_DropItem";
                 Destroy(dropItemGo.GetComponent<PhotonRigidbodyView>());
                 Destroy(dropItemGo.GetComponent<PhotonView>());
             }
             else
             {
-                dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", playerTest.dropItemPosition.position, Quaternion.identity);
+                dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}_DropItem", playerTest.dropItemPosition.position, Quaternion.identity);
             }
+            dropItemGo.name = $"{itemIcon.item.itemData.name}_DropItem";
             itemIcon.dropItem = dropItemGo;
             DropItem dropItem = dropItemGo.GetComponent<DropItem>();
             dropItem.itemIcon = itemIcon.gameObject;
@@ -107,7 +140,7 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void SetDropItemToItemIcon(ItemIcon itemIcon)
     {
-        GameObject dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}", playerTest.dropItemPosition.position, Quaternion.identity);
+        GameObject dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}_DropItem", playerTest.dropItemPosition.position, Quaternion.identity);
         DropItem dropItem = dropItemGo.GetComponent<DropItem>();
         dropItem.SetItem(itemIcon.item);
         dropItem.itemIcon = itemIcon.gameObject;

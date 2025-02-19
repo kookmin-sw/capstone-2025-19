@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using static WareHouseDB;
+
 #if UNITY_EDITOR
 using static UnityEditor.Progress;
 #endif
@@ -33,6 +35,8 @@ public class InventoryController : Singleton<InventoryController>
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
     public int money = 0;
+    [HideInInspector]
+    public List<Item> wareHouse = new List<Item>();
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
     public ItemIcon SelectedItemIcon { get => selectedItemIcon; set { selectedItemIcon = value; } }
 
@@ -247,6 +251,13 @@ public class InventoryController : Singleton<InventoryController>
     public void LoadInventoryItem(PlayerInventory.InventoryItem inventoryItem)
     {
         Debug.Log($"아이템 로드중... {inventoryItem.itemName}");
+        //TODO create itemIcon
+        //TODO insert InventoryPanel
+    }
+
+    public void LoadWareHouseItem(WareHouseDB.WareHouseItem wareHouseItem)
+    {
+        Debug.Log($"아이템 로드중... {wareHouseItem.itemName}");
         //TODO create itemIcon
         //TODO insert InventoryPanel
     }

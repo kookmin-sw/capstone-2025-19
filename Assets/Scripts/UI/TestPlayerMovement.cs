@@ -90,11 +90,6 @@ public class TestPlayerMovement : MonoBehaviour
                 InventoryController.Instance.EnterDropItem(other.GetComponent<DropItem>());
             }
 
-        }else if (other.CompareTag("Test"))
-        {
-            other.GetComponent<TestClass>().SetUpdate(InventoryController.Instance.testID);
-            //other.GetComponent<TestClass>().testID = InventoryController.Instance.testID;
-            Debug.Log($"testPhoton {other.GetComponent<TestClass>().testID.ID}");
         }
     }
     //Function Player dectected objects

@@ -38,7 +38,6 @@ public class InventoryController : Singleton<InventoryController>
 
     DropItem testDropITem;
 
-    public TestID testID;
 
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
@@ -55,7 +54,7 @@ public class InventoryController : Singleton<InventoryController>
     {
         //TODO 아이템 저장하기 전에 new List 하기
         base.Awake();
-        testID = new TestID();
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -280,7 +279,7 @@ public class InventoryController : Singleton<InventoryController>
         }*/
     }
 
-    public void LoadInventoryItem(PlayerInventory.InventoryItem inventoryItem)
+    public void LoadInventoryItem(PlayerInventoryDB.InventoryItem inventoryItem)
     {
         Debug.Log($"아이템 로드중... {inventoryItem.itemName}");
         //TODO create itemIcon
@@ -316,10 +315,7 @@ public class InventoryController : Singleton<InventoryController>
         }
     }
 
-    public void SetTestClassID()
-    {
-        testID.ID += 1;
-    }
+   
 
     public void UpDurability()
     {

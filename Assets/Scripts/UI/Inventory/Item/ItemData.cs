@@ -27,4 +27,6 @@ public class ItemData : ScriptableObject
     public int maxQuantity = 1;
     public int price;
     public int maxItemDurability = 1;
+
+    public WeaponStats weaponStats;
 }

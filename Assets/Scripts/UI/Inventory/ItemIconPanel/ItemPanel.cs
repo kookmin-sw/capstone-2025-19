@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ItemPanel : MonoBehaviour
 {
-    [SerializeField] ScrollRect scrollRect;
+    [SerializeField] protected ScrollRect scrollRect;
     // Start is called before the first frame update
     void Start()
     {

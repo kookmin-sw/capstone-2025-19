@@ -21,6 +21,7 @@ public class WareHouseDB : MonoBehaviour
     }
 
     public List<WareHouseItem> wareHouseList = new List<WareHouseItem>();
+    public List<Item> itemList = new List<Item>();
 
     // Start is called before the first frame update
     void Start()
@@ -138,7 +139,6 @@ public class WareHouseDB : MonoBehaviour
     {
         AddItemToWareHouse(item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
     }
-
     public void WareHouseSynchronizeToDB()
     {
         var auth = FirebaseManager.Instance.Auth;

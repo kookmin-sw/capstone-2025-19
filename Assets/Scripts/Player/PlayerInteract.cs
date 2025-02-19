@@ -19,6 +19,9 @@ public class PlayerInteract : MonoBehaviour
     {
         if (other.CompareTag("InteractiveObject"))
         {
+            InteractGo interact = other.GetComponent<InteractGo>();
+            interact.CloseInteract();
+            interact.enabled = false;
             interactGOs.Remove(other.gameObject);
         }
     }
@@ -31,12 +34,16 @@ public class PlayerInteract : MonoBehaviour
 
     void FixedUpdate()
     {
+        //TODO player의 상태가 Idle일 경우
         if (Input.GetKeyDown(KeyCode.E) && interactGOs.Count != 0)
         {
             
             GameObject curObject = interactGOs[0];
-            
-
+            InteractGo interact = curObject.GetComponent<InteractGo>();
+            interact.enabled=true;
+            interact.InteractObject();
+            interactGOs.Remove(curObject);
+            interactGOs.Add(curObject);
         }
     }
 

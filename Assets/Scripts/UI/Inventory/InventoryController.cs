@@ -19,6 +19,7 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] public InventoryPanel inventoryPanel;
     [SerializeField] public DropItemPanel dropItemPanel;
     [SerializeField] public BackpackPanel backpackPanel;
+    [SerializeField] public ChestItemPanel chestItemPanel;
 
     List<ItemIcon> inventoryList;
     public List<DropItem> dropItemList;
@@ -350,6 +351,25 @@ public class InventoryController : Singleton<InventoryController>
             }
         }
         return totalCount;
+    }
+
+    public void SetChestItemPanel(ref List<Item> itemList, WarehouseInteract warehouse)
+    {
+        //TODO player의 상태 Inventory_Chest로 변경
+        
+        chestItemPanel.gameObject.SetActive(true);
+        chestItemPanel.SetWarehouse(warehouse);
+        foreach(Item item in itemList)
+        {
+            CreateItemIcon(item);
+            chestItemPanel.InsertItem(item.itemIcon);
+        }
+    }
+
+    public void DisableChestItempanel()
+    {
+        //TODO player의 상태 Idle로 변경
+
     }
 
 }

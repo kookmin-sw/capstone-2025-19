@@ -12,11 +12,12 @@ public class PlayerManager : MonoBehaviour
     public bool isSprinting;
     public bool isInAir;
     public bool isGrounded;
+    public bool canDoCombo;
 
     
     private void Awake()
     {
-        cameraHandler = CameraHandler.singleton;
+        cameraHandler = FindObjectOfType<CameraHandler>();
     }
 
     void Start()
@@ -42,8 +43,9 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         float delta = Time.deltaTime;
-
         isInteracting = anim.GetBool("isInteracting");
+        canDoCombo = anim.GetBool("canDoCombo");
+
         inputHandler.TickInput(delta);
         playerLocomotion.HandleMovement(delta);
         playerLocomotion.HandleRollingAndSprinting(delta);

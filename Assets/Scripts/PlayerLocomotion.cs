@@ -181,7 +181,7 @@ public class PlayerLocomotion : MonoBehaviour
                 }
                 else
                 {
-                    animatorHandler.PlayTargetAnimation("Locomotion", false);
+                    animatorHandler.PlayTargetAnimation("Empty", false);
                     inAirTimer = 0;
                 }
 
@@ -216,6 +216,17 @@ public class PlayerLocomotion : MonoBehaviour
                 myTransform.position = targetPosition;
             }
         }
+
+        if (playerManager.isInteracting || inputHandler.moveAmount > 0)
+        {
+            myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime / 0.1f);
+        }
+        else
+        {
+            myTransform.position = targetPosition;
+        }
     }
     #endregion
+
+
 }

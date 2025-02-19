@@ -36,6 +36,7 @@ public class CameraHandler : MonoBehaviour
         myTransform = transform;
         defaultPosition = cameraTransform.localPosition.z;
         ignoreLayers = ~(1 << 8 | 1 << 9 | 1 << 10);
+        targetTransform = FindObjectOfType<PlayerManager>().transform;
     }
 
     public void FollowTarget(float delta)
@@ -50,35 +51,35 @@ public class CameraHandler : MonoBehaviour
     private Vector2 currentMouseInput = Vector2.zero;
     public void HandleCameraRotation(float delta, float mouseXInput, float mouseYInput)
     {
-        // ¸¶¿ì½º ÀÔ·Â°ª ¾÷µ¥ÀÌÆ® (ÀÌÀü ÀÔ·Â°ª°ú ºñ±³ÇÏ¿© °¡¼Ó Àû¿ë)
-        currentMouseInput.x = Mathf.Lerp(currentMouseInput.x, mouseXInput, delta * 5f);  // Lerp·Î ºÎµå·¯¿î °¡¼Ó
+        // ï¿½ï¿½ï¿½ì½º ï¿½Ô·Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·Â°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        currentMouseInput.x = Mathf.Lerp(currentMouseInput.x, mouseXInput, delta * 5f);  // Lerpï¿½ï¿½ ï¿½Îµå·¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         currentMouseInput.y = Mathf.Lerp(currentMouseInput.y, mouseYInput, delta * 5f);
 
-        // ¸¶¿ì½º ¼Óµµ Áõ°¡ (°¡¼Ó Àû¿ë)
+        // ï¿½ï¿½ï¿½ì½º ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         mouseAcceleration.x += (currentMouseInput.x * lookSpeed) * delta;
         mouseAcceleration.y += (currentMouseInput.y * pivotSpeed) * delta;
 
-        // °¡¼Óµµ ±â¹Ý È¸Àü°ª ¾÷µ¥ÀÌÆ®
+        // ï¿½ï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
         lookAngle += mouseAcceleration.x;
         pivotAngle -= mouseAcceleration.y;
 
-        // ÃÖ¼Ò/ÃÖ´ë °¢µµ Á¦ÇÑ
+        // ï¿½Ö¼ï¿½/ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
 
-        // YÃà È¸Àü (ÁÂ¿ì)
+        // Yï¿½ï¿½ È¸ï¿½ï¿½ (ï¿½Â¿ï¿½)
         Vector3 rotation = Vector3.zero;
         rotation.y = lookAngle;
         Quaternion targetRotation = Quaternion.Euler(rotation);
         myTransform.rotation = targetRotation;
 
-        // XÃà È¸Àü (»óÇÏ)
+        // Xï¿½ï¿½ È¸ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½)
         rotation = Vector3.zero;
         rotation.x = pivotAngle;
         targetRotation = Quaternion.Euler(rotation);
         cameraPivotTransform.localRotation = targetRotation;
 
-        // °¨¼Ó Àû¿ë (ÀÚ¿¬½º·´°Ô ¿òÁ÷ÀÓ ¸ØÃßµµ·Ï)
-        mouseAcceleration *= 0.9f;  // °¨¼Óµµ 0.9 -> 90% À¯Áö, Á¡ÁøÀûÀ¸·Î ÁÙ¾îµê
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½)
+        mouseAcceleration *= 0.9f;  // ï¿½ï¿½ï¿½Óµï¿½ 0.9 -> 90% ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½
         /*lookAngle += (mouseXInput * lookSpeed) / delta;
         pivotAngle -= (mouseYInput * pivotSpeed) / delta;
         pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);

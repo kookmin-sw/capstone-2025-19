@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using static WareHouseDB;
 using UnityEngine.UI;
 using System;
-
 
 #if UNITY_EDITOR
 using static UnityEditor.Progress;
@@ -45,12 +45,14 @@ public class InventoryController : Singleton<InventoryController>
     public float currentInventoryLoadValue = 0f;
 
     public int money = 0;
+    [HideInInspector]
+    public List<Item> wareHouse = new List<Item>();
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
     public ItemIcon SelectedItemIcon { get => selectedItemIcon; set { selectedItemIcon = value; } }
 
     protected override void Awake()
     {
-        //TODO ¾ÆÀÌÅÛ ÀúÀåÇÏ±â Àü¿¡ new List ÇÏ±â
+        //TODO ì•„ì´í…œ ì €ì¥í•˜ê¸° ì „ì— new List í•˜ê¸°
         base.Awake();
         testID = new TestID();
     }
@@ -70,7 +72,7 @@ public class InventoryController : Singleton<InventoryController>
             
             if(currentInventoryLoadValue + item.quantity * item.itemData.Weight > backpackPanel.GetItemIcon().item.itemData.containerValue)
             {
-                //TODO ³ÖÀ» ¼ö ÀÖ´Â ¸¸Å­ ³Ö±â Drop item
+                //TODO ë„£ì„ ìˆ˜ ìˆëŠ” ë§Œí¼ ë„£ê¸° Drop item
                 dropItemPanel.InsertItem(item.itemIcon);
                 continue;
             }
@@ -165,7 +167,7 @@ public class InventoryController : Singleton<InventoryController>
     {
         GameObject dropItemGo = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/{item.itemData.name}", player.dropItemPosition.position, Quaternion.identity);
         //GameObject dropItemGo = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{item.itemData.name}"));
-        //dropItemGo.transform.position = player.transform.position; //¾ÆÀÌÅÛ ¹ö¸± °÷
+        //dropItemGo.transform.position = player.transform.position; //ì•„ì´í…œ ë²„ë¦´ ê³³
         Debug.Log($"test dropItem Create {item.itemData}");
         DropItem dropItem = dropItemGo.GetComponent<DropItem>();
         dropItem.SetItem(item);
@@ -215,7 +217,7 @@ public class InventoryController : Singleton<InventoryController>
             CreateItemIcon(dropItem.item);
         }
         dropItemPanel.InsertItem(dropItem.item.itemIcon.GetComponent<ItemIcon>());
-        //TODO ItemIcon ¸¸µé¾î¼­ dropItemPanel.InsertItem() ÇÏ±â*/
+        //TODO ItemIcon ë§Œë“¤ì–´ì„œ dropItemPanel.InsertItem() í•˜ê¸°*/
     }
     private void TakeOutDropItemPanel(DropItem dropItem)
     {
@@ -279,7 +281,14 @@ public class InventoryController : Singleton<InventoryController>
 
     public void LoadInventoryItem(PlayerInventory.InventoryItem inventoryItem)
     {
-        Debug.Log($"¾ÆÀÌÅÛ ·ÎµåÁß... {inventoryItem.itemName}");
+        Debug.Log($"ì•„ì´í…œ ë¡œë“œì¤‘... {inventoryItem.itemName}");
+        //TODO create itemIcon
+        //TODO insert InventoryPanel
+    }
+
+    public void LoadWareHouseItem(WareHouseDB.WareHouseItem wareHouseItem)
+    {
+        Debug.Log($"ì•„ì´í…œ ë¡œë“œì¤‘... {wareHouseItem.itemName}");
         //TODO create itemIcon
         //TODO insert InventoryPanel
     }
@@ -333,10 +342,10 @@ public class InventoryController : Singleton<InventoryController>
         int totalCount = 0;
         foreach (Item item in inventory)
         {
-            // ¾ÆÀÌÅÛ ÀÌ¸§ÀÌ quest.target°ú °°ÀºÁö È®ÀÎ
+            // ì•„ì´í…œ ì´ë¦„ì´ quest.targetê³¼ ê°™ì€ì§€ í™•ì¸
             if (item.itemData.name == itemName)
             {
-                // quantity¸¸Å­ ´õÇØÁÜ
+                // quantityë§Œí¼ ë”í•´ì¤Œ
                 totalCount += item.quantity;
             }
         }

@@ -1,19 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Firestore;
 using Firebase.Extensions;
-using System;
-using Unity.VisualScripting;
+using UnityEngine;
 using static PlayerInventory;
 
-public class PlayerInventory : MonoBehaviour
+public class WareHouseDB : MonoBehaviour
 {
 
     [System.Serializable]
-    public class InventoryItem
+    public class WareHouseItem
     {
         public string itemDocId;
         public string itemType;
@@ -21,15 +19,16 @@ public class PlayerInventory : MonoBehaviour
         public int quantity;
         public float durability;
     }
-    
-    public List<InventoryItem> inventory = new List<InventoryItem>();
 
+    public List<WareHouseItem> wareHouseList = new List<WareHouseItem>();
+
+    // Start is called before the first frame update
     void Start()
     {
         // 일정 주기로 Firebase가 준비되었는지 검사
         InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
-        
-        LoadInventoryFromFirestore();
+
+        LoadWareHouseFromFirestore();
     }
 
     void CheckFirebaseReady()
@@ -42,19 +41,7 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        
-        foreach (Item item in InventoryController.Instance.inventory)
-        {
-            itemToInventoryItem(item);
-        }
-
-        InventorySynchronizeToDB();
-        moneySynchronizeToDB();
-    }
-
-    public void LoadInventoryFromFirestore()
+    public void LoadWareHouseFromFirestore()
     {
         var auth = FirebaseManager.Instance.Auth;
         var db = FirebaseManager.Instance.Db;
@@ -66,99 +53,74 @@ public class PlayerInventory : MonoBehaviour
         }
         Debug.Log($"userName : {user.UserId}");
 
-        // money 동기화: Firestore에 저장된 money를 불러와 InventoryController에 반영
-        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
-        moneyRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Failed to load money: " + task.Exception);
-                return;
-            }
-            var snapshot = task.Result;
-            if (snapshot.Exists && snapshot.ContainsField("money"))
-            {
-                // Firestore에서는 숫자 데이터가 long 또는 double로 저장될 수 있음.
-                int money = Convert.ToInt32(snapshot.GetValue<long>("money"));
-                InventoryController.Instance.money = money;
-                Debug.Log("Money loaded: " + money);
-            }
-            else
-            {
-                Debug.Log("No money field in user document. Setting money to 0.");
-                InventoryController.Instance.money = 0;
-            }
-        });
-
 
         CollectionReference inventoryRef = db.Collection("Users")
                                              .Document(user.UserId)
-                                             .Collection("Inventory");
+                                             .Collection("WareHouse");
 
         inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Failed to load inventory: " + task.Exception);
+                Debug.LogError("Failed to load WareHouse: " + task.Exception);
                 return;
             }
             var snapshot = task.Result;
-            inventory.Clear();
+            wareHouseList.Clear();
 
             foreach (var doc in snapshot.Documents)
             {
                 Dictionary<string, object> dict = doc.ToDictionary();
 
-                InventoryItem item = new InventoryItem();
+                WareHouseItem item = new WareHouseItem();
                 item.itemDocId = doc.Id;
                 item.itemType = dict["itemType"].ToString();
                 item.itemName = dict["itemName"].ToString();
                 item.quantity = System.Convert.ToInt32(dict["quantity"]);
                 item.durability = float.Parse(dict["durability"].ToString());
 
-                InventoryController.Instance.LoadInventoryItem(item);
+                InventoryController.Instance.LoadWareHouseItem(item);
             }
 
         });
     }
 
-
-    public void AddItemToInventory(string itemName, string itemType, int addQuantity = 1, float addDurability = 1f)
+    public void AddItemToWareHouse(string itemName, string itemType, int addQuantity = 1, float addDurability = 1f)
     {
         Debug.Log($"itemType {itemType}");
         if (itemType.Equals("Equipment"))
         {
-            
+
             for (int i = 0; i < addQuantity; i++)
             {
                 string uniqueId = System.Guid.NewGuid().ToString();
 
-                InventoryItem newEquip = new InventoryItem()
+                WareHouseItem newEquip = new WareHouseItem()
                 {
                     itemDocId = uniqueId,
                     itemName = itemName,
-                    quantity = 1,           
+                    quantity = 1,
                     durability = addDurability
                 };
-                inventory.Add(newEquip);
+                wareHouseList.Add(newEquip);
             }
         }
         else
         {
-            
-            InventoryItem existing = inventory.Find(i => i.itemName == itemName);
+
+            WareHouseItem existing = wareHouseList.Find(i => i.itemName == itemName);
             if (existing != null)
             {
-                
+
                 existing.quantity += addQuantity;
             }
             else
             {
-                
+
                 string uniqueId = System.Guid.NewGuid().ToString();
 
-                
-                InventoryItem newItem = new InventoryItem()
+
+                WareHouseItem newItem = new WareHouseItem()
                 {
                     itemDocId = uniqueId,
                     itemName = itemName,
@@ -167,44 +129,17 @@ public class PlayerInventory : MonoBehaviour
                     durability = addDurability
                 };
                 Debug.Log($"AddItem : {newItem.itemName}, {newItem.durability}");
-                inventory.Add(newItem);
+                wareHouseList.Add(newItem);
             }
         }
     }
 
     private void itemToInventoryItem(Item item)
     {
-        AddItemToInventory(item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+        AddItemToWareHouse(item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
     }
 
-    // money 값을 DB에 동기화
-    public void moneySynchronizeToDB()
-    {
-        var auth = FirebaseManager.Instance.Auth;
-        var db = FirebaseManager.Instance.Db;
-        var user = auth.CurrentUser;
-        if (user == null)
-        {
-            Debug.LogError("No logged-in user.");
-            return;
-        }
-
-        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
-        Dictionary<string, object> moneyData = new Dictionary<string, object>()
-        {
-            {"money", InventoryController.Instance.money}
-        };
-
-        moneyRef.SetAsync(moneyData, SetOptions.MergeAll).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-                Debug.LogError("Failed to sync money: " + task.Exception);
-            else
-                Debug.Log("Money synchronized to DB: " + InventoryController.Instance.money);
-        });
-    }
-
-    public void InventorySynchronizeToDB()
+    public void WareHouseSynchronizeToDB()
     {
         var auth = FirebaseManager.Instance.Auth;
         var db = FirebaseManager.Instance.Db;
@@ -217,29 +152,29 @@ public class PlayerInventory : MonoBehaviour
 
         CollectionReference inventoryRef = db.Collection("Users")
             .Document(user.UserId)
-            .Collection("Inventory");
+            .Collection("WareHouse");
 
-        
+
         inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(loadTask =>
         {
             if (loadTask.IsFaulted)
             {
-                Debug.LogError("Failed to load DB inventory: " + loadTask.Exception);
+                Debug.LogError("Failed to load DB WareHouse: " + loadTask.Exception);
                 return;
             }
 
             QuerySnapshot snapshot = loadTask.Result;
             HashSet<string> processedDocIds = new HashSet<string>();
 
-            
+
             foreach (DocumentSnapshot doc in snapshot.Documents)
             {
                 string docId = doc.Id;
-                InventoryItem localItem = inventory.Find(i => i.itemDocId == docId);
+                WareHouseItem localItem = wareHouseList.Find(i => i.itemDocId == docId);
 
                 if (localItem == null)
                 {
-                    
+
                     inventoryRef.Document(docId).DeleteAsync();
                 }
                 else
@@ -272,8 +207,8 @@ public class PlayerInventory : MonoBehaviour
                 }
             }
 
-            
-            foreach (InventoryItem localItem in inventory)
+
+            foreach (WareHouseItem localItem in wareHouseList)
             {
                 if (!processedDocIds.Contains(localItem.itemDocId))
                 {
@@ -292,7 +227,7 @@ public class PlayerInventory : MonoBehaviour
                             Debug.LogError("New item add failed: " + t.Exception);
                         else
                             Debug.Log("Sync 완료");
-                            
+
                     });
                 }
             }
@@ -300,5 +235,4 @@ public class PlayerInventory : MonoBehaviour
             Debug.Log("[Sync! (No Coroutine)");
         });
     }
-
 }

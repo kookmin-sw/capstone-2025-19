@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105dc701a5f2f4544a2504101dc53d92, type: 3}
   m_Name: Backpack
   m_EditorClassIdentifier: 
+  itemType_: 3
   itemIcon: {fileID: 21300000, guid: fae38f10aade40a4b82489fbfa422b9b, type: 3}
   itemType: Potion
-  size: 0
-  Weight: 0
+  size: 10
+  Weight: 10
   isUse: 0
-  isContainer: 0
-  maxQuantity: 0
+  containerValue: 50
+  maxQuantity: 1
   price: 0
-  maxItemDurability: 0
+  maxItemDurability: 1

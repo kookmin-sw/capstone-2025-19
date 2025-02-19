@@ -7,7 +7,11 @@ using UnityEngine.UI;
 public class DebugText : Singleton<DebugText>
 {
     [SerializeField] TextMeshProUGUI text;
-    
+
+    private void Start()
+    {
+        text.raycastTarget = false;
+    }
 
     public void Debug(string text)
     {

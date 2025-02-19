@@ -19,6 +19,7 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Debug.Log("itemIcon test");
         if(PlayerState.Instance.state == PlayerState.State.Inventory)
         {
             rectTransform = Instantiate(itemIconAlphaPrefab, InventoryController.Instance.itemIconParent).GetComponent<RectTransform>();
@@ -63,5 +64,5 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         //TODO 더블클릭 시 여러 기능 추가
     }
 
-    
+ 
 }

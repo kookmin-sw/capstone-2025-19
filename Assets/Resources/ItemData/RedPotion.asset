@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105dc701a5f2f4544a2504101dc53d92, type: 3}
   m_Name: RedPotion
   m_EditorClassIdentifier: 
+  itemType_: 0
   itemIcon: {fileID: 21300000, guid: 1b5b5eb5942649d41a5df0b4ff5712e2, type: 3}
   itemType: Potion
-  size: 0
-  Weight: 0
+  size: 4
+  Weight: 0.3
   isUse: 0
-  isContainer: 0
-  maxQuantity: 0
+  containerValue: 0
+  maxQuantity: 15
   price: 0
-  maxItemDurability: 0
+  maxItemDurability: 15

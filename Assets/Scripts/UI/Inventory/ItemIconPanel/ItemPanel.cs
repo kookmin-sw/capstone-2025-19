@@ -25,7 +25,12 @@ public class ItemPanel : MonoBehaviour
             //TODO 드래그 하고 있는 사이 다른 사람이 먹었거나 아이템이 멀리 떨어지게 되었거나
             return;
         }*/
-        DropItemPanel dropItemPanel = itemIcon.itemPanel as DropItemPanel;
+
+        if(itemIcon.itemPanel != null)
+        {
+            itemIcon.itemPanel.TakeOutItem(this, itemIcon);
+        }
+        /*DropItemPanel dropItemPanel = itemIcon.itemPanel as DropItemPanel;
         DropItemPanel thisItemPanel = this as DropItemPanel;
         InventoryPanel inventoryPanel = itemIcon.itemPanel as InventoryPanel;
         InventoryPanel thisItemPanel_ = this as InventoryPanel;
@@ -37,11 +42,14 @@ public class ItemPanel : MonoBehaviour
         else if(inventoryPanel != null && thisItemPanel_ == null)
         {
             InventoryController.Instance.inventory.Remove(itemIcon.item);
+        }*/
+        if(scrollRect != null)
+        {
+            itemIcon.transform.SetParent(scrollRect.content);
         }
-        itemIcon.transform.SetParent(scrollRect.content);
         itemIcon.itemPanel = this;
     }
-    public virtual void TakeOutItem(Item item)
+    public virtual void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)
     {
         //TODO ItemIcon setActive false 시키기, 혹은 지우기
     }

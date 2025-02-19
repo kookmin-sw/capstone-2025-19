@@ -9,6 +9,8 @@ public class ItemData : ScriptableObject
     {
         Potion,
         Weapon,
+        Armor,
+        Backpack,
 
     }
     public ItemType itemType_;
@@ -16,13 +18,13 @@ public class ItemData : ScriptableObject
     public Sprite itemIcon;
     public string itemType;
 
-    public float size;
-    public float Weight;
+    public float size = 1;
+    public float Weight = 1;
 
     public bool isUse;
-    public bool isContainer;
+    public float containerValue;
 
-    public int maxQuantity;
+    public int maxQuantity = 1;
     public int price;
-    public int maxItemDurability;
+    public int maxItemDurability = 1;
 }

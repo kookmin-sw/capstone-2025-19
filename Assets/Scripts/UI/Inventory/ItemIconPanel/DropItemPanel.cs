@@ -13,8 +13,12 @@ public class DropItemPanel : ItemPanel
         }
         base.InsertItem(itemIcon);
     }
-    public override void TakeOutItem(Item item)
+    public override void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)
     {
+        if(itemPanel != this)
+        {
+            InventoryController.Instance.RemoveDropItem(itemIcon.dropItem.GetComponent<DropItem>());
+        }
         /*if (InventoryController.Instance.dropItemList.Contains(item))
         {
             base.TakeOutItem(item);

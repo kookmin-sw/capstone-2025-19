@@ -71,7 +71,7 @@ public class TestPlayerMovement : MonoBehaviour
         Vector3 velocity = rb.velocity;
         float forwardSpeed = transform.InverseTransformDirection(velocity).z;
         //print(forwardSpeed.ToString("F2"));
-        anim.SetFloat("forwardSpeed", forwardSpeed);
+        //anim.SetFloat("forwardSpeed", forwardSpeed);
         photonView.RPC("SyncAnimator", RpcTarget.Others, forwardSpeed);
     }
     

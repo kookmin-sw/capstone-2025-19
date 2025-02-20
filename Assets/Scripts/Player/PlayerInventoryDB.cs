@@ -7,7 +7,7 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using System;
 using Unity.VisualScripting;
-using static PlayerInventory;
+using static PlayerInventoryDB;
 
 public class PlayerInventoryDB : MonoBehaviour
 {

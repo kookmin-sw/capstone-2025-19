@@ -22,7 +22,7 @@ public class InputHandler : MonoBehaviour
 
     PlayerControls inputActions;
     PlayerAttacker playerAttacker;
-    PlayerInventory playerInventory;
+    //PlayerInventory playerInventory;
     PlayerManager playerManager;
 
     Vector2 movementInput;
@@ -31,7 +31,7 @@ public class InputHandler : MonoBehaviour
     void Awake()
     {
         playerAttacker = GetComponent<PlayerAttacker>();
-        playerInventory = GetComponent<PlayerInventory>();
+        //playerInventory = GetComponent<PlayerInventory>();
         playerManager = GetComponent<PlayerManager>();
     }
 
@@ -98,21 +98,23 @@ public class InputHandler : MonoBehaviour
             if(playerManager.canDoCombo)
             {
                 comboFlag = true;
-                playerAttacker.HandleWeaponCombo(playerInventory.rightWeapon);
+                //playerAttacker.HandleWeaponCombo(playerInventory.rightWeapon);
+                playerAttacker.HandleWeaponCombo(InventoryController.Instance.weaponPanel.GetWeapon());
                 comboFlag = false;
             }
             else
             {
                 if (playerManager.isInteracting) return;
                 if (playerManager.canDoCombo) return;
-                playerAttacker.HandleLightAttack(playerInventory.rightWeapon);
+                //playerAttacker.HandleLightAttack(playerInventory.rightWeapon);
+                playerAttacker.HandleLightAttack(InventoryController.Instance.weaponPanel.GetWeapon());
             }
         }
 
         if(rt_Input)
         {
             if (playerManager.isInteracting) return;
-            playerAttacker.HandleHeavyAttack(playerInventory.leftWeapon);
+            playerAttacker.HandleHeavyAttack(InventoryController.Instance.weaponPanel.GetWeapon());
         }
     }
 }

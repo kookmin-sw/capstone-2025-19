@@ -29,6 +29,7 @@ public class Weaponpanel : ItemPanel
         base.InsertItem(itemIcon);
         itemIcon.transform.SetParent(transform);
         //TODO player에게 무기 쥐어주기
+        WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
     }
     public override void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)
     {
@@ -38,5 +39,14 @@ public class Weaponpanel : ItemPanel
     private void ChangeWeapon()
     {
         //TODO ChangeWeapon
+    }
+
+    public WeaponStats GetWeapon()
+    {
+        if (weaponItemIcon != null)
+        {
+            return weaponItemIcon.item.itemData.weaponStats;
+        }
+        return null;
     }
 }

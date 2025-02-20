@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponSlotManager : MonoBehaviour
+public class WeaponSlotManager : Singleton<WeaponSlotManager>
 {
     WeaponHolderSlot leftHandSlot;
     WeaponHolderSlot rightHandSlot;
@@ -10,8 +10,9 @@ public class WeaponSlotManager : MonoBehaviour
     DamageCollider leftHandDamageCollider;
     DamageCollider rightHandDamageCollider;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
         foreach(WeaponHolderSlot weaponSlot in weaponHolderSlots)
         {

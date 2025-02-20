@@ -5,7 +5,7 @@ using Firebase.Auth;
 using Firebase.Firestore;
 using Firebase.Extensions;
 using UnityEngine;
-using static PlayerInventory;
+using static PlayerInventoryDB;
 
 public class WareHouseDB : MonoBehaviour
 {

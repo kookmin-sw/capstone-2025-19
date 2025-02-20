@@ -20,6 +20,7 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] public DropItemPanel dropItemPanel;
     [SerializeField] public BackpackPanel backpackPanel;
     [SerializeField] public ChestItemPanel chestItemPanel;
+    [SerializeField] public Weaponpanel weaponPanel;
 
     List<ItemIcon> inventoryList;
     public List<DropItem> dropItemList;

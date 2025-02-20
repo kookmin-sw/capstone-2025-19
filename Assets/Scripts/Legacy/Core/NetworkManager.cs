@@ -12,6 +12,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public TextMeshProUGUI connectionInfoText; // 네트워크 정보를 표시할 텍스트
     public Button joinButton; // 룸 접속 버튼
+    public string sceneName = "Sandbox";
 
     // 게임 실행과 동시에 마스터 서버 접속 시도
     private void Start()
@@ -95,6 +96,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         connectionInfoText.text = "Load Completed";
         // 모든 룸 참가자들이 Main 씬을 로드하게 함
         //PhotonNetwork.LoadLevel("Main");
-        PhotonNetwork.LoadLevel("DropItemTestScene");
+        PhotonNetwork.LoadLevel(sceneName);
     }
 }

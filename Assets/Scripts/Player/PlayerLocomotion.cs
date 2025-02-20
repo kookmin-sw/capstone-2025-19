@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class PlayerLocomotion : MonoBehaviour
+public class PlayerLocomotion : MonoBehaviourPun
 {
     PlayerManager playerManager;
     Transform cameraObject;
@@ -73,6 +74,7 @@ public class PlayerLocomotion : MonoBehaviour
     
     public void HandleMovement(float delta)
     {
+        if (!photonView.IsMine) return;
         if (inputHandler.rollFlag) return;
         if (playerManager.isInteracting) return;
 
@@ -225,6 +227,25 @@ public class PlayerLocomotion : MonoBehaviour
         {
             myTransform.position = targetPosition;
         }
+    }
+    
+    public void HandleJumping()
+    {
+        if (playerManager.isInteracting) return;
+
+        if (inputHandler.jump_input)
+        {
+            if (inputHandler.moveAmount > 0)
+            {
+                moveDirection = cameraObject.forward * inputHandler.vertical;
+                moveDirection += cameraObject.right * inputHandler.horizontal;
+                animatorHandler.PlayTargetAnimation("Jump", true);
+                moveDirection.y = 0;
+                Quaternion jumpRotation = Quaternion.LookRotation(moveDirection);
+                myTransform.rotation = jumpRotation;
+            }
+        }
+
     }
     #endregion
 

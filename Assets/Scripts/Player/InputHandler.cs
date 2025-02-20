@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Photon.Realtime;
 using RPGCharacterAnims.Actions;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class InputHandler : MonoBehaviour
     public bool b_Input;
     public bool rb_Input;
     public bool rt_Input;
+    public bool jump_input;
 
     public bool rollFlag;
     public bool sprintFlag;
@@ -57,6 +59,7 @@ public class InputHandler : MonoBehaviour
         MoveInput(delta);
         HandleRollInput(delta);
         HandleAttackInput(delta);
+        HandleJumpInput();
     }
 
     private void MoveInput(float delta)
@@ -112,7 +115,12 @@ public class InputHandler : MonoBehaviour
         if(rt_Input)
         {
             if (playerManager.isInteracting) return;
-            playerAttacker.HandleHeavyAttack(playerInventory.leftWeapon);
+            playerAttacker.HandleHeavyAttack(playerInventory.rightWeapon);
         }
+    }
+
+    private void HandleJumpInput()
+    {
+        inputActions.PlayerActions.Jump.performed += i => jump_input = true;
     }
 }

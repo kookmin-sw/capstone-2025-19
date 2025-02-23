@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Photon.Realtime;
 using RPGCharacterAnims.Actions;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class InputHandler : MonoBehaviour
     public bool b_Input;
     public bool rb_Input;
     public bool rt_Input;
+    public bool jump_input;
 
     public bool rollFlag;
     public bool sprintFlag;
@@ -58,6 +60,7 @@ public class InputHandler : MonoBehaviour
         MoveInput(delta);
         HandleRollInput(delta);
         HandleAttackInput(delta);
+        HandleJumpInput();
     }
 
     private void MoveInput(float delta)
@@ -119,6 +122,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     private void SetInventoryState()
     {
         if(PlayerState.Instance.state == PlayerState.State.Inventory)
@@ -129,5 +133,10 @@ public class InputHandler : MonoBehaviour
         {
             PlayerState.Instance.ChangeState(PlayerState.State.Inventory);
         }
+=======
+    private void HandleJumpInput()
+    {
+        inputActions.PlayerActions.Jump.performed += i => jump_input = true;
+>>>>>>> 171c628a2c1476453c1bcc998fe411821512bff8
     }
 }

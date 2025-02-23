@@ -1300,7 +1300,16 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'Dog01_l'\n\tTransform 'Nose01'\n\tTransform
+    'Dog02_l'\n\tTransform 'Dog01_r'\n\tTransform 'Dog02_r'\n\tTransform 'Nose01'\n\tTransform
+    'Nose02'\n\tTransform 'Nose02'\n\tTransform 'Dog01_l'\n\tTransform 'Nose01'\n\tand
+    more ...\n\tFrom animation clip 'Idle_Battle'\n\tFrom animation clip 'Attack01'\n\tFrom
+    animation clip 'Attack02'\n\tFrom animation clip 'Defend'\n\tFrom animation clip
+    'GetHit'\n\tFrom animation clip 'Dizzy'\n\tFrom animation clip 'Die'\n\tFrom
+    animation clip 'DieRecover'\n\tFrom animation clip 'RunForwardBattle'\n\tFrom
+    animation clip 'WalkForwardBattle'\n\tand more ..."
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

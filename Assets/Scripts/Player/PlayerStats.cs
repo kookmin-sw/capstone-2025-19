@@ -15,6 +15,7 @@ public class PlayerStats : MonoBehaviour
     void Awake()
     {
         animatorHandler = GetComponentInChildren<AnimatorHandler>();
+        healthBar = FindFirstObjectByType<HealthBar>();
     }
 
     void Start()

@@ -204,6 +204,54 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PlayerInteract"",
+            ""id"": ""3ec58611-84e9-46b6-ac8c-c2f20a8df1e5"",
+            ""actions"": [
+                {
+                    ""name"": ""InventoryState"",
+                    ""type"": ""Button"",
+                    ""id"": ""ee224965-2083-4428-a00d-8215b1ce4958"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""fbc8cfc5-8d6b-4478-b491-6f6beaa6b62f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f7f9277c-f726-4731-81c9-db4a0838ced8"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InventoryState"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a3fcfd4-6ed4-490f-ae5f-89c9e813975f"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -217,12 +265,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_Roll = m_PlayerActions.FindAction("Roll", throwIfNotFound: true);
         m_PlayerActions_RB = m_PlayerActions.FindAction("RB", throwIfNotFound: true);
         m_PlayerActions_RT = m_PlayerActions.FindAction("RT", throwIfNotFound: true);
+        // PlayerInteract
+        m_PlayerInteract = asset.FindActionMap("PlayerInteract", throwIfNotFound: true);
+        m_PlayerInteract_InventoryState = m_PlayerInteract.FindAction("InventoryState", throwIfNotFound: true);
+        m_PlayerInteract_Interact = m_PlayerInteract.FindAction("Interact", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
     {
         UnityEngine.Debug.Assert(!m_PlayerMovement.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerMovement.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerActions.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_PlayerInteract.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerInteract.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -396,6 +449,60 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
+
+    // PlayerInteract
+    private readonly InputActionMap m_PlayerInteract;
+    private List<IPlayerInteractActions> m_PlayerInteractActionsCallbackInterfaces = new List<IPlayerInteractActions>();
+    private readonly InputAction m_PlayerInteract_InventoryState;
+    private readonly InputAction m_PlayerInteract_Interact;
+    public struct PlayerInteractActions
+    {
+        private @PlayerControls m_Wrapper;
+        public PlayerInteractActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @InventoryState => m_Wrapper.m_PlayerInteract_InventoryState;
+        public InputAction @Interact => m_Wrapper.m_PlayerInteract_Interact;
+        public InputActionMap Get() { return m_Wrapper.m_PlayerInteract; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(PlayerInteractActions set) { return set.Get(); }
+        public void AddCallbacks(IPlayerInteractActions instance)
+        {
+            if (instance == null || m_Wrapper.m_PlayerInteractActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PlayerInteractActionsCallbackInterfaces.Add(instance);
+            @InventoryState.started += instance.OnInventoryState;
+            @InventoryState.performed += instance.OnInventoryState;
+            @InventoryState.canceled += instance.OnInventoryState;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+        }
+
+        private void UnregisterCallbacks(IPlayerInteractActions instance)
+        {
+            @InventoryState.started -= instance.OnInventoryState;
+            @InventoryState.performed -= instance.OnInventoryState;
+            @InventoryState.canceled -= instance.OnInventoryState;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+        }
+
+        public void RemoveCallbacks(IPlayerInteractActions instance)
+        {
+            if (m_Wrapper.m_PlayerInteractActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IPlayerInteractActions instance)
+        {
+            foreach (var item in m_Wrapper.m_PlayerInteractActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_PlayerInteractActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public PlayerInteractActions @PlayerInteract => new PlayerInteractActions(this);
     public interface IPlayerMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -406,5 +513,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnRoll(InputAction.CallbackContext context);
         void OnRB(InputAction.CallbackContext context);
         void OnRT(InputAction.CallbackContext context);
+    }
+    public interface IPlayerInteractActions
+    {
+        void OnInventoryState(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

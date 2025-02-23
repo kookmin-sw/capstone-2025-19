@@ -42,6 +42,7 @@ public class InputHandler : MonoBehaviour
             inputActions = new PlayerControls();
             inputActions.PlayerMovement.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
             inputActions.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
+            inputActions.PlayerInteract.InventoryState.performed += ctx => SetInventoryState();
         }
 
         inputActions.Enable();
@@ -115,6 +116,18 @@ public class InputHandler : MonoBehaviour
         {
             if (playerManager.isInteracting) return;
             playerAttacker.HandleHeavyAttack(InventoryController.Instance.weaponPanel.GetWeapon());
+        }
+    }
+
+    private void SetInventoryState()
+    {
+        if(PlayerState.Instance.state == PlayerState.State.Inventory)
+        {
+            PlayerState.Instance.ChangeState(PlayerState.State.Idle);
+        }
+        else
+        {
+            PlayerState.Instance.ChangeState(PlayerState.State.Inventory);
         }
     }
 }

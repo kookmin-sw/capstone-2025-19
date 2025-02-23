@@ -13,7 +13,8 @@ using static UnityEditor.Progress;
 public class InventoryController : Singleton<InventoryController>
 {
     [SerializeField] CanvasGroup canvasGroup;
-    public TestPlayerMovement player;
+    //public TestPlayerMovement player;
+    public PlayerManager player;
     [SerializeField] GameObject itemIconPrefab;
 
     [SerializeField] public InventoryPanel inventoryPanel;
@@ -30,7 +31,6 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] Slider inventoryLoadRateSlider;
 
     [SerializeField] public Transform popupParent;
-
 
 
     public PlayerTest playerTest;
@@ -294,7 +294,7 @@ public class InventoryController : Singleton<InventoryController>
         //TODO insert InventoryPanel
     }
 
-    public void SetPlayer(TestPlayerMovement player)
+    public void SetPlayer(PlayerManager player)
     {
         if(this.player == null)
         {

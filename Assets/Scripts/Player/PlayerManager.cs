@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour
     Animator anim;
     CameraHandler cameraHandler;
     PlayerLocomotion playerLocomotion;
+    [SerializeField] public Transform dropItemPosition;
     public bool isInteracting;
     public bool isSprinting;
     public bool isInAir;

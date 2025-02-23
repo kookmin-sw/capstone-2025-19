@@ -40,6 +40,7 @@ public class PlayerStats : MonoBehaviour
         {
             currentHealth = 0;
             animatorHandler.PlayTargetAnimation("Death", true);
+            PlayerState.Instance.ChangeState(PlayerState.State.Death);
         }
     }
 }

@@ -121,11 +121,9 @@ public class InputHandler : MonoBehaviour
             playerAttacker.HandleHeavyAttack(InventoryController.Instance.weaponPanel.GetWeapon());
         }
     }
-
-<<<<<<< HEAD
     private void SetInventoryState()
     {
-        if(PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.state == PlayerState.State.Inventory)
         {
             PlayerState.Instance.ChangeState(PlayerState.State.Idle);
         }
@@ -133,10 +131,11 @@ public class InputHandler : MonoBehaviour
         {
             PlayerState.Instance.ChangeState(PlayerState.State.Inventory);
         }
-=======
+    }
+
     private void HandleJumpInput()
     {
         inputActions.PlayerActions.Jump.performed += i => jump_input = true;
->>>>>>> 171c628a2c1476453c1bcc998fe411821512bff8
+
     }
 }

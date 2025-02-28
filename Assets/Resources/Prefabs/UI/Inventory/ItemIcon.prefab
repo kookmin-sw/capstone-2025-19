@@ -285,10 +285,11 @@ MonoBehaviour:
   itemImageInfo: {fileID: 7117607569572015046}
   itemSliderInfo: {fileID: 8500707519024228533}
   item:
+    itemIcon: {fileID: 0}
     itemData: {fileID: 0}
     quantity: 0
     durability: 0
-  dropItem: {fileID: 4224447294295844274}
+  dropItem: {fileID: 0}
   itemPanel: {fileID: 0}
 --- !u!114 &6157024515327220372
 MonoBehaviour:
@@ -384,7 +385,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 414892849610140215}
   m_HandleRect: {fileID: 0}

@@ -14,7 +14,8 @@ public class InventoryController : Singleton<InventoryController>
 {
     [SerializeField] CanvasGroup canvasGroup;
     //public TestPlayerMovement player;
-    public PlayerManager player;
+    //public PlayerManager player;
+    public PlayerTrigger player;
     [SerializeField] GameObject itemIconPrefab;
 
     [SerializeField] public InventoryPanel inventoryPanel;
@@ -22,6 +23,8 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] public BackpackPanel backpackPanel;
     [SerializeField] public ChestItemPanel chestItemPanel;
     [SerializeField] public Weaponpanel weaponPanel;
+
+    [SerializeField] public DistributionPanel distributionPanel;
 
     List<ItemIcon> inventoryList;
     public List<DropItem> dropItemList;
@@ -70,8 +73,8 @@ public class InventoryController : Singleton<InventoryController>
         
         foreach(Item item in inventory)
         {
-            
-            if(currentInventoryLoadValue + item.quantity * item.itemData.Weight > backpackPanel.GetItemIcon().item.itemData.containerValue)
+
+            if (currentInventoryLoadValue + item.quantity * item.itemData.Weight > backpackPanel.GetContainerValue())
             {
                 //TODO 넣을 수 있는 만큼 넣기 Drop item
                 dropItemPanel.InsertItem(item.itemIcon);
@@ -98,6 +101,13 @@ public class InventoryController : Singleton<InventoryController>
         ItemIcon itemIcon = itemIconGo.GetComponent<ItemIcon>();
         itemIcon.SetItem(item);
     }
+    public ItemIcon GetCreateItemIcon(Item item)
+    {
+        GameObject itemIconGo = Instantiate(itemIconPrefab);
+        ItemIcon itemIcon = itemIconGo.GetComponent<ItemIcon>();
+        itemIcon.SetItem(item);
+        return itemIcon;
+    }
     public void CreateItemIcon(DropItem dropItem)
     {
         GameObject itemIconGo = Instantiate(itemIconPrefab);
@@ -113,11 +123,12 @@ public class InventoryController : Singleton<InventoryController>
         GameObject dropItemGo;
         if (itemIcon.dropItem == null)
         {
-            if(SceneController.Instance.GetCurrentSceneName() == "Village")
+            if(SceneController.Instance.GetCurrentSceneName() != "Dungeon_Multiplay")
             {
                 GameObject dropItemPrefab = Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}_DropItem");
                 dropItemGo = Instantiate(dropItemPrefab);
                 dropItemGo.name = $"{itemIcon.item.itemData.name}_DropItem";
+                dropItemGo.transform.position = player.dropItemPosition.position;
                 Destroy(dropItemGo.GetComponent<PhotonRigidbodyView>());
                 Destroy(dropItemGo.GetComponent<PhotonView>());
             }
@@ -162,6 +173,9 @@ public class InventoryController : Singleton<InventoryController>
     {
         dropItem.RemoveDropItem();
     }
+
+    
+    
     
 
     /*public void CreateDropItem_(Item item)
@@ -294,7 +308,7 @@ public class InventoryController : Singleton<InventoryController>
         //TODO insert InventoryPanel
     }
 
-    public void SetPlayer(PlayerManager player)
+    public void SetPlayer(PlayerTrigger player)
     {
         if(this.player == null)
         {

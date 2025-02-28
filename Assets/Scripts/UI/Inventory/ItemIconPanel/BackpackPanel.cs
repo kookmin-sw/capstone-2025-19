@@ -73,4 +73,10 @@ public class BackpackPanel : ItemPanel
     {
         return backpackitemIcon;
     }
+
+    public float GetContainerValue()
+    {
+        if (backpackitemIcon != null) { return backpackitemIcon.item.itemData.containerValue; }
+        else { return defaultLoadValue; }
+    }
 }

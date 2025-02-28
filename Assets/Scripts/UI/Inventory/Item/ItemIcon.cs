@@ -43,12 +43,32 @@ public class ItemIcon : MonoBehaviour
     }
     private void SetSlider(Item item)
     {
-        if (item.itemData.maxItemDurability == 1) { durabilitySlider.gameObject.SetActive(false); }
-        else { durabilitySlider.gameObject.SetActive(true); }
-        durabilitySlider.maxValue = this.item.itemData.maxQuantity;
-        durabilitySlider.value = this.item.durability;
+        this.item = item;
+        if(item.itemData.itemType_ == ItemData.ItemType.Weapon)
+        {
+            durabilitySlider.gameObject.SetActive(true);
+            durabilitySlider.maxValue = this.item.itemData.maxItemDurability;
+            durabilitySlider.value = this.item.durability;
+        }
+        else if(item.itemData.itemType_ == ItemData.ItemType.Potion)
+        {
+            durabilitySlider.gameObject.SetActive(true);
+            durabilitySlider.maxValue = this.item.itemData.maxQuantity;
+            durabilitySlider.value = this.item.quantity;
+        }
+        
         SetDurabilityColor(item.itemData);
         itemSliderInfo.GetItem(item);
+    }
+    public void SetSlider()
+    {
+        if(item.itemData.itemType_ == ItemData.ItemType.Potion)
+        {
+            durabilitySlider.value = this.item.quantity;
+        }else if(item.itemData.itemType_ == ItemData.ItemType.Weapon)
+        {
+            durabilitySlider.value = this.item.durability;
+        }
     }
 
     private void SetDurabilityColor(ItemData itemData)
@@ -70,6 +90,16 @@ public class ItemIcon : MonoBehaviour
             Debug.Log(durabilityPercent);
             fillImage.color = new Color32(184, 33, 35, 255);
         }
+    }
+
+    public bool PlusItemQuantity(ref Item item)
+    {
+        this.item.quantity += item.quantity;
+        if(this.item.quantity > this.item.itemData.maxQuantity)
+        {
+            item.quantity = this.item.itemData.maxQuantity -= this.item.quantity;
+            return false;
+        }return true;
     }
     
 }

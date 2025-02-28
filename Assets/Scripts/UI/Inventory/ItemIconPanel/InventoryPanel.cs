@@ -8,11 +8,8 @@ public class InventoryPanel : ItemPanel
     
     public override void InsertItem(ItemIcon itemIcon)
     {
-        if(InventoryController.Instance.currentInventoryLoadValue + (itemIcon.item.quantity * itemIcon.item.itemData.Weight) >
-            InventoryController.Instance.backpackPanel.GetItemIcon().item.itemData.containerValue) { 
-            //TODO 개수 만큼 집어넣고 빼기
-            return; }
         base.InsertItem(itemIcon);
+        
         InventoryController.Instance.inventory.Add(itemIcon.GetComponent<ItemIcon>().item);
         InventoryController.Instance.SetInventoryLoadRate();
         Debug.Log($"InsertItem count : {InventoryController.Instance.inventory.Count}");

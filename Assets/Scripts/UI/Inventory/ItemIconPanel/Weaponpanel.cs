@@ -28,6 +28,9 @@ public class Weaponpanel : ItemPanel
         }
         base.InsertItem(itemIcon);
         itemIcon.transform.SetParent(transform);
+        weaponItemIcon = itemIcon;
+        Debug.Log($"itemIcon {itemIcon.item.itemData}");
+        Debug.Log($"itemIcon {itemIcon.item.itemData.weaponStats}");
         //TODO player에게 무기 쥐어주기
         WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
     }

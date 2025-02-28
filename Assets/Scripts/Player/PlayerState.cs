@@ -8,6 +8,7 @@ public class PlayerState : Singleton<PlayerState>
     {
         Idle,
         Inventory,
+        Death,
 
     }
     public State state;

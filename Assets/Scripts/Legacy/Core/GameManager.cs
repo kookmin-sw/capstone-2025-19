@@ -34,8 +34,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         var spawnPosition = spawnPositions[localPlayerIndex % spawnPositions.Length];
 
 
-        GameObject player = PhotonNetwork.Instantiate("Prefabs/TestPlayer", spawnPosition.position, Quaternion.identity);
-        InventoryController.Instance.SetPlayer(player.GetComponent<TestPlayerMovement>());
+        GameObject player = PhotonNetwork.Instantiate("Prefabs/Player/Player", spawnPosition.position, Quaternion.identity);
+        InventoryController.Instance.SetPlayer(player.GetComponent<PlayerManager>());
         virtualCamera.Follow = player.transform;
         virtualCamera.LookAt = player.transform;
     }

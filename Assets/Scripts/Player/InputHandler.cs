@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Photon.Realtime;
 using RPGCharacterAnims.Actions;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class InputHandler : MonoBehaviour
     public bool b_Input;
     public bool rb_Input;
     public bool rt_Input;
+    public bool jump_input;
 
     public bool rollFlag;
     public bool sprintFlag;
@@ -42,6 +44,7 @@ public class InputHandler : MonoBehaviour
             inputActions = new PlayerControls();
             inputActions.PlayerMovement.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
             inputActions.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
+            inputActions.PlayerInteract.InventoryState.performed += ctx => SetInventoryState();
         }
 
         inputActions.Enable();
@@ -57,6 +60,7 @@ public class InputHandler : MonoBehaviour
         MoveInput(delta);
         HandleRollInput(delta);
         HandleAttackInput(delta);
+        HandleJumpInput();
     }
 
     private void MoveInput(float delta)
@@ -116,5 +120,22 @@ public class InputHandler : MonoBehaviour
             if (playerManager.isInteracting) return;
             playerAttacker.HandleHeavyAttack(InventoryController.Instance.weaponPanel.GetWeapon());
         }
+    }
+    private void SetInventoryState()
+    {
+        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+        {
+            PlayerState.Instance.ChangeState(PlayerState.State.Idle);
+        }
+        else
+        {
+            PlayerState.Instance.ChangeState(PlayerState.State.Inventory);
+        }
+    }
+
+    private void HandleJumpInput()
+    {
+        inputActions.PlayerActions.Jump.performed += i => jump_input = true;
+
     }
 }

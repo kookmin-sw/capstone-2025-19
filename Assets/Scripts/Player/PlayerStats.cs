@@ -15,6 +15,7 @@ public class PlayerStats : MonoBehaviour
     void Awake()
     {
         animatorHandler = GetComponentInChildren<AnimatorHandler>();
+        healthBar = FindFirstObjectByType<HealthBar>();
     }
 
     void Start()
@@ -40,6 +41,7 @@ public class PlayerStats : MonoBehaviour
         {
             currentHealth = 0;
             animatorHandler.PlayTargetAnimation("Death", true);
+            PlayerState.Instance.ChangeState(PlayerState.State.Death);
         }
     }
 }

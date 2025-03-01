@@ -46,7 +46,8 @@ public class InventoryController : Singleton<InventoryController>
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
     [HideInInspector]
-    public float currentInventoryLoadValue = 0f;
+    public float currentInventoryWeightValue = 0f;
+    public float currentInventoryItemSizeValue = 0f;
 
     public int money = 0;
     [HideInInspector]
@@ -65,33 +66,71 @@ public class InventoryController : Singleton<InventoryController>
     {
         TestItemIcon();
         SetInventoryCanvas();
-        SetInventoryLoadRate();
+        SetInventorySizeRate();
     }
 
-    public void SetInventoryLoadRate()
+    public void SetInventorySizeRate()
     {
         
         foreach(Item item in inventory)
         {
 
-            if (currentInventoryLoadValue + item.quantity * item.itemData.Weight > backpackPanel.GetContainerValue())
+            /*if (currentInventoryItemSizeValue + item.quantity * item.itemData.size > backpackPanel.GetContainerValue())
             {
                 //TODO 넣을 수 있는 만큼 넣기 Drop item
-                dropItemPanel.InsertItem(item.itemIcon);
+                if(item.itemData.itemType_ == ItemData.ItemType.Objects)
+                {
+                    dropItemPanel.InsertItem(item.itemIcon);
+                }
+                
                 continue;
-            }
-            currentInventoryLoadValue += item.quantity * item.itemData.Weight;
+            }*/
+            currentInventoryItemSizeValue += item.quantity * item.itemData.size;
         }
         backpackPanel.SetBackpack();
+    }
+    public void RemoveItemsUntilUnderMaxWeight()
+    {
+        int tryCount = 0;
+        while(currentInventoryItemSizeValue < backpackPanel.GetContainerValue())
+        {
+            int index = inventory.Count-1;
+            if (inventory[index].itemData.itemType_ == ItemData.ItemType.Objects)
+            {
+                if (backpackPanel.GetContainerValue() < currentInventoryItemSizeValue - inventory[index].GetSize())
+                {
+                    currentInventoryItemSizeValue -= inventory[index].GetSize();
+                    currentInventoryWeightValue -= inventory[index].GetWeight();
+                    dropItemPanel.InsertItem(inventory[index].itemIcon);
+                }
+                else
+                {
+                    float value = currentInventoryItemSizeValue - backpackPanel.GetContainerValue();
+                    int count = (int)(value / inventory[index].GetSize()) + 1;
+                    Item item = new Item(inventory[index].itemData, count, 1);
+                    ItemIcon itemIcon = GetCreateItemIcon(item);
+                    dropItemPanel.InsertItem(itemIcon);
+                    inventory[index].quantity -= count;
+                    inventory[index].itemIcon.GetComponent<ItemIcon>().SetSlider();
+                }
+            }
+            else
+            {
+                currentInventoryItemSizeValue -= inventory[index].GetSize();
+                currentInventoryWeightValue -= inventory[index].GetWeight();
+                dropItemPanel.InsertItem(inventory[index].itemIcon);
+            }
+
+
+            tryCount++;
+            if(tryCount > 100) { Debug.LogError("trycount 100 over");break; }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if(testDropITem != null)
-        {
-            Debug.Log($"test {testDropITem.item.name}");
-        }*/
+        
     }
 
 

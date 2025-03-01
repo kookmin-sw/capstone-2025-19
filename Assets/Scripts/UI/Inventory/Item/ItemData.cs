@@ -11,6 +11,7 @@ public class ItemData : ScriptableObject
         Weapon,
         Armor,
         Backpack,
+        Objects,
 
     }
     public ItemType itemType_;

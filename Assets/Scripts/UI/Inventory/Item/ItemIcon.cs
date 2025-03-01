@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using static UnityEditor.Progress;
 
 public class ItemIcon : MonoBehaviour
 {
@@ -101,6 +102,8 @@ public class ItemIcon : MonoBehaviour
             return false;
         }return true;
     }
+
+    
     
 }
 [Serializable]
@@ -120,6 +123,20 @@ public class Item
         this.itemData = itemData;
         this.quantity = quantity;
         this.durability = durability;
+    }
+    public float GetSize()
+    {
+        switch (this.itemData.itemType_)
+        {
+            case ItemData.ItemType.Objects:
+                return this.itemData.size * this.quantity;
+            default:
+                return this.itemData.size;
+        }
+    }
+    public float GetWeight()
+    {
+        return this.itemData.Weight * this.quantity;
     }
 }
 

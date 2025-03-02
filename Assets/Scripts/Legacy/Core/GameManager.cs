@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         GameObject player = PhotonNetwork.Instantiate("Prefabs/Player/Player", spawnPosition.position, Quaternion.identity);
-        InventoryController.Instance.SetPlayer(player.GetComponent<PlayerManager>());
+        InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
         virtualCamera.Follow = player.transform;
         virtualCamera.LookAt = player.transform;
     }

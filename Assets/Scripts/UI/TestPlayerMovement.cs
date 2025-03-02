@@ -28,15 +28,15 @@ public class TestPlayerMovement : MonoBehaviour
     private void Start()
     {
         
-        if (!photonView.IsMine)
+        /*if (!photonView.IsMine)
         {
             triggerCollider.enabled = false;
-        }
+        }*/
     }
 
     private void Update()
     {
-        if (!photonView.IsMine) return;
+        //if (!photonView.IsMine) return;
         UpdateAnimator();
         Move();
     }
@@ -72,10 +72,10 @@ public class TestPlayerMovement : MonoBehaviour
         float forwardSpeed = transform.InverseTransformDirection(velocity).z;
         //print(forwardSpeed.ToString("F2"));
         //anim.SetFloat("forwardSpeed", forwardSpeed);
-        photonView.RPC("SyncAnimator", RpcTarget.Others, forwardSpeed);
+        //photonView.RPC("SyncAnimator", RpcTarget.Others, forwardSpeed);
     }
     
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("DropItem"))
         {
@@ -109,7 +109,7 @@ public class TestPlayerMovement : MonoBehaviour
             }
 
         }
-    }
+    }*/
     [PunRPC]
     private void SyncAnimator(float forwardSpeed)
     {
@@ -118,7 +118,7 @@ public class TestPlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!photonView.IsMine) return;
+        //if (!photonView.IsMine) return;
 
         rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
     }

@@ -19,7 +19,6 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("itemIcon test");
         if(PlayerState.Instance.state == PlayerState.State.Inventory)
         {
             rectTransform = Instantiate(itemIconAlphaPrefab, InventoryController.Instance.itemIconParent).GetComponent<RectTransform>();
@@ -43,7 +42,17 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         {
             if (InventoryController.Instance.SelectedItemPanel != null)
             {
-                InventoryController.Instance.SelectedItemPanel.InsertItem(itemIcon);
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    //TODO 아이템 분배
+                    Debug.Log("item test");
+                    InventoryController.Instance.distributionPanel.SetItem(InventoryController.Instance.SelectedItemPanel, itemIcon);
+                }
+                else
+                {
+
+                    InventoryController.Instance.SelectedItemPanel.InsertItem(itemIcon);
+                }
             }
             Destroy(rectTransform.gameObject);
             rectTransform = null;

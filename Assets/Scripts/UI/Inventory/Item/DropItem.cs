@@ -31,7 +31,7 @@ public class DropItem : MonoBehaviour
     public void SetItem(Item item)
     {
         
-        if(SceneController.Instance.GetCurrentSceneName() != "Village")
+        if(SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
         {
             string itemData = ChangeData(item);
             DebugText.Instance.Debug($"set item {itemData}");
@@ -97,7 +97,7 @@ public class DropItem : MonoBehaviour
     public void RemoveDropItem()
     {
         itemIcon = null;
-        if (SceneController.Instance.GetCurrentSceneName() != "Village")
+        if (SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
         {
             if (!photonView.IsMine)
             {
@@ -148,7 +148,7 @@ public class DropItem : MonoBehaviour
     public void ActivateDropItem(Transform position)
     {
         this.gameObject.transform.position = position.transform.position;
-        if(SceneController.Instance.GetCurrentSceneName() != "Village")
+        if(SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
         {
             if (!photonView.IsMine)
             {

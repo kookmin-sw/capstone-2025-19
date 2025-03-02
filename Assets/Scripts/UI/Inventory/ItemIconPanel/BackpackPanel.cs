@@ -21,16 +21,12 @@ public class BackpackPanel : ItemPanel
     }
     public override void InsertItem(ItemIcon itemIcon)
     {
-        Debug.Log("test1");
         if(itemIcon.item.itemData.itemType_ != ItemData.ItemType.Backpack) { return; }
-        Debug.Log("test2");
         if (backpackitemIcon != null)
         {
-            Debug.Log("test3");
             ChangeBackpack();
             return;
         }
-        Debug.Log("test4");
         base.InsertItem(itemIcon);
         backpackitemIcon = itemIcon;
         SetBackpack();
@@ -42,17 +38,17 @@ public class BackpackPanel : ItemPanel
     }
     public void SetBackpack()
     {
-        Debug.Log($"{InventoryController.Instance.currentInventoryLoadValue} {backpackitemIcon}");
+        Debug.Log($"{InventoryController.Instance.currentInventoryItemSizeValue} {backpackitemIcon}");
         if(backpackitemIcon != null)
         {
-            loadRate.SetValue(InventoryController.Instance.currentInventoryLoadValue, backpackitemIcon.item.itemData.containerValue);
+            loadRate.SetValue(InventoryController.Instance.currentInventoryItemSizeValue, backpackitemIcon.item.itemData.containerValue);
             backpackitemIcon.transform.SetParent(transform);
             backpackitemIcon.transform.position = transform.position;
             loadRate.backpackName = backpackitemIcon.name;
         }
         else
         {
-            loadRate.SetValue(InventoryController.Instance.currentInventoryLoadValue, defaultLoadValue);
+            loadRate.SetValue(InventoryController.Instance.currentInventoryItemSizeValue, defaultLoadValue);
             loadRate.backpackName = null;
         }
 
@@ -72,5 +68,11 @@ public class BackpackPanel : ItemPanel
     public ItemIcon GetItemIcon()
     {
         return backpackitemIcon;
+    }
+
+    public float GetContainerValue()
+    {
+        if (backpackitemIcon != null) { return backpackitemIcon.item.itemData.containerValue; }
+        else { return defaultLoadValue; }
     }
 }

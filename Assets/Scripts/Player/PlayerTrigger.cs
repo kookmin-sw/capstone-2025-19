@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerTrigger : MonoBehaviour
 {
+    public Transform dropItemPosition;
     // Start is called before the first frame update
     void Start()
     {

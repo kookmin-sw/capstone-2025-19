@@ -14,7 +14,8 @@ public class InventoryController : Singleton<InventoryController>
 {
     [SerializeField] CanvasGroup canvasGroup;
     //public TestPlayerMovement player;
-    public PlayerManager player;
+    //public PlayerManager player;
+    public PlayerTrigger player;
     [SerializeField] GameObject itemIconPrefab;
 
     [SerializeField] public InventoryPanel inventoryPanel;
@@ -22,6 +23,8 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] public BackpackPanel backpackPanel;
     [SerializeField] public ChestItemPanel chestItemPanel;
     [SerializeField] public Weaponpanel weaponPanel;
+
+    [SerializeField] public DistributionPanel distributionPanel;
 
     List<ItemIcon> inventoryList;
     public List<DropItem> dropItemList;
@@ -43,7 +46,8 @@ public class InventoryController : Singleton<InventoryController>
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
     [HideInInspector]
-    public float currentInventoryLoadValue = 0f;
+    public float currentInventoryWeightValue = 0f;
+    public float currentInventoryItemSizeValue = 0f;
 
     public int money = 0;
     [HideInInspector]
@@ -62,33 +66,71 @@ public class InventoryController : Singleton<InventoryController>
     {
         TestItemIcon();
         SetInventoryCanvas();
-        SetInventoryLoadRate();
+        SetInventorySizeRate();
     }
 
-    public void SetInventoryLoadRate()
+    public void SetInventorySizeRate()
     {
         
         foreach(Item item in inventory)
         {
-            
-            if(currentInventoryLoadValue + item.quantity * item.itemData.Weight > backpackPanel.GetItemIcon().item.itemData.containerValue)
+
+            /*if (currentInventoryItemSizeValue + item.quantity * item.itemData.size > backpackPanel.GetContainerValue())
             {
                 //TODO 넣을 수 있는 만큼 넣기 Drop item
-                dropItemPanel.InsertItem(item.itemIcon);
+                if(item.itemData.itemType_ == ItemData.ItemType.Objects)
+                {
+                    dropItemPanel.InsertItem(item.itemIcon);
+                }
+                
                 continue;
-            }
-            currentInventoryLoadValue += item.quantity * item.itemData.Weight;
+            }*/
+            currentInventoryItemSizeValue += item.quantity * item.itemData.size;
         }
         backpackPanel.SetBackpack();
+    }
+    public void RemoveItemsUntilUnderMaxWeight()
+    {
+        int tryCount = 0;
+        while(currentInventoryItemSizeValue < backpackPanel.GetContainerValue())
+        {
+            int index = inventory.Count-1;
+            if (inventory[index].itemData.itemType_ == ItemData.ItemType.Objects)
+            {
+                if (backpackPanel.GetContainerValue() < currentInventoryItemSizeValue - inventory[index].GetSize())
+                {
+                    currentInventoryItemSizeValue -= inventory[index].GetSize();
+                    currentInventoryWeightValue -= inventory[index].GetWeight();
+                    dropItemPanel.InsertItem(inventory[index].itemIcon);
+                }
+                else
+                {
+                    float value = currentInventoryItemSizeValue - backpackPanel.GetContainerValue();
+                    int count = (int)(value / inventory[index].GetSize()) + 1;
+                    Item item = new Item(inventory[index].itemData, count, 1);
+                    ItemIcon itemIcon = GetCreateItemIcon(item);
+                    dropItemPanel.InsertItem(itemIcon);
+                    inventory[index].quantity -= count;
+                    inventory[index].itemIcon.GetComponent<ItemIcon>().SetSlider();
+                }
+            }
+            else
+            {
+                currentInventoryItemSizeValue -= inventory[index].GetSize();
+                currentInventoryWeightValue -= inventory[index].GetWeight();
+                dropItemPanel.InsertItem(inventory[index].itemIcon);
+            }
+
+
+            tryCount++;
+            if(tryCount > 100) { Debug.LogError("trycount 100 over");break; }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if(testDropITem != null)
-        {
-            Debug.Log($"test {testDropITem.item.name}");
-        }*/
+        
     }
 
 
@@ -97,6 +139,13 @@ public class InventoryController : Singleton<InventoryController>
         GameObject itemIconGo = Instantiate(itemIconPrefab);
         ItemIcon itemIcon = itemIconGo.GetComponent<ItemIcon>();
         itemIcon.SetItem(item);
+    }
+    public ItemIcon GetCreateItemIcon(Item item)
+    {
+        GameObject itemIconGo = Instantiate(itemIconPrefab);
+        ItemIcon itemIcon = itemIconGo.GetComponent<ItemIcon>();
+        itemIcon.SetItem(item);
+        return itemIcon;
     }
     public void CreateItemIcon(DropItem dropItem)
     {
@@ -113,11 +162,12 @@ public class InventoryController : Singleton<InventoryController>
         GameObject dropItemGo;
         if (itemIcon.dropItem == null)
         {
-            if(SceneController.Instance.GetCurrentSceneName() == "Village")
+            if(SceneController.Instance.GetCurrentSceneName() != "Dungeon_Multiplay")
             {
                 GameObject dropItemPrefab = Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}_DropItem");
                 dropItemGo = Instantiate(dropItemPrefab);
                 dropItemGo.name = $"{itemIcon.item.itemData.name}_DropItem";
+                dropItemGo.transform.position = player.dropItemPosition.position;
                 Destroy(dropItemGo.GetComponent<PhotonRigidbodyView>());
                 Destroy(dropItemGo.GetComponent<PhotonView>());
             }
@@ -162,6 +212,9 @@ public class InventoryController : Singleton<InventoryController>
     {
         dropItem.RemoveDropItem();
     }
+
+    
+    
     
 
     /*public void CreateDropItem_(Item item)
@@ -294,7 +347,7 @@ public class InventoryController : Singleton<InventoryController>
         //TODO insert InventoryPanel
     }
 
-    public void SetPlayer(PlayerManager player)
+    public void SetPlayer(PlayerTrigger player)
     {
         if(this.player == null)
         {

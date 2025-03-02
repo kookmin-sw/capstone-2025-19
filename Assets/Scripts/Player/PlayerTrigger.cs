@@ -32,6 +32,12 @@ public class PlayerTrigger : MonoBehaviour
             }
 
         }
+        if(other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
+        {
+            Debug.Log("1");
+
+            triggerUI.StartEvent();
+        }
     }
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
@@ -49,6 +55,10 @@ public class PlayerTrigger : MonoBehaviour
                 InventoryController.Instance.ExitDropItem(other.GetComponent<DropItem>());
             }
 
+        }
+        if (other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
+        {
+            triggerUI.EndEvent();
         }
     }
 }

@@ -26,14 +26,11 @@ public class ItemIcon : MonoBehaviour
     public void SetItem(Item item)
     {
         this.item = item;
-        Debug.Log($"item {item}");
-        Debug.Log($"this.item{this.item.itemData.name}");
         this.item.itemIcon = this;
         itemNameText.text = this.item.itemData.name;
         itemImage.sprite = this.item.itemData.itemIcon;
         itemImageInfo.GetItem(item);
         SetSlider(this.item);
-        Debug.Log($"ItemIcon SetItem {this.item.quantity} {this.item.durability}");
     }
 
     public void RemoveItemIcon()
@@ -76,19 +73,15 @@ public class ItemIcon : MonoBehaviour
     {
         // 100 ~ 66 green 66 ~ 33 orange 33 ~ 0 red
         float durabilityPercent = ((float)durabilitySlider.value / (float)itemData.maxQuantity) * 100;
-        Debug.Log(durabilityPercent);
         if(durabilityPercent >= 66)
         {
-            Debug.Log(durabilityPercent);
             fillImage.color = new Color32(84, 238, 106, 255);
         }else if(durabilityPercent >= 33)
         {
-            Debug.Log(durabilityPercent);
             fillImage.color = new Color32(227, 177, 78, 255); ;
         }
         else
         {
-            Debug.Log(durabilityPercent);
             fillImage.color = new Color32(184, 33, 35, 255);
         }
     }

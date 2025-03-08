@@ -6,18 +6,23 @@ using UnityEngine;
 
 public class DungeonGenerator : Singleton<DungeonGenerator>
 {
+    [Header("던전 구성 요소")]
+    [SerializeField, Tooltip("생성될 방 개수")] private int noOfRooms = 10;
+    [Space(10)]
+    [SerializeField, Tooltip("시작지점 방")] private GameObject entrance; //던전의 시작지점 방
+    [SerializeField, Tooltip("일반적인 방")] private List<GameObject> rooms;
+    [SerializeField, Tooltip("특별한 방(던전 생성시 같은 방 하나 이상 생성 안됨. ex) 폴가이즈 식 함정방)")] private List<GameObject> specialRooms; //전리품이 있을 수 있는 특별한 방
+    [SerializeField, Tooltip("대체 입구 -> 안쓸거니 넣으면 안됨")] private List<GameObject> alternateEntrances; //대체 입구 ex)리썰 컴퍼니의 비상구 -> 필요 없을 듯
+    [SerializeField, Tooltip("복도. 생성시 방 카운트에 적용 안됨")] private List<GameObject> hallways;
+    [SerializeField, Tooltip("문. 아직 작동 안함")] private GameObject door;
     //영상에선 이 오브젝트의 존재가 맵의 영향을 주지 않도록 y의 값을 -1000을 했음 아닌가? 내가 해석을 잘못했나?
-
-
-
-    [SerializeField] private GameObject entrance; //던전의 시작지점 방
-    [SerializeField] private List<GameObject> rooms;
-    [SerializeField] private List<GameObject> specialRooms; //전리품이 있을 수 있는 특별한 방
-    [SerializeField] private List<GameObject> alternateEntrances; //대체 입구 ex)리썰 컴퍼니의 비상구
-    [SerializeField] private List<GameObject> hallways;
-    [SerializeField] private GameObject door;
-    [SerializeField] private int noOfRooms = 10;
+    [Space(10)]
+    [Header("던전매니저 구성, 바뀌면 안됨")]
     [SerializeField] LayerMask roomsLayerMask;
+    [Space(10)]
+    [Header("테스트 인스펙터")]
+    [SerializeField] GameObject dontSelectedEntryGO;
+    
     private List<DungeonPart> generatedRooms; //던전 내부에 생성된 방List
     //private List<EntryPoint> emtryList;
     private bool isGenerated = false;
@@ -51,11 +56,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             if(generatedRooms.Count < 1) //아직 생성된 방이 없다면
             {
                 GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation); //여기에 있는 entrance가 던전의 시작점이 될것임
-                generatedRoom.transform.SetParent(null);
-                //멀티플레이 요소임
+                generatedRoom.transform.SetParent(null);// 생성된 방이 어떤 parent에 속해 있다면 Position 값이 parent에게 영향 받을 수 있기에 혹시나 parent 설정되어있으면 null로 할당하기
+                
                 if (generatedRoom.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))
                 {
-                    //dungeonPart.GetNetworkObject().Spawn(true); //모든 클라이언트에 대한 게임 객체를 생성하는 
+                    //멀티플레이 요소임
+                    //dungeonPart.GetNetworkObject().Spawn(true); //모든 클라이언트에 대한 게임 객체를 생성하는 -> photonView.Instantiate()형식
                     generatedRooms.Add(dungeonPart); //방 만든거 List에 추가
                 }
             }
@@ -72,7 +78,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
                 while (randomGeneratedRoom == null && retryIndex < totalRetries) // 무작위 행동 while문에 대해 혹시 모르는 무한 루프에 빠질 가능성을 지우기 위해 최대 100번까지만 루프 돌게 함
                 {
-                    int randomLinkRoomIndex = UnityEngine.Random.Range(0, generatedRooms.Count); //임의의 방을 선택
+                    int randomLinkRoomIndex = UnityEngine.Random.Range(0, generatedRooms.Count); //임의의 생성된 방을 선택
                     DungeonPart roomToTest = generatedRooms[randomLinkRoomIndex];
 
                     if(roomToTest.HasAvailableEntryPoint(out room1EntryPoint))//그 선택한 방에서 입구를 찾고 있으면 room1EntryPoint에 할당하고 
@@ -229,6 +235,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                             yield return new WaitForSeconds(5f);
 
                             //if (HandleIntersection(room2_dungeonPart)) //위치가 미리 생성한 방이랑 곂친다던가 하는 문제가 있을 시 되돌리는 부분인거 같은데
+                            bool innerTest = false;
                             if (room2_dungeonPart.IsColliderOverlapping())
                             {
                                 room2_dungeonPart.UnuseEntrypoint(room2Entrypoint);
@@ -254,11 +261,14 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                                             if (!room2_dungeonPart.IsColliderOverlapping())
                                             {
                                                 generatedRooms.Add(room2_dungeonPart);//생성한 복도에서 알맞은 입구를 골랐으면 생성한 복도를 generatedRooms(생성한 방 리스트)에 추가
+                                                Debug.LogError("화면 집중");
+                                                yield return new WaitForSeconds(3f);
                                                 room1Transform.GetComponent<EntryPoint>().SetOccupied(true);
-                                                room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);
+                                                room2Transform.GetComponent<EntryPoint>().SetOccupied(true);
                                                 check1 = true;
                                                 check2 = true;
                                                 finalCheck = true;
+                                                innerTest = true;
                                                 Debug.Log("통과");
                                                 yield return new WaitForSeconds(5f);
                                                 break;
@@ -278,9 +288,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                                     continue; }
                                 
                             }
-                            room1EntryPoint.GetComponent<EntryPoint>().SetOccupied(true);
-                            room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);   
-                            generatedRooms.Add(room2_dungeonPart);
+                            if (!innerTest)
+                            {
+                                room1EntryPoint.GetComponent<EntryPoint>().SetOccupied(true);
+                                room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);
+                                generatedRooms.Add(room2_dungeonPart);
+                            }
                             i -= 1;
                             continue;
                         }
@@ -320,6 +333,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                                                                                                             //첫번째 방 입구, 지금 생성한 복도 입구)
                             Debug.Log("test");
                             yield return new WaitForSeconds(5f);
+                            bool innerTest = false;
                             if(room2_dungeonPart.IsColliderOverlapping())
                             //if (HandleIntersection(room2_dungeonPart)) //위치가 미리 생성한 방이랑 곂친다던가 하는 문제가 있을 시 되돌리는 부분인거 같은데
                             {
@@ -346,11 +360,15 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                                             if (!room2_dungeonPart.IsColliderOverlapping())
                                             {
                                                 generatedRooms.Add(room2_dungeonPart);//생성한 복도에서 알맞은 입구를 골랐으면 생성한 복도를 generatedRooms(생성한 방 리스트)에 추가
+                                                Debug.LogError("화면 집중");
+                                                yield return new WaitForSeconds(3f);
                                                 room1Transform.GetComponent<EntryPoint>().SetOccupied(true);
-                                                room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);
+                                                //room2Entrypoint
+                                                room2Transform.GetComponent<EntryPoint>().SetOccupied(true);
                                                 check1 = true;
                                                 check2 = true;
                                                 finalCheck = true;
+                                                innerTest = true;
                                                 Debug.Log("통과");
                                                 yield return new WaitForSeconds(5f);
                                                 break;
@@ -366,15 +384,18 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                                 }
                                 if (!finalCheck)
                                 {
-                                    Debug.Log("room2(room)를 바꾸기 !!! ");
+                                    Debug.LogError("room2(room)를 바꾸기 !!! ");
                                     Destroy(room2_dungeonPart.gameObject);
                                     continue;
                                 }
 
                             }
-                            generatedRooms.Add(room2_dungeonPart);
-                            room1EntryPoint.GetComponent<EntryPoint>().SetOccupied(true);
-                            room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);
+                            if (!innerTest)
+                            {
+                                generatedRooms.Add(room2_dungeonPart);
+                                room1EntryPoint.GetComponent<EntryPoint>().SetOccupied(true);
+                                room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);
+                            }
                         }
                     }
                 }
@@ -570,7 +591,6 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
         //두 입구의 위치를 정확하게 일치시킴
         Vector3 offset = room1Entry.position - room2Entry.position;
-        Debug.Log(offset);
         room2.position += offset;
 
         float angle = Vector3.Angle(room1Entry.forward, room2Entry.forward);

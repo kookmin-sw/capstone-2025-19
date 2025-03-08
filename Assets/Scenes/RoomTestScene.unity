@@ -288,6 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc0f483f5a1dc6a489dda820a681e0fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noOfRooms: 5
   entrance: {fileID: 2933166231360555509, guid: 4cbf9ba094c99074e9bbdfe8bde2bbbc,
     type: 3}
   rooms:
@@ -298,15 +299,13 @@ MonoBehaviour:
   specialRooms: []
   alternateEntrances: []
   hallways:
-  - {fileID: 975602598891651452, guid: 00d3cd24905af624ca98dce1d0dcdf02, type: 3}
-  - {fileID: 1055053789658726513, guid: b3cd734c64bb9774c9173fab1886ffef, type: 3}
-  - {fileID: 8515470845408962666, guid: d69307717acaa344081118e17c3b371a, type: 3}
-  - {fileID: 5722230678197234652, guid: cb8024c3e71d96548b7148f04e253a8e, type: 3}
+  - {fileID: 503321049714542921, guid: e2480cc12b0e47f4db6fba6f03033287, type: 3}
   door: {fileID: 0}
-  noOfRooms: 5
   roomsLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  dontSelectedEntryGO: {fileID: 3914469935603822739, guid: 0512c6bcb10e78442813d0efd5e03e43,
+    type: 3}
 --- !u!4 &188715246
 Transform:
   m_ObjectHideFlags: 0

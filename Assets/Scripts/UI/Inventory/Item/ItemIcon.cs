@@ -107,8 +107,7 @@ public class Item
     public int quantity = 1;
     public float durability = 1f;
 
-    /*    public GameObject itemIcon = null;
-        public GameObject dropItem = null;*/
+    
 
 
     public Item(ItemData itemData, int quantity, float durability)
@@ -131,6 +130,8 @@ public class Item
     {
         return this.itemData.Weight * this.quantity;
     }
+
+    
 }
 
 

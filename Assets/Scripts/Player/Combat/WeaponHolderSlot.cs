@@ -27,7 +27,7 @@ namespace PlayerCombat
                 Destroy(currentWeaponModel);
             }
         }
-        public void LoadWeaponModel(WeaponItem weaponItem)
+        public void LoadWeaponModel(WeaponStats weaponItem)
         {
             UnloadWeaponAndDestroy();
 

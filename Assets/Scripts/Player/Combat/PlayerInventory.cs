@@ -8,8 +8,8 @@ namespace PlayerCombat
     {
         WeaponSlotManager weaponSlotManager;
 
-        public WeaponItem rightWeapon;
-        public WeaponItem leftWeapon;
+        public WeaponStats rightWeapon;
+        public WeaponStats leftWeapon;
 
         void Awake()
         {

@@ -422,4 +422,10 @@ public class InventoryController : Singleton<InventoryController>
 
     }
 
+    public void SetPlayerInventory()
+    {
+        //Scene 이동 시 Inventory 내에서 적용 해야 할 아이템 적용 시키기
+        weaponPanel.SetWeapon();
+    }
+
 }

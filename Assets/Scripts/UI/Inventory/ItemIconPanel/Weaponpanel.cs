@@ -53,4 +53,12 @@ public class Weaponpanel : ItemPanel
         }
         return null;
     }
+
+    public void SetWeapon()
+    {
+        if(weaponItemIcon != null)
+        {
+            WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
+        }
+    }
 }

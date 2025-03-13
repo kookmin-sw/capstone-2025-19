@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PlayerCombat
 {
-    public class PlayerInventory : MonoBehaviour
+    public class PlayerInventory_ : MonoBehaviour
     {
         WeaponSlotManager weaponSlotManager;
 

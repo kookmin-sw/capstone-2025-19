@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -864,10 +865,33 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     {
         //지금 당장은 PhotonView를 쓰는 것이 아님
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer"));
-        player.transform.position = playerSpawnDungeonPart.spawnPoint.position;
+        player.transform.localPosition = playerSpawnDungeonPart.spawnPoint.position;
+        Debug.Log(player.transform.position);
+        player_ = player;
+        StartCoroutine(ResetPlayerPosition());
     }
 
+    //지금 게임을 플레이 할 때 계속 player의 position을 돌려버림 왜인지 찾을 때까지 대기
+    GameObject player_;
+    IEnumerator ResetPlayerPosition()
+    {
+        yield return new WaitForSeconds(1f);
+        Debug.LogError($"player position {player_.transform.position}");
+        player_.transform.position = playerSpawnDungeonPart.spawnPoint.position;
+        SetPlayer();
+    }
 
+    private void SetPlayer()
+    {
+        GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
+        GameObject followCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/PlayerFollowCamera"));
+        CinemachineVirtualCamera virtualCamera = followCamera.GetComponent<CinemachineVirtualCamera>();
+        virtualCamera.Follow = player_.transform.Find("PlayerCameraRoot");
+        PlayerControl.PlayerController playerController = player_.GetComponent<PlayerControl.PlayerController>();
+        playerController.SetMainCamera(mainCamera);
+    }
+
+    //TODO player Setting
 
 
     // Update is called once per frame

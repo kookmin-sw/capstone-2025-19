@@ -117,6 +117,11 @@ namespace PlayerControl
             }
         }
 
+        public void SetMainCamera(GameObject mainCamera)
+        {
+            _mainCamera = mainCamera;
+        }
+
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;

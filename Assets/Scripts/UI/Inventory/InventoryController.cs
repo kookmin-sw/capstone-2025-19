@@ -81,7 +81,7 @@ public class InventoryController : Singleton<InventoryController>
 
     public void SetInventorySizeRate()
     {
-        
+        currentInventoryItemSizeValue = 0;
         foreach(Item item in inventory)
         {
 
@@ -95,7 +95,9 @@ public class InventoryController : Singleton<InventoryController>
                 
                 continue;
             }*/
-            currentInventoryItemSizeValue += item.quantity * item.itemData.size;
+            currentInventoryItemSizeValue += item.GetSize();
+            /*if(item.itemData.itemType_ == ItemData.ItemType.Objects) currentInventoryItemSizeValue += item.quantity * item.itemData.size;
+            else currentInventoryItemSizeValue += item.itemData.size;*/
         }
         backpackPanel.SetBackpack();
     }
@@ -105,6 +107,8 @@ public class InventoryController : Singleton<InventoryController>
         while(currentInventoryItemSizeValue >= backpackPanel.GetContainerValue())
         {
             int index = inventory.Count-1;
+            Debug.Log($"currentInventoryItemSizeValeu {currentInventoryItemSizeValue}");
+            Debug.Log($"backpackPanel.GetContainerValue() {backpackPanel.GetContainerValue()}");
             Debug.Log($"inventory index {index}");
             if(inventory.Count == 0)
             {
@@ -353,6 +357,9 @@ public class InventoryController : Singleton<InventoryController>
     public void LoadInventoryItem(PlayerInventoryDB.InventoryItem inventoryItem)
     {
         Debug.Log($"아이템 로드중... {inventoryItem.itemName}");
+        Item item = new Item(Resources.Load<ItemData>($"ItemData/{inventoryItem.itemName}"), inventoryItem.quantity, inventoryItem.durability);
+        ItemIcon itemIcon = GetCreateItemIcon(item);
+        inventoryPanel.InsertItem(itemIcon);
         //TODO create itemIcon
         //TODO insert InventoryPanel
     }
@@ -367,6 +374,9 @@ public class InventoryController : Singleton<InventoryController>
     public void LoadEquippedItem(WeaponDbSync.WearableItemDB equippedItem)
     {
         Debug.Log($"착용 아이템 로드중... {equippedItem.itemName}");
+        Item item = new Item(Resources.Load<ItemData>($"ItemData/{equippedItem.itemName}"), 1, equippedItem.durability);
+        ItemIcon itemIcon = GetCreateItemIcon(item);
+        weaponPanel.InsertItem(itemIcon);
         //TODO create itemIcon
         //TODO insert InventoryPanel
     }

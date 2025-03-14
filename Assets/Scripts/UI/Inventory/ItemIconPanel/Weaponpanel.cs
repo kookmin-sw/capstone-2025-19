@@ -63,4 +63,9 @@ public class Weaponpanel : ItemPanel
             //WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
         }
     }
+
+    public ItemIcon GetWeaponItemIcon()
+    {
+        return weaponItemIcon;
+    }
 }

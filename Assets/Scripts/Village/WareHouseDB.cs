@@ -84,6 +84,7 @@ public class WareHouseDB : MonoBehaviour
             }
 
         });
+        Debug.Log("Village 창고 동기화 완료");
     }
 
     public void AddItemToWareHouse(string itemName, string itemType, int addQuantity = 1, float addDurability = 1f)

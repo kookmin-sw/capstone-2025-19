@@ -83,6 +83,10 @@ public class MonsterMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Monster"))
+        {
+            return;
+        }
         //Reaction update를 아예 여기서 처리
 
         _state = MonsterState.Reaction;

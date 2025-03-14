@@ -75,6 +75,8 @@ public class InventoryController : Singleton<InventoryController>
         TestItemIcon();
         SetInventoryCanvas();
         SetInventorySizeRate();
+
+
     }
 
     public void SetInventorySizeRate()
@@ -358,6 +360,13 @@ public class InventoryController : Singleton<InventoryController>
     public void LoadWareHouseItem(WareHouseDB.WareHouseItem wareHouseItem)
     {
         Debug.Log($"아이템 로드중... {wareHouseItem.itemName}");
+        //TODO create itemIcon
+        //TODO insert InventoryPanel
+    }
+
+    public void LoadEquippedItem(WeaponDbSync.WearableItemDB equippedItem)
+    {
+        Debug.Log($"착용 아이템 로드중... {equippedItem.itemName}");
         //TODO create itemIcon
         //TODO insert InventoryPanel
     }

@@ -33,7 +33,8 @@ public class Weaponpanel : ItemPanel
         Debug.Log($"itemIcon {itemIcon.item.itemData}");
         Debug.Log($"itemIcon {itemIcon.item.itemData.weaponStats}");
         //TODO player에게 무기 쥐어주기
-        WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
+        InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
+        //WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
     }
     public override void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)
     {
@@ -58,7 +59,8 @@ public class Weaponpanel : ItemPanel
     {
         if(weaponItemIcon != null)
         {
-            WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
+            InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
+            //WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
         }
     }
 }

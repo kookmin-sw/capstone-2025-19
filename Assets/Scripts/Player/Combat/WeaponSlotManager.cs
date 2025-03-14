@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PlayerCombat
 {
-    public class WeaponSlotManager : Singleton<WeaponSlotManager>
+    public class WeaponSlotManager : MonoBehaviour
     {
         WeaponHolderSlot leftHandSlot;
         WeaponHolderSlot rightHandSlot;
@@ -13,9 +13,9 @@ namespace PlayerCombat
         DamageCollider leftHandDamageCollider;
         DamageCollider rightHandDamageCollider;
 
-        protected override void Awake()
+         void Awake()
         {
-            base.Awake();
+            
             WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
             foreach (WeaponHolderSlot weaponSlot in weaponHolderSlots)
             {

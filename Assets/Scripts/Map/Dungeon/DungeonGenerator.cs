@@ -866,6 +866,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         //지금 당장은 PhotonView를 쓰는 것이 아님
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer"));
         player.transform.localPosition = playerSpawnDungeonPart.spawnPoint.position;
+        InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
         Debug.Log(player.transform.position);
         player_ = player;
         StartCoroutine(ResetPlayerPosition());
@@ -889,6 +890,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         virtualCamera.Follow = player_.transform.Find("PlayerCameraRoot");
         PlayerControl.PlayerController playerController = player_.GetComponent<PlayerControl.PlayerController>();
         playerController.SetMainCamera(mainCamera);
+        InventoryController.Instance.SetPlayerInventory();
     }
 
     //TODO player Setting

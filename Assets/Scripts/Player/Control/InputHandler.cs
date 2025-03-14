@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace PlayerControl
 {
@@ -15,6 +16,7 @@ namespace PlayerControl
 		public bool lockOnPrevious;
 		public bool lockOnNext;
 		public bool attack;
+		public bool inventory;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -72,7 +74,23 @@ namespace PlayerControl
 			AttackInput(value.isPressed);
 		}
 
+        public void OnInventory(InputValue value)
+        {
+			Debug.Log("PlayerInventory test");
+            if (PlayerState.Instance.state == PlayerState.State.Inventory)
+			{
+				PlayerState.Instance.ChangeState(PlayerState.State.Idle);
+				Cursor.lockState = CursorLockMode.None;
 
+			}
+			else
+			{
+				PlayerState.Instance.ChangeState(PlayerState.State.Inventory);
+                Cursor.lockState = CursorLockMode.None;
+			}
+        }
+
+		
 		public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
@@ -118,7 +136,7 @@ namespace PlayerControl
 			attack = newAttackState;
 		}
 
-		private void OnApplicationFocus(bool hasFocus)
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}

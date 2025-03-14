@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Inventory",
+                    "type": "Button",
+                    "id": "d8d00bb1-8f98-4edc-9616-1c8a77a8c284",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -274,32 +283,15 @@
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Inventory",
-            "id": "d4f328cb-c818-4847-a3a8-636449720d9d",
-            "actions": [
-                {
-                    "name": "SetInventory",
-                    "type": "Button",
-                    "id": "941f8f11-581c-4c58-9043-fe519170d968",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "94692c5f-9ca5-4bbb-96e7-c623d1047fb4",
+                    "id": "a74d626e-4c5c-473d-88a5-32c063366e30",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SetInventory",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -5,6 +5,8 @@ using Photon.Pun;
 using static WareHouseDB;
 using UnityEngine.UI;
 using System;
+using PlayerCombat;
+
 
 #if UNITY_EDITOR
 using static UnityEditor.Progress;
@@ -47,6 +49,8 @@ public class InventoryController : Singleton<InventoryController>
     public List<Item> inventory = new List<Item>();
     [HideInInspector]
     public float currentInventoryWeightValue = 0f;
+    [HideInInspector]
+    public WeaponSlotManager weaponSlotManager;
     public float currentInventoryItemSizeValue = 0f;
 
     public int money = 0;
@@ -59,6 +63,10 @@ public class InventoryController : Singleton<InventoryController>
     {
         //TODO 아이템 저장하기 전에 new List 하기
         base.Awake();
+        if(player == null)
+        {
+            
+        }
         
     }
     // Start is called before the first frame update
@@ -360,6 +368,7 @@ public class InventoryController : Singleton<InventoryController>
         {
             this.player = player;
             SetInventoryCanvas();
+            if(weaponSlotManager == null) weaponSlotManager = player.gameObject.GetComponent<WeaponSlotManager>();
         }
     }
 

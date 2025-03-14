@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class InventoryPanel : ItemPanel
 {
@@ -9,6 +10,8 @@ public class InventoryPanel : ItemPanel
     [SerializeField] Transform weaponParent;
     [SerializeField] Transform potionParent;
     [SerializeField] Transform objectParent;
+
+    [SerializeField] Transform content;
     
     public override void InsertItem(ItemIcon itemIcon)
     {
@@ -22,7 +25,8 @@ public class InventoryPanel : ItemPanel
         {
             itemIcon.transform.SetParent(scrollRect.content);
         }*/
-        switch (itemIcon.item.itemData.itemType_)
+        //TODO 아이템 parent 설정 다시 하기(넣으면 맨 위에 처박힘)
+        /*switch (itemIcon.item.itemData.itemType_)
         {
             case ItemData.ItemType.Weapon:
                 itemIcon.transform.parent = weaponParent; break;
@@ -30,7 +34,8 @@ public class InventoryPanel : ItemPanel
                 itemIcon.transform.parent = potionParent; break;
             default:
                 itemIcon.transform.parent = objectParent; break;
-        }
+        }*/
+        itemIcon.transform.parent = content.transform;
         itemIcon.itemPanel = this;
 
         InventoryController.Instance.inventory.Add(itemIcon.GetComponent<ItemIcon>().item);
@@ -40,7 +45,7 @@ public class InventoryPanel : ItemPanel
         Debug.Log($"InsertItem count : {InventoryController.Instance.inventory.Count}");
 
         //QuestManager에게 알려주기
-        Debug.Log("In InsertItem");
+        Debug.Log($"In InsertItem {itemIcon}");
         //QuestManager.Instance.OnItemAcquired();
     }
     public override void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)

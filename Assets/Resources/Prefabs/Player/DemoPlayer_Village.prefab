@@ -574,6 +574,8 @@ GameObject:
   - component: {fileID: 4457514038712557782}
   - component: {fileID: 3265366409636379811}
   - component: {fileID: 3780459399134766147}
+  - component: {fileID: 7241973206731051481}
+  - component: {fileID: 6886353717447692346}
   m_Layer: 0
   m_Name: DemoPlayer_Village
   m_TagString: Player
@@ -713,6 +715,7 @@ MonoBehaviour:
   lockOnPrevious: 0
   lockOnNext: 0
   attack: 0
+  inventory: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
@@ -874,6 +877,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4b8a68f23a98e94cbda9c77b1f066b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7241973206731051481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2675672716764841357}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0399cc5b1f816bd42b3b2365f8ccb846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6886353717447692346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2675672716764841357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe193baf67a41f641838c5f27d1c7d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2700620108024862172

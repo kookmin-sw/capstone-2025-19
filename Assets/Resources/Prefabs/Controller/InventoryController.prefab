@@ -293,6 +293,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollRect: {fileID: 1243604163640013008}
+  weaponParent: {fileID: 0}
+  potionParent: {fileID: 0}
+  objectParent: {fileID: 0}
 --- !u!114 &2527208818953730143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -765,7 +768,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000026888856}
+  m_AnchoredPosition: {x: 0, y: -0.00001691674}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6906862298772425787
@@ -1668,7 +1671,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9204038103274002930}
   m_HandleRect: {fileID: 6192522308225976169}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2236,7 +2239,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000026888856}
+  m_AnchoredPosition: {x: 0, y: -0.00001691674}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8631973557480017620
@@ -3362,6 +3365,7 @@ MonoBehaviour:
   backpackPanel: {fileID: 5574489778027483571}
   chestItemPanel: {fileID: 2409737562713512710}
   weaponPanel: {fileID: 0}
+  distributionPanel: {fileID: 0}
   dropItemList: []
   itemDataList: []
   itemIconParent: {fileID: 8615857916415097641}
@@ -3369,7 +3373,8 @@ MonoBehaviour:
   popupParent: {fileID: 2088288846341300653}
   playerTest: {fileID: 0}
   inventory: []
-  currentInventoryLoadValue: 0
+  currentInventoryWeightValue: 0
+  currentInventoryItemSizeValue: 0
   money: 0
   wareHouse: []
 --- !u!1 &8722401438976410805
@@ -3406,7 +3411,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000035993606}
+  m_AnchoredPosition: {x: 0, y: -0.000017250102}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8385468551084091178

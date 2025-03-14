@@ -1528,6 +1528,7 @@ GameObject:
   - component: {fileID: 3587572099402510105}
   - component: {fileID: 2697970337979930730}
   - component: {fileID: 2932805947826710224}
+  - component: {fileID: 8125946773838038851}
   m_Layer: 0
   m_Name: DemoPlayer
   m_TagString: Player
@@ -1667,6 +1668,7 @@ MonoBehaviour:
   lockOnPrevious: 0
   lockOnNext: 0
   attack: 0
+  inventory: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
@@ -1812,9 +1814,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4235437455366719818}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0399cc5b1f816bd42b3b2365f8ccb846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8125946773838038851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4235437455366719818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe193baf67a41f641838c5f27d1c7d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4306662595219875041

@@ -34,10 +34,10 @@ public class GameManager_ : MonoBehaviourPunCallbacks
         var spawnPosition = spawnPositions[localPlayerIndex % spawnPositions.Length];
 
 
-        GameObject player = PhotonNetwork.Instantiate("Prefabs/Player/Player", spawnPosition.position, Quaternion.identity);
+        GameObject player = PhotonNetwork.Instantiate("Prefabs/TestPlayer", spawnPosition.position, Quaternion.identity);
         InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
-        virtualCamera.Follow = player.transform;
-        virtualCamera.LookAt = player.transform;
+        /*virtualCamera.Follow = player.transform;
+        virtualCamera.LookAt = player.transform;*/
     }
 
     public override void OnLeftRoom()

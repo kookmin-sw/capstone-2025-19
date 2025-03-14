@@ -92,10 +92,17 @@ public class InventoryController : Singleton<InventoryController>
     public void RemoveItemsUntilUnderMaxWeight()
     {
         int tryCount = 0;
-        while(currentInventoryItemSizeValue < backpackPanel.GetContainerValue())
+        while(currentInventoryItemSizeValue >= backpackPanel.GetContainerValue())
         {
             int index = inventory.Count-1;
-            if (inventory[index].itemData.itemType_ == ItemData.ItemType.Objects)
+            Debug.Log($"inventory index {index}");
+            if(inventory.Count == 0)
+            {
+                currentInventoryItemSizeValue -= inventory[index].GetSize();
+                currentInventoryWeightValue -= inventory[index].GetWeight();
+                dropItemPanel.InsertItem(inventory[index].itemIcon);
+            }
+            else if (inventory[index].itemData.itemType_ == ItemData.ItemType.Objects)
             {
                 if (backpackPanel.GetContainerValue() < currentInventoryItemSizeValue - inventory[index].GetSize())
                 {

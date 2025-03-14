@@ -35,6 +35,7 @@ public class InventoryPanel : ItemPanel
 
         InventoryController.Instance.inventory.Add(itemIcon.GetComponent<ItemIcon>().item);
         InventoryController.Instance.SetInventorySizeRate();
+        Debug.Log($"Test InventoryController inventory {InventoryController.Instance.inventory.Count}");
         InventoryController.Instance.RemoveItemsUntilUnderMaxWeight();
         Debug.Log($"InsertItem count : {InventoryController.Instance.inventory.Count}");
 

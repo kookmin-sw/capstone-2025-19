@@ -21,7 +21,7 @@ public class Weaponpanel : ItemPanel
 
     public override void InsertItem(ItemIcon itemIcon)
     {
-        if (itemIcon.item.itemData.itemType_ != ItemData.ItemType.Weapon) { return; }
+        if (itemIcon.item.itemData.itemType != ItemData.ItemType.Weapon) { return; }
         if (weaponItemIcon != null)
         {
             ChangeWeapon();
@@ -72,4 +72,12 @@ public class Weaponpanel : ItemPanel
     {
         return weaponItemIcon;
     }
+
+    public override void RemoveItem(ItemIcon itemIcon)
+    {
+        weaponItemIcon = null;
+        InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(null, false);
+    }
+
+
 }

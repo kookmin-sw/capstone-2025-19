@@ -37,18 +37,19 @@ public class ItemIcon : MonoBehaviour
     {
         dropItem = null;
         GetComponent<ItemIconInteract>().DestroyItemAlpha();
+        if (itemPanel != null) { itemPanel.RemoveItem(this); }
         Destroy(gameObject);
     }
     private void SetSlider(Item item)
     {
         this.item = item;
-        if(item.itemData.itemType_ == ItemData.ItemType.Weapon)
+        if(item.itemData.itemType == ItemData.ItemType.Weapon)
         {
             durabilitySlider.gameObject.SetActive(true);
             durabilitySlider.maxValue = this.item.itemData.maxItemDurability;
             durabilitySlider.value = this.item.durability;
         }
-        else if(item.itemData.itemType_ == ItemData.ItemType.Potion)
+        else if(item.itemData.itemType == ItemData.ItemType.Potion)
         {
             durabilitySlider.gameObject.SetActive(true);
             durabilitySlider.maxValue = this.item.itemData.maxQuantity;
@@ -60,10 +61,10 @@ public class ItemIcon : MonoBehaviour
     }
     public void SetSlider()
     {
-        if(item.itemData.itemType_ == ItemData.ItemType.Potion)
+        if(item.itemData.itemType == ItemData.ItemType.Potion)
         {
             durabilitySlider.value = this.item.quantity;
-        }else if(item.itemData.itemType_ == ItemData.ItemType.Weapon)
+        }else if(item.itemData.itemType == ItemData.ItemType.Weapon)
         {
             durabilitySlider.value = this.item.durability;
         }
@@ -118,7 +119,7 @@ public class Item
     }
     public float GetSize()
     {
-        switch (this.itemData.itemType_)
+        switch (this.itemData.itemType)
         {
             case ItemData.ItemType.Objects:
                 return this.itemData.size * this.quantity;
@@ -129,6 +130,27 @@ public class Item
     public float GetWeight()
     {
         return this.itemData.Weight * this.quantity;
+    }
+
+    public void UseItem()
+    {
+        if (this.itemData.itemType == ItemData.ItemType.Potion)
+        {
+            foreach(ItemEffect effect in this.itemData.effectList)
+            {
+                effect.Effect();
+            }
+            quantity -= 1;
+            UpdateInfo();
+        }
+        else { Debug.LogError($"It is not Potion type it's{this.itemData.itemType}"); }
+    }
+
+    public void UpdateInfo()
+    {
+        if (durability <= 0) InventoryController.Instance.RemoveItemIcon(this.itemIcon);
+        if (quantity <= 0) InventoryController.Instance.RemoveItemIcon(this.itemIcon);
+        this.itemIcon.SetSlider();
     }
 
     

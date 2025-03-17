@@ -138,7 +138,7 @@ public class WareHouseDB : MonoBehaviour
 
     private void itemToInventoryItem(Item item)
     {
-        AddItemToWareHouse(item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+        AddItemToWareHouse(item.itemData.name, item.itemData.itemType.ToString(), item.quantity, item.durability);
     }
     public void WareHouseSynchronizeToDB()
     {

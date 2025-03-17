@@ -13,6 +13,10 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     [SerializeField] GameObject itemIconAlphaPrefab;
     GameObject itemIconAlpha;
 
+    private float lastClickTime;
+    private const float doubleClickThreshold = 0.3f; // 더블클릭 시간 간격 (초)
+
+
     void Awake()
     {
         itemIcon = GetComponent<ItemIcon>();
@@ -70,7 +74,17 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        //TODO 더블클릭 시 여러 기능 추가
+        if (Time.time - lastClickTime < doubleClickThreshold)
+        {
+            Debug.Log("UI 더블클릭 감지!");
+            OnDoubleClick();
+        }
+        lastClickTime = Time.time;
+    }
+
+    private void OnDoubleClick()
+    {
+        itemIcon.item.UseItem();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

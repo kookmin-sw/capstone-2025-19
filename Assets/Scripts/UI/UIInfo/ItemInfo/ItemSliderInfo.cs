@@ -7,7 +7,7 @@ public class ItemSliderInfo : UIInfoData
     Item item;
     public override string GetContent()
     {
-        switch (item.itemData.itemType_)
+        switch (item.itemData.itemType)
         {
             case ItemData.ItemType.Weapon:
                 return $"{item.itemData.name} Durability \n durability / max durability \n {item.durability} / {item.itemData.maxItemDurability}";

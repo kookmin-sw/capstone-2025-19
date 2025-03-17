@@ -27,11 +27,16 @@ public class DropItemPanel : ItemPanel
         }*/
     }
 
+    public override void RemoveItem(ItemIcon itemIcon)
+    {
+        InventoryController.Instance.dropItemList.Remove(itemIcon.dropItem.GetComponent<DropItem>());
+    }
+
     /*public void RemoveDropItem(Item item)
     {
         InventoryController.Instance.RemoveDropItem(item);
     }*/
-    
 
-    
+
+
 }

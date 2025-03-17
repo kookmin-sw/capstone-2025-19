@@ -145,5 +145,10 @@ namespace PlayerControl
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
+
+		public void OnUseItem()
+		{
+			InventoryController.Instance.useItemPanel.UseItem();
+		}
 	}
 }

@@ -43,7 +43,7 @@ public class WeaponDbSync : MonoBehaviour
     {
         Item item = InventoryController.Instance.weaponPanel.GetWeaponItemIcon().item;
         Debug.Log($"Save weapon item {item}");
-        WearableItemDB weapon = EquippedToInventory(item.itemData.name, item.itemData.itemType_.ToString(), item.durability);
+        WearableItemDB weapon = EquippedToInventory(item.itemData.name, item.itemData.itemType.ToString(), item.durability);
         SyncToDB(weapon);
     }
 

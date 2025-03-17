@@ -14,10 +14,9 @@ public class ItemData : ScriptableObject
         Objects,
 
     }
-    public ItemType itemType_;
+    public ItemType itemType;
 
     public Sprite itemIcon;
-    public string itemType;
 
     public float size = 1;
     public float Weight = 1;
@@ -30,4 +29,5 @@ public class ItemData : ScriptableObject
     public int maxItemDurability = 1;
 
     public WeaponStats weaponStats;
+    public List<ItemEffect> effectList;
 }

@@ -56,4 +56,10 @@ public class InventoryPanel : ItemPanel
             InventoryController.Instance.SetInventorySizeRate();
         }
     }
+
+    public override void RemoveItem(ItemIcon itemIcon)
+    {
+        InventoryController.Instance.inventory.Remove(itemIcon.item);
+        InventoryController.Instance.SetInventorySizeRate();
+    }
 }

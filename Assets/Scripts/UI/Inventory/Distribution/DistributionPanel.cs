@@ -22,7 +22,7 @@ public class DistributionPanel : MonoBehaviour
     
     public void SetItem(ItemPanel itemPanel, ItemIcon itemIcon)
     {
-        if(itemIcon.item.itemData.itemType_ != ItemData.ItemType.Potion) { return; }
+        if(itemIcon.item.itemData.itemType != ItemData.ItemType.Potion) { return; }
         this.itemPanel = itemPanel;
         distributionItemIcon = itemIcon;
         itemImage.sprite = distributionItemIcon.item.itemData.itemIcon;

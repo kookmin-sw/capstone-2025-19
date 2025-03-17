@@ -25,6 +25,7 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] public BackpackPanel backpackPanel;
     [SerializeField] public ChestItemPanel chestItemPanel;
     [SerializeField] public Weaponpanel weaponPanel;
+    [SerializeField] public UseItemPanel useItemPanel;
 
     [SerializeField] public DistributionPanel distributionPanel;
 
@@ -116,7 +117,7 @@ public class InventoryController : Singleton<InventoryController>
                 currentInventoryWeightValue -= inventory[index].GetWeight();
                 dropItemPanel.InsertItem(inventory[index].itemIcon);
             }
-            else if (inventory[index].itemData.itemType_ == ItemData.ItemType.Objects)
+            else if (inventory[index].itemData.itemType == ItemData.ItemType.Objects)
             {
                 if (backpackPanel.GetContainerValue() < currentInventoryItemSizeValue - inventory[index].GetSize())
                 {

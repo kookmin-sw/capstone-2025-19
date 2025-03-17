@@ -38,6 +38,15 @@ public class PlayerTrigger : MonoBehaviour
 
             triggerUI.StartEvent();
         }
+
+        if (other.CompareTag("Monster"))
+        {
+            Debug.Log("Hit by Monster");
+            //맞는 애니메이션 실행
+            //플레이어 체력 조정
+            int damage = other.GetComponent<MonsterStatus>().damage;
+            PlayerStatusController.Instance.getDamage(damage);
+        }
     }
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
@@ -61,4 +70,5 @@ public class PlayerTrigger : MonoBehaviour
             triggerUI.EndEvent();
         }
     }
+
 }

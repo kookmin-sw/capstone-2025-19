@@ -25,7 +25,7 @@ public class Weaponpanel : ItemPanel
         if (weaponItemIcon != null)
         {
             ChangeWeapon();
-            return; // 당장은 return
+            //return; 
         }
         base.InsertItem(itemIcon);
         itemIcon.transform.SetParent(transform);
@@ -39,11 +39,15 @@ public class Weaponpanel : ItemPanel
     public override void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)
     {
         base.TakeOutItem(itemPanel, itemIcon);
+        weaponItemIcon = null;
         //TODO 무기 지우기
+        InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(null, false);
     }
     private void ChangeWeapon()
     {
         //TODO ChangeWeapon
+        InventoryController.Instance.inventoryPanel.InsertItem(weaponItemIcon);
+        weaponItemIcon = null;
     }
 
     public WeaponStats GetWeapon()

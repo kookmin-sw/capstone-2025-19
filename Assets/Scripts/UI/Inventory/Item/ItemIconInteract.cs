@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 
 [RequireComponent(typeof(ItemIcon))]
-public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerDownHandler
+public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerDownHandler, IPointerEnterHandler
 {
     ItemIcon itemIcon;
     RectTransform rectTransform;
@@ -73,5 +73,8 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         //TODO 더블클릭 시 여러 기능 추가
     }
 
- 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Debug.Log("ItemIcon enter");
+    }
 }

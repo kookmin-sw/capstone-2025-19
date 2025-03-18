@@ -21,11 +21,12 @@ namespace PlayerControl
         // Update is called once per frame
         void Update()
         {
-            if (input.attack)
+            if (input.attack && PlayerStatusController.Instance.canAttack)
             {
                 input.attack = false;
                 anim.SetTrigger("Attack");
                 AttackCount = 0;
+                PlayerStatusController.Instance.attack();
             }
         }
 

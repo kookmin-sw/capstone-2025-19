@@ -227,7 +227,14 @@ namespace PlayerControl
                 lockOnSpeed = SprintSpeed;
             }
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? lockOnSpeed : MoveSpeed;
+            float targetSpeed = (_input.sprint && PlayerStatusController.Instance.canSprint) ? lockOnSpeed : MoveSpeed;
+
+            //sprint가 가능한 상태인지 확인 후 스테미나 감소
+            if (_input.sprint && PlayerStatusController.Instance.canSprint && _input.move != Vector2.zero)
+            {
+                //*Time.deltaTime을 사용해서 초당으로 계산중
+                PlayerStatusController.Instance.sprint();
+            }
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -296,10 +303,11 @@ namespace PlayerControl
 
         private void Rolling()
         {
-            if (_input.rolling)
+            if (_input.rolling && PlayerStatusController.Instance.canRolling)
             {
                 _animator.SetTrigger(_animIDRolling);
                 _input.rolling = false;
+                PlayerStatusController.Instance.rolling();
             }
         }
 

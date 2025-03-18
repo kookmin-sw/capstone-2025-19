@@ -8,6 +8,15 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     [SerializeField] Slider HpBar;
     [SerializeField] Slider SpBar;
 
+    [SerializeField] float recoverSpValue = 3f;
+    [SerializeField] float sprintStamina = 5f;
+    [SerializeField] float rollingStamina = 5f;
+    [SerializeField] float attackStamina = 5f;
+
+    public bool canSprint;
+    public bool canRolling;
+    public bool canAttack;
+
     //현재 플레이어 체력 (max체력은 realValue["Hp"]값
     [HideInInspector]
     public float curHp;
@@ -44,7 +53,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         needExpPoint = 10;
         expPoint = 0;
         realValue["Hp"] = 1000;
-        realValue["Sp"] = 100;
+        realValue["Sp"] = 10;
         curHp = realValue["Hp"];
         curSp = realValue["Sp"];
     }
@@ -55,6 +64,26 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         //체력, 스테미나 바 업데이트
         UpdateHpBar();
         UpdateSpBar();
+        UpdateBehaviorBool();
+
+        //스테미나 회복
+        RecoverStamina(recoverSpValue);
+    }
+
+    //스테미나 상태에 따라서 행동이 가능한지 
+    void UpdateBehaviorBool()
+    {
+        //달리기 가능
+        if(curSp < sprintStamina) canSprint = false;
+        else canSprint = true;
+
+        //구르기 가능
+        if (curSp < rollingStamina) canRolling = false;
+        else canRolling = true;
+
+        //공격 가능
+        if (curSp < attackStamina) canAttack = false;
+        else canAttack = true;
     }
 
     void UpdateHpBar()
@@ -69,10 +98,6 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public void SettingItemBuff()
     {
         //TODO ItemBuff 효과
-    }
-    public void UseStamina(float value)
-    {
-        //TODO 실시간 Player StaminaBar에 반영
     }
 
     //원하는 타입의 status 변화
@@ -99,6 +124,36 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         curHp -= damage;
         Debug.Log($"남은 체력 : {curHp}");
     }
+    
+    //public void UseStamina(float value)
+    //{
+    //    curSp -= value;
+    //    Debug.Log($"남은 스테미나 : {curSp}");
+    //}
+
+    public void rolling()
+    {
+        curSp -= rollingStamina;
+    }
+
+    public void sprint()
+    {
+        curSp -= sprintStamina * Time.deltaTime;
+    }
+
+    public void attack()
+    {
+        curSp -= attackStamina;
+    }
+
+    private void RecoverStamina(float recoverSpValue)
+    {
+        if (realValue["Sp"] > curSp) 
+        {
+            curSp += recoverSpValue* Time.deltaTime;
+        }
+    }
+
 
     private void Die()
     {

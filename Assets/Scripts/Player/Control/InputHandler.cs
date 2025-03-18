@@ -18,7 +18,8 @@ namespace PlayerControl
 		public bool attack;
 		public bool inventory;
 
-		[Header("Movement Settings")]
+
+        [Header("Movement Settings")]
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
@@ -52,7 +53,7 @@ namespace PlayerControl
 		public void OnRolling(InputValue value)
 		{
 			RollingInput(value.isPressed);
-		}
+        }
 
 		public void OnLockOn(InputValue value)
 		{
@@ -72,7 +73,7 @@ namespace PlayerControl
 		public void OnAttack(InputValue value)
 		{
 			AttackInput(value.isPressed);
-		}
+        }
 
         public void OnInventory(InputValue value)
         {

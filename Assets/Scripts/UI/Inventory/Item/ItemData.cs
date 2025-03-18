@@ -12,6 +12,7 @@ public class ItemData : ScriptableObject
         Armor,
         Backpack,
         Objects,
+        
 
     }
     public ItemType itemType;

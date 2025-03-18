@@ -26,6 +26,7 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] public ChestItemPanel chestItemPanel;
     [SerializeField] public Weaponpanel weaponPanel;
     [SerializeField] public UseItemPanel useItemPanel;
+    [SerializeField] public MoneyPanel moneyPanel;
 
     [SerializeField] public DistributionPanel distributionPanel;
 
@@ -64,20 +65,50 @@ public class InventoryController : Singleton<InventoryController>
     {
         //TODO 아이템 저장하기 전에 new List 하기
         base.Awake();
-        if(player == null)
-        {
-            
-        }
-        
+
     }
     // Start is called before the first frame update
     void Start()
     {
+        //TODO FireBase 정보 받기(VillageManager에게 정보받는것)
         TestItemIcon();
         SetInventoryCanvas();
         SetInventorySizeRate();
+        SetMoney();
 
+    }
 
+    private void SetMoney()
+    {
+
+        moneyPanel.SetMoney(money);
+    }
+
+    public void GetMoney(MoneyItemIcon itemIcon)
+    {
+        money += itemIcon.moneyValue;
+        SetMoney();
+        itemIcon.RemoveItemIcon();
+    }
+
+    public void DropMoney()
+    {
+        distributionPanel.SetMoney();
+    }
+
+    public void SetDropMoneyValue(int value)
+    {
+        GameObject dropItem = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/Money_DropItem")); //떨구는 돈의 양에 따라서 드랍 아이템 바꾸기?
+        MoneyDropItem moneyDropItem = dropItem.GetComponent<MoneyDropItem>();
+        dropItem.transform.position = player.dropItemPosition.position;
+    }
+
+    public void SetMoneyItemIcon(MoneyDropItem dropItemMoney)
+    {
+        GameObject moneyItemIcon = Instantiate(Resources.Load<GameObject>($"Prefabs/UI/Inventory/Money_ItemIcon"));
+        MoneyItemIcon itemIcon = moneyItemIcon.GetComponent<MoneyItemIcon>();
+        itemIcon.SetMoney(dropItemMoney.moneyValue);
+        dropItemPanel.InsertMoney(moneyItemIcon);
     }
 
     public void SetInventorySizeRate()
@@ -149,11 +180,7 @@ public class InventoryController : Singleton<InventoryController>
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
 
     public void CreateItemIcon(Item item)

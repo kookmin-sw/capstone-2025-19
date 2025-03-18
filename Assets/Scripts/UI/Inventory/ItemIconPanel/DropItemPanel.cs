@@ -32,6 +32,11 @@ public class DropItemPanel : ItemPanel
         InventoryController.Instance.dropItemList.Remove(itemIcon.dropItem.GetComponent<DropItem>());
     }
 
+    public void InsertMoney(GameObject itemIcon)
+    {
+        itemIcon.transform.SetParent(scrollRect.content);
+    }
+
     /*public void RemoveDropItem(Item item)
     {
         InventoryController.Instance.RemoveDropItem(item);

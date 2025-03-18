@@ -31,6 +31,9 @@ public class PlayerTrigger : MonoBehaviour
                 InventoryController.Instance.EnterDropItem(other.GetComponent<DropItem>());
             }
 
+        }else if (other.CompareTag("Money"))
+        {
+
         }
         if(other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
         {

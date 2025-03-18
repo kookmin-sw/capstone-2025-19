@@ -10,6 +10,9 @@ public class DistributionPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI itemName;
     [SerializeField] TextMeshProUGUI quantityText;
     [SerializeField] Slider quantitySlider;
+
+    [Header("돈 관련")]
+    [SerializeField] Sprite moneyImage;
     
     
     [HideInInspector]
@@ -33,6 +36,15 @@ public class DistributionPanel : MonoBehaviour
         gameObject.SetActive(true);
         quantitySlider.onValueChanged.AddListener(UpdateValueText);
     }
+    public void SetMoney()
+    {
+        itemImage.sprite = moneyImage;
+        quantityText.text = $"{InventoryController.Instance.money} / {InventoryController.Instance.money}";
+        quantitySlider.maxValue = InventoryController.Instance.money;
+        quantitySlider.value = InventoryController.Instance.money;
+        gameObject.SetActive(true);
+        quantitySlider.onValueChanged.AddListener (UpdateValueText);
+    }
 
     public void CancellButton()
     {
@@ -40,19 +52,28 @@ public class DistributionPanel : MonoBehaviour
     }
     public void OKButton()
     {
-        if(quantitySlider.value < distributionItemIcon.item.quantity)
+        if(distributionItemIcon != null) //일반 아이템일 경우
         {
-            Item item = new Item(distributionItemIcon.item.itemData, (int)quantitySlider.value, distributionItemIcon.item.durability);
-            ItemIcon itemIcon = InventoryController.Instance.GetCreateItemIcon(item);
-            itemPanel.InsertItem(itemIcon);
-            distributionItemIcon.item.quantity -= (int)quantitySlider.value;
-            distributionItemIcon.SetSlider();
+            if (quantitySlider.value < distributionItemIcon.item.quantity)
+            {
+                Item item = new Item(distributionItemIcon.item.itemData, (int)quantitySlider.value, distributionItemIcon.item.durability);
+                ItemIcon itemIcon = InventoryController.Instance.GetCreateItemIcon(item);
+                itemPanel.InsertItem(itemIcon);
+                distributionItemIcon.item.quantity -= (int)quantitySlider.value;
+                distributionItemIcon.SetSlider();
+            }
+            else
+            {
+                itemPanel.InsertItem(distributionItemIcon);
+            }
+            gameObject.SetActive(false);
+            distributionItemIcon = null;
         }
-        else
+        else//Money 일 경우
         {
-            itemPanel.InsertItem(distributionItemIcon);
+
         }
-        gameObject.SetActive(false);
+        
         
     }
 

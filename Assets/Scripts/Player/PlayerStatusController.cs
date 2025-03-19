@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerStatusController : Singleton<PlayerStatusController>
 {
+    [Header("Slider bar")]
     [SerializeField] Slider HpBar;
     [SerializeField] Slider SpBar;
 
+    [Header("Stat_Text")]
+    [SerializeField] TextMeshProUGUI LevelText;
+    [SerializeField] TextMeshProUGUI ExpText;
+    [SerializeField] TextMeshProUGUI ApText;
+
+
+    [Header("Stamina")]
     [SerializeField] float recoverSpValue = 3f;
     [SerializeField] float sprintStamina = 5f;
     [SerializeField] float rollingStamina = 5f;
     [SerializeField] float attackStamina = 5f;
 
+    [Header("player move bool")]
     public bool canSprint;
     public bool canRolling;
     public bool canAttack;
@@ -24,10 +34,15 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public float curSp;
 
     int playerLevel;
-    int needExpPoint; //다음까지 필요한
-    int expPoint; //가지고 있는 경험치 포인트
+    int needExpPoint; //다음까지 필요한 경험치
 
-    //현재 장착중인 아이템의 효과
+    //플레이어 스탯 종류 (Dic 저장된)
+    //Hp
+    //Sp
+    //Ap - 공격력
+    //Wp - 적재량
+
+    //현재 장착중인 아이템의 효과 -> 저장시 Hp 같이 첫글자만 대문자
     Dictionary<string, float> itemStatus = new Dictionary<string, float>();
     //현재 플레이어에게 적용되는 버프 혹은 저주 효과
     Dictionary<string, float> itemBuffStatus = new Dictionary<string, float>();
@@ -42,18 +57,35 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
     void Start()
     {
+        InitPlayerStatus(); //Dic에 기본 값들 생성 -> VillageManger에서 DB에 동기화된 값으로 후에 업데이트
         //나중에는 DB에서 동기화해오는 걸로 바꿔야 함.
-        InitPlayerStatus();
+        InitReal();
+
+        //스탯이 DB에서 동기화 된 후
+        ShowFirstStatus();
     }
 
-    public void InitPlayerStatus()
+    private void InitPlayerStatus()
+    {
+        //key만 생성
+        playerStatusValue["Exp"] = 0;
+        playerStatusValue["Hp"] = 0;
+        playerStatusValue["Sp"] = 0;
+        playerStatusValue["Ap"] = 0;
+        playerStatusValue["Wp"] = 0;
+    }
+
+    public void InitReal()
     {
         //원래는 아무것도 없어야 하지만 아직 DB를 하지 못한 관계로 임시
         playerLevel = 1;
         needExpPoint = 10;
-        expPoint = 0;
+        //원래는 playerStatusValue Dic에다가 저장하고 realValue에 최종 계산해야 하지만 나중에
+        realValue["Exp"] = 0;
         realValue["Hp"] = 1000;
         realValue["Sp"] = 10;
+        realValue["Ap"] = 10;
+        realValue["Wp"] = 20;
         curHp = realValue["Hp"];
         curSp = realValue["Sp"];
     }
@@ -69,6 +101,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         //스테미나 회복
         RecoverStamina(recoverSpValue);
     }
+
+    
 
     //스테미나 상태에 따라서 행동이 가능한지 
     void UpdateBehaviorBool()
@@ -95,16 +129,12 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         SpBar.value = curSp / realValue["Sp"];
     }
 
-    public void SettingItemBuff()
+    private void ShowFirstStatus()
     {
-        //TODO ItemBuff 효과
-    }
-
-    //원하는 타입의 status 변화
-    public void ChangeStatus(string type, int value)
-    {
-        //playerStatus.SetPlayerStatusValue(type, value);
-        //TODO 관련 UI 최신화
+        //처음 게임 실행하고 계산된 RealStatus를 text에 전달
+        LevelText.text = playerLevel.ToString();
+        ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
+        ApText.text = realValue["Ap"].ToString();
     }
 
     //계산 시점
@@ -116,6 +146,11 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         //realValue["CP"] = playerStatusValue["CP"] * 10.0f + playerLevel * 1.0f;
         //realValue["AP"] = 0;
         needExpPoint = 10 * playerLevel;
+    }
+
+    void StatusUpdate(string stat)
+    {
+        //업데이트된 realValue의 값을 text와 동기화
     }
 
     //플레이어 데미지

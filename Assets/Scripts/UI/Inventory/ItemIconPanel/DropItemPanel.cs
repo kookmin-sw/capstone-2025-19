@@ -29,6 +29,9 @@ public class DropItemPanel : ItemPanel
 
     public override void RemoveItem(ItemIcon itemIcon)
     {
+        Debug.Log($"{itemIcon}");
+        if(itemIcon == InventoryController.Instance.selectedItemIcon_) { Debug.LogError("Who is change itemIcon dropItem"); }
+        Debug.Log($"{itemIcon.dropItem}");
         InventoryController.Instance.dropItemList.Remove(itemIcon.dropItem.GetComponent<DropItem>());
     }
 

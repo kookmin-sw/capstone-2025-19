@@ -35,9 +35,9 @@ public class ItemIcon : MonoBehaviour
 
     public void RemoveItemIcon()
     {
-        dropItem = null;
         GetComponent<ItemIconInteract>().DestroyItemAlpha();
         if (itemPanel != null) { itemPanel.RemoveItem(this); }
+        dropItem = null;
         Destroy(gameObject);
     }
     private void SetSlider(Item item)

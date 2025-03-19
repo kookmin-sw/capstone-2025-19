@@ -33,7 +33,7 @@ public class PlayerTrigger : MonoBehaviour
 
         }else if (other.CompareTag("Money"))
         {
-
+            InventoryController.Instance.SetMoneyItemIcon(other.GetComponent<MoneyDropItem>());
         }
         if(other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
         {

@@ -61,11 +61,13 @@ public class InventoryController : Singleton<InventoryController>
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
     public ItemIcon SelectedItemIcon { get => selectedItemIcon; set { selectedItemIcon = value; } }
 
+    public ItemIcon selectedItemIcon_;
+
     protected override void Awake()
     {
         //TODO 아이템 저장하기 전에 new List 하기
         base.Awake();
-
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -76,6 +78,11 @@ public class InventoryController : Singleton<InventoryController>
         SetInventorySizeRate();
         SetMoney();
 
+    }
+
+    private void Update()
+    {
+        
     }
 
     private void SetMoney()
@@ -109,6 +116,11 @@ public class InventoryController : Singleton<InventoryController>
         MoneyItemIcon itemIcon = moneyItemIcon.GetComponent<MoneyItemIcon>();
         itemIcon.SetMoney(dropItemMoney.moneyValue);
         dropItemPanel.InsertMoney(moneyItemIcon);
+    }
+
+    public void RemoveMoneyItemIcon(MoneyDropItem dropItemMoney)
+    {
+        dropItemMoney.MoneyItemIcon.GetComponent<MoneyItemIcon>().RemoveItemIcon();
     }
 
     public void SetInventorySizeRate()
@@ -198,13 +210,19 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void CreateItemIcon(DropItem dropItem)
     {
+        Debug.Log("CreateItemIcon to dropItem");
         GameObject itemIconGo = Instantiate(itemIconPrefab);
         dropItem.itemIcon = itemIconGo;
         ItemIcon itemIcon = itemIconGo.GetComponent<ItemIcon>();
         itemIcon.dropItem = dropItem.gameObject;
+        Debug.Log($"createItemIcon {itemIcon.dropItem}");
         Item item = new Item(dropItem.itemData, dropItem.quantity, dropItem.durability);
         itemIcon.SetItem(item);
         itemIconGo.name = $"{item.itemData.name}_ItemIcon";
+
+
+        //Test
+        selectedItemIcon_ = itemIcon;
     }
     public void CreateDropItem(ItemIcon itemIcon)
     {
@@ -332,18 +350,14 @@ public class InventoryController : Singleton<InventoryController>
 
     public void ExitDropItem(DropItem dropItem)
     {
-        Debug.Log("1");
         if(dropItem == null) { return; }
-        Debug.Log("2");
         if (dropItemList.Contains(dropItem))
         {
-            Debug.Log("3");
             dropItemList.Remove(dropItem);
             RemoveItemIcon(dropItem);
         }
         else
         {
-            Debug.Log("4");
             RemoveDropItem(dropItem);
         }
         /*Debug.Log(testDropITem);

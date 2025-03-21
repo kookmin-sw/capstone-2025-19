@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class MonsterMovement : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] Transform target;
     [SerializeField] private float chaseDistance = 10f;   // 추적 시작 거리
-   
-    
+    [SerializeField] GameObject tempCollisionObject; //몬스터가 실제 무기를 들기 전 임시 사용.
+
+    Vector3 spawnPosition;
+
     NavMeshAgent agent;
     NavMeshPath path;
     float distance = Mathf.Infinity;
@@ -26,11 +29,12 @@ public class MonsterMovement : MonoBehaviour
         Idle,
         Attack,
         Reaction,
+        BackToSpawn
     }
 
     [SerializeField] List<string> attackList = new List<string>{ "AttackDownward", "ComboAttack1"};
-    [SerializeField] List<float> attackDistanceList = new List<float> {5f, 2f};
-    List<float> attackAniInitRotate = new List<float> {19f, 35f };
+    //[SerializeField] List<float> attackDistanceList = new List<float> {5f, 2f};
+    //List<float> attackAniInitRotate = new List<float> {19f, 35f };
 
     float attackDistance = 2f; // 공격 거리
     string nextAttackMotion = "AttackDownward";
@@ -63,6 +67,14 @@ public class MonsterMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();
+    }
+
+    private void Start()
+    {
+        tempCollisionObject.SetActive(false);
+
+        //몬스터 스폰 지점 저장
+        spawnPosition = transform.position;
     }
 
 
@@ -111,7 +123,8 @@ public class MonsterMovement : MonoBehaviour
         // 3) 그 밖에는 Idle
         else
         {
-            _state = MonsterState.Idle;
+            if (Vector3.Distance(transform.position, spawnPosition) < 1f) _state = MonsterState.Idle;
+            else _state = MonsterState.BackToSpawn;
         }
 
         // 상태별 동작
@@ -125,6 +138,9 @@ public class MonsterMovement : MonoBehaviour
                 break;
             case MonsterState.Attack:
                 UpdateAttack();
+                break;
+            case MonsterState.BackToSpawn:
+                BackToSpawnPosition();
                 break;
         }
     }
@@ -145,6 +161,17 @@ public class MonsterMovement : MonoBehaviour
         return distance;
     }
 
+    private void BackToSpawnPosition()
+    {
+        // 이동 시작
+        agent.isStopped = false;
+        agent.SetDestination(spawnPosition);
+
+        //애니메이션
+        animator.SetBool("Stop", false);
+        animator.SetBool("Following", true);
+    }
+
     private void UpdateFollowing()
     {
         // 이동 시작
@@ -162,21 +189,7 @@ public class MonsterMovement : MonoBehaviour
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
-        // 타겟 바라보기
-        //Vector3 dir = (target.position - transform.position).normalized;
-        //dir.y = 0f; // 수직축은 무시
-        //transform.rotation = Quaternion.LookRotation(dir);
-
-        ////각 공격 애니메이션 마다 초기 회전값 보정
-        //int attackIndex = attackList.IndexOf(nextAttackMotion);
-        //if (attackIndex >= 0)
-        //{
-        //    //추가 회전 값
-        //    float initRotate = attackAniInitRotate[attackIndex];
-
-        //    //transform에 추가 회전을 곱
-        //    transform.rotation *= Quaternion.Euler(0f, initRotate, 0f);
-        //}
+        
 
         animator.SetBool("Following", false);
         //animator.SetBool("Stop", true);
@@ -241,4 +254,34 @@ public class MonsterMovement : MonoBehaviour
         Debug.Log("OnDownAttackEnd 호출");
     }
 
+    public void ColliderOn()
+    {
+        //공격 물체에 collider 켜기
+        tempCollisionObject.SetActive(true);
+        Debug.Log("Collider 켜짐");
+    }
+
+    public void ColliderOff()
+    {
+        //공격 물체에 collider 켜기
+        tempCollisionObject.SetActive(false);
+        Debug.Log("Collider 꺼짐");
+    }
+
 }
+
+// 타겟 바라보기
+//Vector3 dir = (target.position - transform.position).normalized;
+//dir.y = 0f; // 수직축은 무시
+//transform.rotation = Quaternion.LookRotation(dir);
+
+////각 공격 애니메이션 마다 초기 회전값 보정
+//int attackIndex = attackList.IndexOf(nextAttackMotion);
+//if (attackIndex >= 0)
+//{
+//    //추가 회전 값
+//    float initRotate = attackAniInitRotate[attackIndex];
+
+//    //transform에 추가 회전을 곱
+//    transform.rotation *= Quaternion.Euler(0f, initRotate, 0f);
+//}

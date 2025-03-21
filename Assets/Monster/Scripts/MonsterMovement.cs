@@ -8,6 +8,7 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] Transform target;
     [SerializeField] private float chaseDistance = 10f;   // 추적 시작 거리
+   
     
     NavMeshAgent agent;
     NavMeshPath path;
@@ -27,17 +28,17 @@ public class MonsterMovement : MonoBehaviour
         Reaction,
     }
 
-    [SerializeField] List<string> attackList = new List<string>{ "JumpAttack", "AttackDownward"};
+    [SerializeField] List<string> attackList = new List<string>{ "AttackDownward", "ComboAttack1"};
     [SerializeField] List<float> attackDistanceList = new List<float> {5f, 2f};
     List<float> attackAniInitRotate = new List<float> {19f, 35f };
 
-    float attackDistance = 5f; // 공격 거리
-    string nextAttackMotion = "JumpAttack";
+    float attackDistance = 2f; // 공격 거리
+    string nextAttackMotion = "AttackDownward";
     private void chooseAttackMotion()
     {
-
+        /*
         //target과의 거리를 기반으로 공격 선택
-        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        float distanceToPlayer = CalculDistance();
         if (distanceToPlayer >= 5f)
         {
             // 점프 공격
@@ -49,7 +50,12 @@ public class MonsterMovement : MonoBehaviour
             // 근접 공격
             nextAttackMotion = "AttackDownward";
             attackDistance = 2f;
-        }
+        }*/
+        int randomAttackIndex = Random.Range(0, attackList.Count);
+
+        nextAttackMotion = attackList[randomAttackIndex];
+        //nextAttackMotion = "ComboAttack1";
+        //attackDistance = 2f;
     }
 
     private void Awake()
@@ -82,11 +88,6 @@ public class MonsterMovement : MonoBehaviour
     void Update()
     {
         Debug.Log(_state);
-
-        if(_state == MonsterState.Attack)
-        {
-            UpdateAttack();
-        }
         if (_state == MonsterState.Reaction)
         {
             return;
@@ -146,7 +147,6 @@ public class MonsterMovement : MonoBehaviour
 
     private void UpdateFollowing()
     {
-        
         // 이동 시작
         agent.isStopped = false;
         agent.SetDestination(target.position);
@@ -154,8 +154,6 @@ public class MonsterMovement : MonoBehaviour
         //애니메이션
         animator.SetBool("Stop", false);
         animator.SetBool("Following", true);
-        AttackTriggerReset();
-        chooseAttackMotion();
     }
 
     private void UpdateAttack()
@@ -183,7 +181,6 @@ public class MonsterMovement : MonoBehaviour
         animator.SetBool("Following", false);
         //animator.SetBool("Stop", true);
         animator.SetTrigger(nextAttackMotion);
-        chooseAttackMotion();
     }
 
     public void UpdateIdle()
@@ -195,16 +192,19 @@ public class MonsterMovement : MonoBehaviour
         //애니메이션
         animator.SetBool("Stop", true);
         animator.SetBool("Following", false);
-        AttackTriggerReset();
     }
 
     
 
-    private void AttackTriggerReset()
+    public void AttackTriggerReset()
     {
-        animator.ResetTrigger("JumpAttack");
-        animator.ResetTrigger("AttackDownward");
-
+        attackList.ForEach(attack => 
+        {
+            animator.ResetTrigger(attack);
+        });
+        chooseAttackMotion();
+        Debug.Log("attack trigger reset");
+        Debug.Log($"랜덤 선택 공격 모션 : {nextAttackMotion}");
     }
 
     public void WatchPlayer()
@@ -226,7 +226,7 @@ public class MonsterMovement : MonoBehaviour
 
     public void OnJumpAttckEnd()
     {
-        _state = MonsterState.Idle;
+        _state = MonsterState.Following;
 
         animator.ResetTrigger("JumpAttack");
 
@@ -235,7 +235,7 @@ public class MonsterMovement : MonoBehaviour
 
     public void OnDownAttackEnd()
     {
-        _state = MonsterState.Idle;
+        _state = MonsterState.Following;
 
         animator.ResetTrigger("AttackDownward");
         Debug.Log("OnDownAttackEnd 호출");

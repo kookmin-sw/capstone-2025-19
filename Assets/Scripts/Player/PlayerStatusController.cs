@@ -157,7 +157,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public void getDamage(int damage)
     {
         curHp -= damage;
-        Debug.Log($"남은 체력 : {curHp}");
+        //Debug.Log($"남은 체력 : {curHp}");
     }
     
     //public void UseStamina(float value)

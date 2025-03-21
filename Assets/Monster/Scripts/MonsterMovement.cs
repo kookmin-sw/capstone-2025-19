@@ -10,6 +10,8 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField] private float chaseDistance = 10f;   // 추적 시작 거리
     
     NavMeshAgent agent;
+    NavMeshPath path;
+    float distance = Mathf.Infinity;
 
     MonsterState _state = MonsterState.Idle;
 
@@ -54,6 +56,7 @@ public class MonsterMovement : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        path = new NavMeshPath();
     }
 
 
@@ -90,7 +93,9 @@ public class MonsterMovement : MonoBehaviour
         }
 
         //플레이어와의 거리를 확인
-        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        float distanceToPlayer = CalculDistance();
+        //Debug.Log($"실제 거리 : {distanceToPlayer}");
 
         // 1) 공격 사거리 이내인지?
         if (distanceToPlayer <= attackDistance)
@@ -121,6 +126,22 @@ public class MonsterMovement : MonoBehaviour
                 UpdateAttack();
                 break;
         }
+    }
+
+    private float CalculDistance()
+    {
+        // 경로 계산
+        if (agent.CalculatePath(target.position, path))
+        {
+            // 코너 간 거리를 더해서 총 경로 길이 계산
+            distance = 0f;
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                distance += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+            }
+        }
+
+        return distance;
     }
 
     private void UpdateFollowing()

@@ -793,6 +793,7 @@ GameObject:
   - component: {fileID: 475276051}
   - component: {fileID: 475276050}
   - component: {fileID: 475276049}
+  - component: {fileID: 475276053}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Untagged
@@ -880,12 +881,28 @@ Transform:
   m_GameObject: {fileID: 475276048}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.47694063, z: -0, w: 0.8789355}
-  m_LocalPosition: {x: -10.322105, y: 36.751717, z: 39.541492}
+  m_LocalPosition: {x: -10.322105, y: 37.47, z: 39.541492}
   m_LocalScale: {x: 1.8246999, y: 1, z: 7.5537004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 788936465}
   m_LocalEulerAnglesHint: {x: 0, y: 56.972, z: 0}
+--- !u!208 &475276053
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475276048}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &482374351
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,6 +1867,7 @@ GameObject:
   - component: {fileID: 1473533484}
   - component: {fileID: 1473533483}
   - component: {fileID: 1473533482}
+  - component: {fileID: 1473533486}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -1937,12 +1955,28 @@ Transform:
   m_GameObject: {fileID: 1473533481}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.47694063, z: -0, w: 0.8789355}
-  m_LocalPosition: {x: -19.462105, y: 37.051716, z: 28.651491}
+  m_LocalPosition: {x: -19.462105, y: 37.38, z: 28.651491}
   m_LocalScale: {x: 1.8246999, y: 1, z: 7.5537004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 788936465}
   m_LocalEulerAnglesHint: {x: 0, y: 56.972, z: 0}
+--- !u!208 &1473533486
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473533481}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1491049259
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4717653563900543932}
   - component: {fileID: 7723247661488388762}
   - component: {fileID: 2115608519793946249}
+  - component: {fileID: 5877933192911782524}
   m_Layer: 0
   m_Name: CollisionObject (1)
   m_TagString: Monster
@@ -81,6 +82,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.19
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5877933192911782524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330967055735793883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bb398e399da0224592122edb1d267c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
 --- !u!1 &4987189137454835500
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 8206172958325894135}
   target: {fileID: 0}
-  chaseDistance: 10
+  chaseDistance: 15
   attackList:
   - JumpAttack
   - AttackDownward
@@ -302,7 +316,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 1
+  m_Speed: 0.05
   m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 1080

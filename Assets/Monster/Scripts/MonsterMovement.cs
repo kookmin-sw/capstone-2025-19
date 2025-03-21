@@ -33,10 +33,6 @@ public class MonsterMovement : MonoBehaviour
     string nextAttackMotion = "JumpAttack";
     private void chooseAttackMotion()
     {
-        //int attackIndex = Random.Range(0, attackList.Count);
-        //Debug.Log($"{attackIndex}");
-        //nextAttackMotion = attackList[attackIndex];
-        //attackDistance = attackDistanceList[attackIndex];
 
         //target과의 거리를 기반으로 공격 선택
         float distanceToPlayer = Vector3.Distance(transform.position, target.position);
@@ -58,27 +54,7 @@ public class MonsterMovement : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        //agent.updatePosition = false;
-        //agent.updateRotation = false;
-        //animator.applyRootMotion = true;
     }
-
-    //private void OnAnimatorMove()
-    //{
-    //    if (_state != MonsterState.Attack)
-    //    {
-    //        // 루트 모션 이동
-    //        transform.position += animator.deltaPosition;
-
-    //        // 원하는 경우에만 회전
-    //        Vector3 dir = (target.position - transform.position).normalized;
-    //        dir.y = 0f;
-    //        transform.rotation = Quaternion.LookRotation(dir);
-    //    }
-
-    //    // NavMeshAgent 위치를 Transform에 동기화 (안 그러면 NavMeshAgent와 Transform이 어긋남)
-    //    agent.nextPosition = transform.position;
-    //}
 
 
     private void OnTriggerEnter(Collider other)
@@ -104,8 +80,11 @@ public class MonsterMovement : MonoBehaviour
     {
         Debug.Log(_state);
 
-
-        if (_state == MonsterState.Reaction || _state == MonsterState.Attack)
+        if(_state == MonsterState.Attack)
+        {
+            UpdateAttack();
+        }
+        if (_state == MonsterState.Reaction)
         {
             return;
         }
@@ -160,26 +139,25 @@ public class MonsterMovement : MonoBehaviour
 
     private void UpdateAttack()
     {
-
         // 공격 시에는 멈추고 애니메이션 실행
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
         // 타겟 바라보기
-        Vector3 dir = (target.position - transform.position).normalized;
-        dir.y = 0f; // 수직축은 무시
-        transform.rotation = Quaternion.LookRotation(dir);
+        //Vector3 dir = (target.position - transform.position).normalized;
+        //dir.y = 0f; // 수직축은 무시
+        //transform.rotation = Quaternion.LookRotation(dir);
 
-        //각 공격 애니메이션 마다 초기 회전값 보정
-        int attackIndex = attackList.IndexOf(nextAttackMotion);
-        if (attackIndex >= 0)
-        {
-            //추가 회전 값
-            float initRotate = attackAniInitRotate[attackIndex];
+        ////각 공격 애니메이션 마다 초기 회전값 보정
+        //int attackIndex = attackList.IndexOf(nextAttackMotion);
+        //if (attackIndex >= 0)
+        //{
+        //    //추가 회전 값
+        //    float initRotate = attackAniInitRotate[attackIndex];
 
-            //transform에 추가 회전을 곱
-            transform.rotation *= Quaternion.Euler(0f, initRotate, 0f);
-        }
+        //    //transform에 추가 회전을 곱
+        //    transform.rotation *= Quaternion.Euler(0f, initRotate, 0f);
+        //}
 
         animator.SetBool("Following", false);
         //animator.SetBool("Stop", true);
@@ -208,6 +186,13 @@ public class MonsterMovement : MonoBehaviour
 
     }
 
+    public void WatchPlayer()
+    {
+        // 타겟 바라보기
+        //Vector3 dir = (target.position - transform.position).normalized;
+        //dir.y = 0f; // 수직축은 무시
+        //transform.rotation = Quaternion.LookRotation(dir);
+    }
     public void OnReactionEnd()
     {
         // Reaction 애니메이션 끝

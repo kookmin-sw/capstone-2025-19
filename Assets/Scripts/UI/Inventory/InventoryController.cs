@@ -14,12 +14,25 @@ using static UnityEditor.Progress;
 
 public class InventoryController : Singleton<InventoryController>
 {
+    public enum InventoryState
+    {
+        Inventory,
+        Store,
+        Warehouse,
+
+    }
+
+    private InventoryState _state = InventoryState.Inventory;
+
     [SerializeField] CanvasGroup canvasGroup;
+    [SerializeField] CanvasGroup storeCanvasGroup;
+    [SerializeField] CanvasGroup warehouseCanvasGroup;
     //public TestPlayerMovement player;
     //public PlayerManager player;
     public PlayerTrigger player;
     [SerializeField] GameObject itemIconPrefab;
 
+    [Header("ItemPanel Inspector")]
     [SerializeField] public InventoryPanel inventoryPanel;
     [SerializeField] public DropItemPanel dropItemPanel;
     [SerializeField] public BackpackPanel backpackPanel;
@@ -29,6 +42,12 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] public MoneyPanel moneyPanel;
 
     [SerializeField] public DistributionPanel distributionPanel;
+
+    [Header("Store Inspector")]
+    [SerializeField] Canvas storeCanvas;
+    [SerializeField] public StoreItemPanel storeItemPanel;
+    [SerializeField] public PurchasePanel purchasePanel;
+    public bool purchasePanelBool = false;
 
     List<ItemIcon> inventoryList;
     public List<DropItem> dropItemList;
@@ -435,8 +454,7 @@ public class InventoryController : Singleton<InventoryController>
 
     public void SetInventoryCanvas()
     {
-        //if (player == null) { return; }
-        if(PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.state == PlayerState.State.Inventory)
         {
             canvasGroup.alpha = 1;
         }
@@ -444,6 +462,20 @@ public class InventoryController : Singleton<InventoryController>
         {
             canvasGroup.alpha = 0;
         }
+
+    }
+
+    public void SetStoreInventory(bool input)
+    {
+        dropItemPanel.gameObject.SetActive(!input);
+        storeCanvas.gameObject.SetActive(input);
+        if (input) { PlayerState.Instance.ChangeState(PlayerState.State.Inventory); }
+        else { PlayerState.Instance.ChangeState(PlayerState.State.Idle); }
+    }
+
+    public void SetWareHouseInventory()
+    {
+
     }
 
    

@@ -74,7 +74,7 @@ public class InventoryController : Singleton<InventoryController>
     public WeaponSlotManager weaponSlotManager;
     public float currentInventoryItemSizeValue = 0f;
 
-    public int money = 0;
+    public int money = 1000000;
     [HideInInspector]
     public List<Item> wareHouse = new List<Item>();
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }

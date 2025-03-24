@@ -14,8 +14,18 @@ public class StoreItemInteract : MonoBehaviour,IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(itemIcon.item != null) { }
-        else { InventoryController.Instance.purchasePanel.SetItem(itemIcon); }
+        if (itemIcon.isPurchasePanel)
+        {
+            //TODO Return item
+            if (itemIcon.isInventoryItem) { Debug.Log($"itemIcon {itemIcon.item}"); } 
+            else { InventoryController.Instance.purchasePanel.RemoveItemIcon(itemIcon); }
+        }
+        else
+        {
+            if(itemIcon.isInventoryItem) { Debug.Log($"itemIcon {itemIcon.item}"); }
+            else { InventoryController.Instance.purchasePanel.SetItem(itemIcon);  }
+
+        }
     }
 
     void Awake()

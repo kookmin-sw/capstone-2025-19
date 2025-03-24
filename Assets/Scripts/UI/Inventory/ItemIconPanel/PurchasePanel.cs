@@ -7,50 +7,60 @@ using TMPro;
 public class PurchasePanel : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI priceText;
-    GameObject purchaseButton;
-    GameObject sellButton;
+    [SerializeField] ScrollRect scrollRect;
+    [SerializeField] GameObject purchaseButton;
+    [SerializeField] GameObject sellButton;
+    
     bool storeType = true;
     List<StoreItemIcon> itemList = new List<StoreItemIcon>();
     int totalPrice = 0;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+ 
 
     public void InsertItem(StoreItemIcon item)
     {
-        if(item.item != null) { totalPrice += item.item.itemData.price; }
+        item.transform.SetParent(scrollRect.content);
+        if(item.isInventoryItem) { totalPrice += item.item.itemData.price; }
         else { totalPrice += item.itemData.price; }
+        priceText.text = totalPrice.ToString();
+        itemList.Add(item);
     }
 
     public void RemoveItemIcon(StoreItemIcon item)
     {
-        if (item.item != null) { ItemIcon itemIcon = InventoryController.Instance.GetCreateItemIcon(item.item); InventoryController.Instance.inventoryPanel.InsertItem(itemIcon); 
+        if (item.isInventoryItem) { ItemIcon itemIcon = InventoryController.Instance.GetCreateItemIcon(item.item); InventoryController.Instance.inventoryPanel.InsertItem(itemIcon); 
             totalPrice -= item.item.itemData.price;
             item.item = null;
         }
         else { totalPrice -= item.itemData.price; }
+        priceText.text = totalPrice.ToString();
+        itemList.Remove(item);
         Destroy(item.gameObject);
         
     }
 
     public void SetItem(Item item)
     {
-
+        if (storeType) { if (itemList.Count != 0) return;
+            storeType = !storeType;
+        }
+        GameObject storeItemIcon = Instantiate(Resources.Load<GameObject>($"Prefabs/UI/Inventory/Store_ItemIcon"));
+        StoreItemIcon _itemIcon = storeItemIcon.GetComponent<StoreItemIcon>();
+        _itemIcon.SetItem(item);
+        InsertItem(_itemIcon);
     }
 
     public void SetItem(StoreItemIcon item)
     {
-
+        if (!storeType) {
+            if (itemList.Count != 0) return;
+            storeType = !storeType; }
+        GameObject storeItemIcon = Instantiate(Resources.Load<GameObject>($"Prefabs/UI/Inventory/Store_ItemIcon"));
+        StoreItemIcon _itemIcon = storeItemIcon.GetComponent<StoreItemIcon>();
+        _itemIcon.SetItem(item.itemData);
+        _itemIcon.isPurchasePanel = true;
+        InsertItem(_itemIcon);
     }
 
     public void PurchaseButton()
@@ -61,9 +71,29 @@ public class PurchasePanel : MonoBehaviour
             Debug.LogError("Not enought money");
             return;
         }
-        foreach(StoreItemIcon item in itemList)
+        foreach(StoreItemIcon itemIcon in itemList)
         {
-
+            Item item = new Item(itemIcon.itemData, itemIcon.itemData.maxQuantity, itemIcon.itemData.maxItemDurability);
+            ItemIcon _itemIcon = InventoryController.Instance.GetCreateItemIcon(item);
+            InventoryController.Instance.inventoryPanel.InsertItem(_itemIcon);
         }
+        InventoryController.Instance.money -= totalPrice;
+        ClearPurchasePanel();
+    }
+
+    public void SellButton()
+    {
+
+    }
+
+    private void ClearPurchasePanel()
+    {
+        foreach (Transform child in scrollRect.content)
+        {
+            Destroy(child.gameObject);
+        }
+        totalPrice = 0;
+        priceText.text = totalPrice.ToString();
+        itemList.Clear();
     }
 }

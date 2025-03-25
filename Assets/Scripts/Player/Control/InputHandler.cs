@@ -17,6 +17,8 @@ namespace PlayerControl
 		public bool lockOnNext;
 		public bool attack;
 		public bool inventory;
+		public bool useItem;
+		public bool pickup;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -90,6 +92,16 @@ namespace PlayerControl
 			}
         }
 
+		public void OnUseItem(InputValue value)
+		{
+			UseItemInput(value.isPressed);
+		}
+
+		public void OnPickUp(InputValue value)
+		{
+			PickUpInput(value.isPressed);
+		}
+
 		
 		public void MoveInput(Vector2 newMoveDirection)
 		{
@@ -134,6 +146,16 @@ namespace PlayerControl
 		public void AttackInput(bool newAttackState)
 		{
 			attack = newAttackState;
+		}
+
+		public void UseItemInput(bool newUseItemState)
+		{
+			useItem = newUseItemState;
+		}
+
+		public void PickUpInput(bool newPickUpState)
+		{
+			pickup = newPickUpState;
 		}
 
         private void OnApplicationFocus(bool hasFocus)

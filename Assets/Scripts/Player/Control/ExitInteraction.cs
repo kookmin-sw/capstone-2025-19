@@ -5,14 +5,14 @@ using UnityEngine;
 public class ExitInteraction : StateMachineBehaviour
 {
     public string triggerName;
-    public float freeTime = 0.75f;
+    [Range(0, 0.99f)]public float freeProgressRate = 0.75f;
     const string INTERACTING_LABEL = "Interacting";
     const string BLOCKING_LABEL = "Blocking";
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         float progress = stateInfo.normalizedTime;
-        if (progress >= freeTime && progress < 1.0f)
+        if (progress >= freeProgressRate && progress < 1.0f)
         {      
             animator.SetBool(INTERACTING_LABEL, false);
             animator.applyRootMotion = false;

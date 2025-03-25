@@ -32,16 +32,16 @@ public class Weaponpanel : ItemPanel
         weaponItemIcon = itemIcon;
         Debug.Log($"itemIcon {itemIcon.item.itemData}");
         Debug.Log($"itemIcon {itemIcon.item.itemData.weaponStats}");
-        //TODO player¿¡°Ô ¹«±â Áã¾îÁÖ±â
-        InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
+        //TODO playerï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
+        //InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
         //WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
     }
     public override void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)
     {
         base.TakeOutItem(itemPanel, itemIcon);
         weaponItemIcon = null;
-        //TODO ¹«±â Áö¿ì±â
-        InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(null, false);
+        //TODO ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+        //InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(null, false);
     }
     private void ChangeWeapon()
     {
@@ -63,7 +63,7 @@ public class Weaponpanel : ItemPanel
     {
         if(weaponItemIcon != null)
         {
-            InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
+            //InventoryController.Instance.weaponSlotManager.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
             //WeaponSlotManager.Instance.LoadWeaponOnSlot(weaponItemIcon.item.itemData.weaponStats, false);
         }
     }

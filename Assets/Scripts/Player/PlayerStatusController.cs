@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,7 +15,13 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     [SerializeField] TextMeshProUGUI LevelText;
     [SerializeField] TextMeshProUGUI ExpText;
     [SerializeField] TextMeshProUGUI ApText;
+    [SerializeField] Button LevelUpButton;
+    [SerializeField] Button PointDecomposeCompleteBnt;
+    [SerializeField] TextMeshProUGUI LevelUpPoint;
 
+    [Header("LevelUp")]
+    [SerializeField] GameObject PlusButton;
+    [SerializeField] TextMeshProUGUI AP_Result;
 
     [Header("Stamina")]
     [SerializeField] float recoverSpValue = 3f;
@@ -35,6 +42,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     int playerLevel;
     int needExpPoint; //다음까지 필요한 경험치
+
+    int levelPoint; //레벨업 시 얻는 포인트
 
     //플레이어 스탯 종류 (Dic 저장된)
     //Hp
@@ -57,12 +66,17 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
     void Start()
     {
+        PlusButton.SetActive(false);
+        LevelUpButton.gameObject.SetActive(false);
+        PointDecomposeCompleteBnt.gameObject.SetActive(false);
+        LevelUpPoint.gameObject.SetActive(false);
+
         InitPlayerStatus(); //Dic에 기본 값들 생성 -> VillageManger에서 DB에 동기화된 값으로 후에 업데이트
         //나중에는 DB에서 동기화해오는 걸로 바꿔야 함.
         InitReal();
 
         //스탯이 DB에서 동기화 된 후
-        ShowFirstStatus();
+        UpdateStatusText();
     }
 
     private void InitPlayerStatus()
@@ -81,11 +95,14 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         playerLevel = 1;
         needExpPoint = 10;
         //원래는 playerStatusValue Dic에다가 저장하고 realValue에 최종 계산해야 하지만 나중에
-        realValue["Exp"] = 0;
-        realValue["Hp"] = 1000;
-        realValue["Sp"] = 10;
-        realValue["Ap"] = 10;
-        realValue["Wp"] = 20;
+        playerStatusValue["Exp"] = 0;
+        playerStatusValue["Hp"] = 1000;
+        playerStatusValue["Sp"] = 10;
+        playerStatusValue["Ap"] = 10;
+        playerStatusValue["Wp"] = 20;
+
+        StatusCalculate();
+
         curHp = realValue["Hp"];
         curSp = realValue["Sp"];
     }
@@ -129,7 +146,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         SpBar.value = curSp / realValue["Sp"];
     }
 
-    private void ShowFirstStatus()
+    private void UpdateStatusText()
     {
         //처음 게임 실행하고 계산된 RealStatus를 text에 전달
         LevelText.text = playerLevel.ToString();
@@ -138,19 +155,25 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
 
     //계산 시점
-    //아이템이 장착되는 시점 + 물약이나 저주시
+    //아이템이 장착되는 시점 + 물약이나 저주 + 레벨업
+    //playerStatus를 기준으로 realValue를 업데이트
     private void StatusCalculate()
     {
+        realValue["Exp"] = playerStatusValue["Exp"];
         realValue["Hp"] = playerStatusValue["Hp"];
         realValue["Sp"] = playerStatusValue["Sp"] * 100.0f + playerLevel * 0.0f;
-        //realValue["CP"] = playerStatusValue["CP"] * 10.0f + playerLevel * 1.0f;
-        //realValue["AP"] = 0;
+        realValue["Ap"] = playerStatusValue["Ap"];
+        //realValue["Cp"] = playerStatusValue["Cp"] * 10.0f + playerLevel * 1.0f;
         needExpPoint = 10 * playerLevel;
     }
 
-    void StatusUpdate(string stat)
+    void StatusUpdate()
     {
+        //playerStatusValue를 기준으로 realValue를 업데이트
+        StatusCalculate();
+
         //업데이트된 realValue의 값을 text와 동기화
+        UpdateStatusText();
     }
 
     //플레이어 데미지
@@ -197,6 +220,72 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
             //플레이어 죽음.
             Debug.Log("플레이어 사망");
         }
+    }
+
+    //player 경험치가 다 차면 레벨업 가능
+    public void getExp(int exp)
+    {
+        playerStatusValue["Exp"] += exp;
+        realValue["Exp"] = playerStatusValue["Exp"];
+
+        //경험치 얻은거 상태 업데이트
+        ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
+
+        if (realValue["Exp"] >= needExpPoint)
+        {
+            LevelUpButton.gameObject.SetActive(true);
+        }
+    }
+
+    //플레이어가 LevelUp버튼을 눌렀을 경우
+    public void LevelUpStep1()
+    {
+        //UI 작동
+        PlusButton.SetActive(true);
+        LevelUpButton.gameObject.SetActive(false);
+        PointDecomposeCompleteBnt.gameObject.SetActive(true);
+        LevelUpPoint.gameObject.SetActive(true);
+        PointDecomposeCompleteBnt.interactable = false; //보이기만 하고 아직 클릭은 못하도록
+
+        //능력치 포인트 및 표시
+        levelPoint = 5;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+
+        //+ 옆에 표시할 완료 이후 능력치들
+        //주의할 점은 realValue가 아닌 playerStatusValue를 사용해서 계산해야 한다. 
+        AP_Result.text = playerStatusValue["Ap"].ToString();
+    }
+
+    //Ap+버튼을 눌렀을 경우 실행
+    public void ApPlusButton()
+    {
+        AP_Result.text = (float.Parse(AP_Result.text) + 1).ToString();
+        levelPoint--;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    private void isLevelPoint0()
+    {
+        if(levelPoint <= 0)
+        {
+            PlusButton.SetActive(false);
+            PointDecomposeCompleteBnt.interactable = true;
+        }
+    }
+
+    public void PressPointDecomposeCompleteBnt()
+    {
+        //Exp 소모
+        playerStatusValue["Exp"] -= needExpPoint;
+
+        //바뀐 능력치를 저장
+        playerStatusValue["Ap"] = float.Parse(AP_Result.text);
+
+        playerLevel++;
+        StatusUpdate();
+        PointDecomposeCompleteBnt.gameObject.SetActive(false);
+        LevelUpPoint.gameObject.SetActive(false);
     }
 
 }

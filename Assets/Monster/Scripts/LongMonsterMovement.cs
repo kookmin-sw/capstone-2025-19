@@ -67,6 +67,7 @@ public class LongMonsterMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();
+        agent.stoppingDistance = 2f;
     }
 
     private void Start()
@@ -113,18 +114,39 @@ public class LongMonsterMovement : MonoBehaviour
         // 1) 공격 사거리 이내인지?
         if (distanceToPlayer <= attackDistance)
         {
-            _state = MonsterState.Attack;
+            if (HasLineOfSight(target)) //캐릭터가 보이면
+            {
+                animator.SetBool("SeeTarget", true);
+                animator.SetBool("Follow", false);
+                Debug.Log("캐릭터 보임");
+                _state = MonsterState.Attack;
+            }
+            else
+            {
+                animator.SetBool("SeeTarget", false);
+                _state = MonsterState.Following;
+            }
+            
         }
-        // 2) 추적 사거리 이내인지?
-        //else if (distanceToPlayer <= chaseDistance)
-        //{
-        //    _state = MonsterState.Following;
-        //}
-        // 3) 그 밖에는 Idle
         else
         {
-            if (Vector3.Distance(transform.position, spawnPosition) < 1f) _state = MonsterState.Idle;
-            //else _state = MonsterState.BackToSpawn;
+            animator.SetBool("SeeTarget", false);
+            //if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) _state = MonsterState.Idle;
+            //else
+            //{
+
+            //    if (_state != MonsterState.BackToSpawn)
+            //    {
+            //        Debug.Log("이거 실행되면 안되는 건데?");
+            //        animator.SetTrigger("BackToPosition");
+            //    }
+            //    _state = MonsterState.BackToSpawn;
+            //}
+            if (_state != MonsterState.BackToSpawn)
+            {
+                animator.SetTrigger("BackToPosition");
+                _state = MonsterState.BackToSpawn;
+            }
         }
 
         // 상태별 동작
@@ -168,8 +190,18 @@ public class LongMonsterMovement : MonoBehaviour
         agent.SetDestination(spawnPosition);
 
         //애니메이션
-        //animator.SetBool("Stop", false);
-        //animator.SetBool("Following", true);
+        animator.SetBool("Follow", true);
+
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            // 목표 지점 도달 시 처리
+            // => Idle 상태 전환, 이동 애니메이션 끄기 등
+            _state = MonsterState.Idle;
+            animator.SetBool("Follow", false);
+
+            // 트리거를 한 번만 사용하고 싶다면, 여기서 ResetTrigger 해도 됨
+            animator.ResetTrigger("BackToPosition");
+        }
     }
 
     private void UpdateFollowing()
@@ -179,8 +211,7 @@ public class LongMonsterMovement : MonoBehaviour
         agent.SetDestination(target.position);
 
         //애니메이션
-        animator.SetBool("Stop", false);
-        animator.SetBool("Following", true);
+        animator.SetBool("Follow", true);
     }
 
     private void UpdateAttack()
@@ -189,13 +220,12 @@ public class LongMonsterMovement : MonoBehaviour
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
-        animator.SetBool("SeeTarget", true);
+        //animator.SetTrigger("Attack");
 
         Vector3 dir = (target.position - transform.position).normalized;
         dir.y = 0f; // 수직축은 무시
         transform.rotation = Quaternion.LookRotation(dir);
-        //animator.SetBool("Stop", true);
-        //animator.SetTrigger(nextAttackMotion);
+        
     }
 
     public void UpdateIdle()
@@ -205,10 +235,44 @@ public class LongMonsterMovement : MonoBehaviour
         agent.velocity = Vector3.zero;
 
         //애니메이션
-        animator.SetBool("SeeTarget", false);
+        animator.SetBool("Follow", false);
+        animator.ResetTrigger("BackToPosition");
     }
 
-    
+
+
+    private bool HasLineOfSight(Transform target)
+    {
+        Vector3 startPos = transform.position + Vector3.up * 1.5f;
+        Vector3 targetPos = target.position + Vector3.up * 1.5f;
+        Vector3 dir = (targetPos - startPos).normalized;
+        float distance = Vector3.Distance(startPos, targetPos);
+
+        // 레이캐스트 검사
+        // LayerMask를 지정해줄 수 있으면, 장애물이 될 레이어만 체크할 수 있도록 해주는 것이 좋습니다.
+        // 예: if (Physics.Raycast(startPos, dir, out RaycastHit hit, distance, obstacleLayerMask))
+        if (Physics.Raycast(startPos, dir, out RaycastHit hit, distance))
+        {
+            if (hit.collider.CompareTag("Player"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //레이캐스트가 아무것도 맞추지 못한 경우
+        return false;
+    }
+
+
+
+
+
+    //애니메이션 끝난 후 적용 메서드들
+
     public void AttackTriggerReset()
     {
         attackList.ForEach(attack => 

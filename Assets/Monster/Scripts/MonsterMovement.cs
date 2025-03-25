@@ -99,7 +99,7 @@ public class MonsterMovement : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(_state);
+        //Debug.Log(_state);
         if (_state == MonsterState.Reaction)
         {
             return;

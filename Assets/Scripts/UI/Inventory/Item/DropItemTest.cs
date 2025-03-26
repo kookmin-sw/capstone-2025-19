@@ -1,21 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Photon.Pun;
-using UnityEngine.Windows;
-using System.Runtime.CompilerServices;
+using UnityEngine;
 
-
-public class DropItem : MonoBehaviour
+public class DropItemTest : MonoBehaviour
 {
-    [SerializeField] Transform itemModelPosition;
-    GameObject itemModel;
+    [SerializeField] Transform dropItemPosition;
     public GameObject itemIcon = null;
     PhotonView photonView;
     public int quantity = 1;
     public float durability = 1f;
     public ItemData itemData;
-
     public void Start()
     {
         Init();
@@ -32,8 +27,7 @@ public class DropItem : MonoBehaviour
 
     public void SetItem(Item item)
     {
-        
-        if(SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
+        if (SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
         {
             string itemData = ChangeData(item);
             DebugText.Instance.Debug($"set item {itemData}");
@@ -53,20 +47,12 @@ public class DropItem : MonoBehaviour
         {
             UpdateItem(item);
         }
-        
-        
     }
     private void UpdateItem(Item item)
     {
         this.itemData = item.itemData;
         quantity = item.quantity;
         durability = item.durability;
-
-        if(itemModel != null) { Destroy(itemModel); itemModel = null; }
-
-        itemModel = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/DropItemModel/{item.itemData.name}_DropItem"));
-        itemModel.transform.position = itemModelPosition.position;
-        itemModel.transform.SetParent(itemModelPosition.transform);
     }
     [PunRPC]
     public void RequestUpdateItemPhoton(string itemData)
@@ -82,7 +68,7 @@ public class DropItem : MonoBehaviour
     [PunRPC]
     private void UpdateItemPhoton(string itemData)
     {
-        
+
         string[] data = itemData.Split('|'); // 문자열을 분할하여 값 추출
         this.itemData = ItemDatabase.Instance.GetItemDataByName(data[0]);
         quantity = int.Parse(data[1]);
@@ -119,29 +105,29 @@ public class DropItem : MonoBehaviour
         }
         else
         {
-            InventoryController.Instance.dropItemList.Remove(this);
+            //InventoryController.Instance.dropItemList.Remove(this);
             gameObject.SetActive(false);
         }
-        
-        
+
+
     }
 
-    
+
     [PunRPC]
     void DeactivateDropItem(int viewID)
     {
-        PhotonView targetView = PhotonView.Find(viewID);
+        /*PhotonView targetView = PhotonView.Find(viewID);
         if (targetView != null)
         {
             DebugText.Instance.Debug("DeactivateDropItem");
             InventoryController.Instance.dropItemList.Remove(targetView.GetComponent<DropItem>());
-            if(targetView.GetComponent<DropItem>().itemIcon != null)
+            if (targetView.GetComponent<DropItem>().itemIcon != null)
             {
                 targetView.GetComponent<DropItem>().itemIcon.GetComponent<ItemIcon>().RemoveItemIcon();
             }
             targetView.GetComponent<DropItem>().itemIcon = null;
             targetView.gameObject.SetActive(false);
-        }
+        }*/
     }
     [PunRPC]
     void RequestDeactivateDropItem(int viewID)
@@ -156,7 +142,7 @@ public class DropItem : MonoBehaviour
     public void ActivateDropItem(Transform position)
     {
         this.gameObject.transform.position = position.transform.position;
-        if(SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
+        if (SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
         {
             if (!photonView.IsMine)
             {
@@ -172,13 +158,13 @@ public class DropItem : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-        
+
     }
     [PunRPC]
     void ActiavateDropItemPhoton(int viewID)
     {
         PhotonView targetView = PhotonView.Find(viewID);
-        if(targetView != null)
+        if (targetView != null)
         {
             targetView.gameObject.SetActive(true);
         }
@@ -186,8 +172,8 @@ public class DropItem : MonoBehaviour
     [PunRPC]
     void RequestActivateDropItemphoton(int viewID)
     {
-        PhotonView targetView = PhotonView.Find (viewID);
-        if(targetView != null && targetView.IsMine)
+        PhotonView targetView = PhotonView.Find(viewID);
+        if (targetView != null && targetView.IsMine)
         {
             photonView.RPC("ActiavateDropItemPhoton", RpcTarget.AllBuffered, photonView.ViewID);
         }
@@ -207,15 +193,14 @@ public class DropItem : MonoBehaviour
             photonView.RPC("UpdateItemPhoton", RpcTarget.AllBuffered, item);
         }
     }*/
-    
 
-    
+
+
 
     private string ChangeData(Item item)
     {
         return string.Join("|", item.itemData.name, item.quantity, item.durability);
     }
 
-    
 
 }

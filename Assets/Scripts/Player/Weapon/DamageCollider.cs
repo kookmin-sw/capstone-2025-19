@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Compression;
 using UnityEngine;
 
 public class DamageCollider : MonoBehaviour
@@ -20,35 +21,35 @@ public class DamageCollider : MonoBehaviour
     public void EnableDamageCollider()
     {
         damageCollider.enabled = true;
-        trailRenderer.SetActive(true);
+        if (trailRenderer != null) trailRenderer.SetActive(true);
     }
 
     public void UnableDamageCollider()
     {
         damageCollider.enabled = false;
-        trailRenderer.SetActive(false);
+        if (trailRenderer != null) trailRenderer.SetActive(false);
     }
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.tag == "Player")
+        if (gameObject.tag == "Enemy" && collision.tag == "Player")
         {
-            /*PlayerStats playerStats = collision.GetComponent<PlayerStats>();
-            
-            if (playerStats != null)
-            {
-                playerStats.TakeDamage(currentWeaponDamage);
-            }*/
+            GetHit(collision.GetComponent<Health>());
         }
 
-        if (collision.tag == "Enemy")
+        if (gameObject.tag == "Player" && collision.tag == "Enemy")
         {
-            print("hit");
-            EnemyStats enemyStats = collision.GetComponent<EnemyStats>();
-            if (enemyStats != null)
-            {
-                enemyStats.TakeDamage(currentWeaponDamage);
-            }
+            GetHit(collision.GetComponent<Health>());
         }
+    }
+
+    private void GetHit(Health target)
+    {
+        if (target != null)
+        {
+            print(target.name + " hit");
+            target.TakeDamage(currentWeaponDamage);
+        }
+
     }
 }

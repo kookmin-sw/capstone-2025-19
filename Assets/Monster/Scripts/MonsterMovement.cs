@@ -8,8 +8,8 @@ public class MonsterMovement : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] Transform target;
-    [SerializeField] private float chaseDistance = 10f;   // ���� ���� �Ÿ�
-    [SerializeField] GameObject tempCollisionObject; //���Ͱ� ���� ���⸦ ��� �� �ӽ� ���.
+    [SerializeField] private float chaseDistance = 10f;   
+    [SerializeField] GameObject tempCollisionObject;
 
     Vector3 spawnPosition;
 
@@ -36,7 +36,7 @@ public class MonsterMovement : MonoBehaviour
     //[SerializeField] List<float> attackDistanceList = new List<float> {5f, 2f};
     //List<float> attackAniInitRotate = new List<float> {19f, 35f };
 
-    float attackDistance = 2f; // ���� �Ÿ�
+    float attackDistance = 2f;
     string nextAttackMotion = "AttackDownward";
     private void chooseAttackMotion()
     {
@@ -77,7 +77,7 @@ public class MonsterMovement : MonoBehaviour
         spawnPosition = transform.position;
     }
 
-
+    /*
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Monster"))
@@ -95,7 +95,7 @@ public class MonsterMovement : MonoBehaviour
 
         //������ �Ϸ� �ߴ� Animation Ʈ���� ����
         AttackTriggerReset();
-    }
+    }*/
 
     void Update()
     {
@@ -189,8 +189,6 @@ public class MonsterMovement : MonoBehaviour
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
-        
-
         animator.SetBool("Following", false);
         //animator.SetBool("Stop", true);
         animator.SetTrigger(nextAttackMotion);
@@ -216,8 +214,6 @@ public class MonsterMovement : MonoBehaviour
             animator.ResetTrigger(attack);
         });
         chooseAttackMotion();
-        Debug.Log("attack trigger reset");
-        Debug.Log($"���� ���� ���� ��� : {nextAttackMotion}");
     }
 
     public void WatchPlayer()
@@ -233,8 +229,6 @@ public class MonsterMovement : MonoBehaviour
         _state = MonsterState.Idle;
 
         animator.ResetTrigger("Hit");
-
-        Debug.Log("OnReactionEnd ȣ��");
     }
 
     public void OnJumpAttckEnd()
@@ -242,8 +236,6 @@ public class MonsterMovement : MonoBehaviour
         _state = MonsterState.Following;
 
         animator.ResetTrigger("JumpAttack");
-
-        Debug.Log("OnJumpAttckEnd ȣ��");
     }
 
     public void OnDownAttackEnd()
@@ -251,21 +243,18 @@ public class MonsterMovement : MonoBehaviour
         _state = MonsterState.Following;
 
         animator.ResetTrigger("AttackDownward");
-        Debug.Log("OnDownAttackEnd ȣ��");
     }
 
     public void ColliderOn()
     {
         //���� ��ü�� collider �ѱ�
         tempCollisionObject.SetActive(true);
-        Debug.Log("Collider ����");
     }
 
     public void ColliderOff()
     {
         //���� ��ü�� collider �ѱ�
         tempCollisionObject.SetActive(false);
-        Debug.Log("Collider ����");
     }
 
 }

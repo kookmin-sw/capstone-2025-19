@@ -7,13 +7,13 @@ public class MonsterStatus : MonoBehaviour
     public int damage = 10;
 
 
-    void Start()
+    void OnTriggerEnter(Collider other)
     {
-        
-    }
+        if (other.tag == "Player")
+        {
+            Health health = other.GetComponent<Health>();
 
-    void Update()
-    {
-        
+            health.TakeDamage(damage);
+        }
     }
 }

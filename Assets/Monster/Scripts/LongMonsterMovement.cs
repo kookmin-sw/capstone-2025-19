@@ -11,6 +11,10 @@ public class LongMonsterMovement : MonoBehaviour
     [SerializeField] float attackDistance = 15f;   // 추적 시작 거리
     //[SerializeField] GameObject tempCollisionObject; //몬스터가 실제 무기를 들기 전 임시 사용.
 
+    [Header("Weapon")]
+    [SerializeField] GameObject ArrowPosition;
+    [SerializeField] GameObject Arrow;
+
     Vector3 spawnPosition;
 
     NavMeshAgent agent;
@@ -68,6 +72,9 @@ public class LongMonsterMovement : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();
         agent.stoppingDistance = 2f;
+
+        //처음 사격 가능
+        animator.SetBool("ShotWait", false);
     }
 
     private void Start()
@@ -323,20 +330,39 @@ public class LongMonsterMovement : MonoBehaviour
         Debug.Log("Collider 꺼짐");
     }
 
+    public void aim_recoilEnd()
+    {
+        StartCoroutine(WaitAfterShotCoroutine());
+    }
+    private IEnumerator WaitAfterShotCoroutine()
+    {
+        Debug.Log("Shot 후 대기 시작");
+        animator.SetBool("ShotWait", true);
+        agent.isStopped = true;
+
+        yield return new WaitForSeconds(3f);
+        animator.SetBool("ShotWait", false);
+        agent.isStopped = false;
+        Debug.Log("Shot 후 대기 종료, 다음 상태로 전환");
+    }
+
+    public void CreateArrow()
+    {
+        Instantiate(Arrow, ArrowPosition.transform);
+    }
+
+    public void LaunchArrow()
+    {
+        if (ArrowPosition.transform.childCount > 0)
+        {
+            Transform arrowTransform = ArrowPosition.transform.GetChild(0);
+            arrowTransform.SetParent(null);
+            ArrowProjectile arrowProj = arrowTransform.GetComponent<ArrowProjectile>();
+            Vector3 shootDirection = transform.forward;
+            arrowProj.SetDirection(shootDirection);
+        }
+    }
+
 }
 
-// 타겟 바라보기
-//Vector3 dir = (target.position - transform.position).normalized;
-//dir.y = 0f; // 수직축은 무시
-//transform.rotation = Quaternion.LookRotation(dir);
 
-////각 공격 애니메이션 마다 초기 회전값 보정
-//int attackIndex = attackList.IndexOf(nextAttackMotion);
-//if (attackIndex >= 0)
-//{
-//    //추가 회전 값
-//    float initRotate = attackAniInitRotate[attackIndex];
-
-//    //transform에 추가 회전을 곱
-//    transform.rotation *= Quaternion.Euler(0f, initRotate, 0f);
-//}

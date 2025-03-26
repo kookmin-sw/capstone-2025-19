@@ -265,12 +265,23 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         isLevelPoint0();
     }
 
+    public void ApMinusButton()
+    {
+        AP_Result.text = (float.Parse(AP_Result.text) - 1).ToString();
+        levelPoint++;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
     private void isLevelPoint0()
     {
         if(levelPoint <= 0)
         {
-            PlusButton.SetActive(false);
             PointDecomposeCompleteBnt.interactable = true;
+        }
+        else
+        {
+            PointDecomposeCompleteBnt.interactable = false;
         }
     }
 
@@ -286,6 +297,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         StatusUpdate();
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
+        PlusButton.SetActive(false);
     }
 
 }

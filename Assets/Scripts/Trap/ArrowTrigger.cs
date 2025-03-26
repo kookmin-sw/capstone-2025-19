@@ -11,12 +11,12 @@ public class ArrowTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("player가 화살 맞음");
-            PlayerStats playerStats = other.GetComponent<PlayerStats>();
+            /*PlayerStats playerStats = other.GetComponent<PlayerStats>();
 
             if (playerStats != null)
             {
                 playerStats.TakeDamage(damage);
-            }
+            }*/
         }
     }
 

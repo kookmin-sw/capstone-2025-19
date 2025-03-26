@@ -28,14 +28,14 @@ public class Ground_thorn : MonoBehaviour
         if (other.CompareTag("Player") && !isMoving)
         {
             Debug.Log("player가 Ground thorn 함정 발동");
-            PlayerStats playerStats = other.GetComponent<PlayerStats>();
+            /*PlayerStats playerStats = other.GetComponent<PlayerStats>();
 
             if (playerStats != null)
             {
                 playerStats.TakeDamage(damage);
             }
 
-            StartCoroutine(SpikeRoutine());
+            StartCoroutine(SpikeRoutine());*/
         }
     }
 

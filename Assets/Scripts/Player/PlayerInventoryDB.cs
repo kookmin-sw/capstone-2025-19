@@ -174,7 +174,7 @@ public class PlayerInventoryDB : MonoBehaviour
 
     private void itemToInventoryItem(Item item)
     {
-        AddItemToInventory(item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+        AddItemToInventory(item.itemData.name, item.itemData.itemType.ToString(), item.quantity, item.durability);
     }
 
     // money 값을 DB에 동기화

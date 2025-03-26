@@ -14,7 +14,7 @@ public class PlayerTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.Log($"update position {transform.position}");
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -31,6 +31,9 @@ public class PlayerTrigger : MonoBehaviour
                 InventoryController.Instance.EnterDropItem(other.GetComponent<DropItem>());
             }
 
+        }else if (other.CompareTag("Money"))
+        {
+            InventoryController.Instance.SetMoneyItemIcon(other.GetComponent<MoneyDropItem>());
         }
         if(other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
         {

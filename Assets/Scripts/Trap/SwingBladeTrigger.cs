@@ -12,12 +12,12 @@ public class SwingBladeTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("player가 swingblade 함정에 걸림");
-            PlayerStats playerStats = other.GetComponent<PlayerStats>();
+            /*PlayerStats playerStats = other.GetComponent<PlayerStats>();
 
             if (playerStats != null)
             {
                 playerStats.TakeDamage(damage);
-            }
+            }*/
         }
     }
     // Start is called before the first frame update

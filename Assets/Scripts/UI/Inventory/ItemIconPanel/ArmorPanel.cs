@@ -18,7 +18,7 @@ public class ArmorPanel : ItemPanel
     }
     public override void InsertItem(ItemIcon itemIcon)
     {
-        if (itemIcon.item.itemData.itemType_ != ItemData.ItemType.Armor) { return; }
+        if (itemIcon.item.itemData.itemType != ItemData.ItemType.Armor) { return; }
         if(armorItemIcon != null) { ChangeArmor();
             return; //¥Á¿Â¿∫ return
         }

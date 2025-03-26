@@ -11,10 +11,20 @@ public class DungeonPart : MonoBehaviour
         Hallway,
         Stair,
     }
+
+    public enum RoomUse
+    {
+        Nothing,
+        PlayerSpawn,
+        MonsterSpawn,
+
+    }
     [SerializeField] private LayerMask roomsLayermask;
     [SerializeField] private DungeonPartType dungeonPartType;
     [SerializeField] GameObject fillerWall; //던전이 다 생성되고 사용되지 않은 빈 입구를 이걸로 채움 -> 재질이 비슷한 벽으로 할당해야 함
-
+    [SerializeField] public RoomUse roomUse;
+    [SerializeField] public Transform spawnPoint;
+    //TODO EnemySpawn Point functiion
     public List<Transform> entryPoints; // 방에 있는 문
     public new Collider collider; //new의 기능 :부모의 같은 이름을 가진 오브젝트를 숨김. 부모 클래스에 Collider collider가 있으면 그거를 base.collider로 쓰게 하고 새로운 collider를 생성.
                                   //이 collider는 지금 생성된 방이 이전 생성된 방과 곂치게 생성되는지 확인하는 용도. 그냥 단순한 box collider여도 됨(Trigger)

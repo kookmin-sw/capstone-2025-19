@@ -27,11 +27,24 @@ public class DropItemPanel : ItemPanel
         }*/
     }
 
+    public override void RemoveItem(ItemIcon itemIcon)
+    {
+        Debug.Log($"{itemIcon}");
+        if(itemIcon == InventoryController.Instance.selectedItemIcon_) { Debug.LogError("Who is change itemIcon dropItem"); }
+        Debug.Log($"{itemIcon.dropItem}");
+        InventoryController.Instance.dropItemList.Remove(itemIcon.dropItem.GetComponent<DropItem>());
+    }
+
+    public void InsertMoney(GameObject itemIcon)
+    {
+        itemIcon.transform.SetParent(scrollRect.content);
+    }
+
     /*public void RemoveDropItem(Item item)
     {
         InventoryController.Instance.RemoveDropItem(item);
     }*/
-    
 
-    
+
+
 }

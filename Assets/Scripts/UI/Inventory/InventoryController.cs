@@ -5,6 +5,8 @@ using Photon.Pun;
 using static WareHouseDB;
 using UnityEngine.UI;
 using System;
+using PlayerCombat;
+
 
 #if UNITY_EDITOR
 using static UnityEditor.Progress;
@@ -12,19 +14,40 @@ using static UnityEditor.Progress;
 
 public class InventoryController : Singleton<InventoryController>
 {
+    public enum InventoryState
+    {
+        Inventory,
+        Store,
+        Warehouse,
+
+    }
+
+    private InventoryState _state = InventoryState.Inventory;
+
     [SerializeField] CanvasGroup canvasGroup;
+    [SerializeField] CanvasGroup storeCanvasGroup;
+    [SerializeField] CanvasGroup warehouseCanvasGroup;
     //public TestPlayerMovement player;
     //public PlayerManager player;
     public PlayerTrigger player;
     [SerializeField] GameObject itemIconPrefab;
 
+    [Header("ItemPanel Inspector")]
     [SerializeField] public InventoryPanel inventoryPanel;
     [SerializeField] public DropItemPanel dropItemPanel;
     [SerializeField] public BackpackPanel backpackPanel;
     [SerializeField] public ChestItemPanel chestItemPanel;
     [SerializeField] public Weaponpanel weaponPanel;
+    [SerializeField] public UseItemPanel useItemPanel;
+    [SerializeField] public MoneyPanel moneyPanel;
 
     [SerializeField] public DistributionPanel distributionPanel;
+
+    [Header("Store Inspector")]
+    [SerializeField] Canvas storeCanvas;
+    [SerializeField] public StoreItemPanel storeItemPanel;
+    [SerializeField] public PurchasePanel purchasePanel;
+    public bool purchasePanelBool = false;
 
     List<ItemIcon> inventoryList;
     public List<DropItem> dropItemList;
@@ -47,13 +70,17 @@ public class InventoryController : Singleton<InventoryController>
     public List<Item> inventory = new List<Item>();
     [HideInInspector]
     public float currentInventoryWeightValue = 0f;
+    [HideInInspector]
+    public WeaponSlotManager weaponSlotManager;
     public float currentInventoryItemSizeValue = 0f;
 
-    public int money = 0;
+    public int money = 1000000;
     [HideInInspector]
     public List<Item> wareHouse = new List<Item>();
     public ItemPanel SelectedItemPanel { get =>  selectedItemPanel; set { selectedItemPanel = value; } }
     public ItemIcon SelectedItemIcon { get => selectedItemIcon; set { selectedItemIcon = value; } }
+
+    public ItemIcon selectedItemIcon_;
 
     protected override void Awake()
     {
@@ -64,14 +91,60 @@ public class InventoryController : Singleton<InventoryController>
     // Start is called before the first frame update
     void Start()
     {
+        //TODO FireBase 정보 받기(VillageManager에게 정보받는것)
         TestItemIcon();
         SetInventoryCanvas();
         SetInventorySizeRate();
+        SetMoney();
+
+    }
+
+    private void Update()
+    {
+        
+    }
+
+    private void SetMoney()
+    {
+
+        moneyPanel.SetMoney(money);
+    }
+
+    public void GetMoney(MoneyItemIcon itemIcon)
+    {
+        money += itemIcon.moneyValue;
+        SetMoney();
+        itemIcon.RemoveItemIcon();
+    }
+
+    public void DropMoney()
+    {
+        distributionPanel.SetMoney();
+    }
+
+    public void SetDropMoneyValue(int value)
+    {
+        GameObject dropItem = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/Money_DropItem")); //떨구는 돈의 양에 따라서 드랍 아이템 바꾸기?
+        MoneyDropItem moneyDropItem = dropItem.GetComponent<MoneyDropItem>();
+        dropItem.transform.position = player.dropItemPosition.position;
+    }
+
+    public void SetMoneyItemIcon(MoneyDropItem dropItemMoney)
+    {
+        GameObject moneyItemIcon = Instantiate(Resources.Load<GameObject>($"Prefabs/UI/Inventory/Money_ItemIcon"));
+        MoneyItemIcon itemIcon = moneyItemIcon.GetComponent<MoneyItemIcon>();
+        itemIcon.SetMoney(dropItemMoney.moneyValue);
+        dropItemPanel.InsertMoney(moneyItemIcon);
+    }
+
+    public void RemoveMoneyItemIcon(MoneyDropItem dropItemMoney)
+    {
+        dropItemMoney.MoneyItemIcon.GetComponent<MoneyItemIcon>().RemoveItemIcon();
     }
 
     public void SetInventorySizeRate()
     {
-        
+        currentInventoryItemSizeValue = 0;
         foreach(Item item in inventory)
         {
 
@@ -85,17 +158,28 @@ public class InventoryController : Singleton<InventoryController>
                 
                 continue;
             }*/
-            currentInventoryItemSizeValue += item.quantity * item.itemData.size;
+            currentInventoryItemSizeValue += item.GetSize();
+            /*if(item.itemData.itemType_ == ItemData.ItemType.Objects) currentInventoryItemSizeValue += item.quantity * item.itemData.size;
+            else currentInventoryItemSizeValue += item.itemData.size;*/
         }
         backpackPanel.SetBackpack();
     }
     public void RemoveItemsUntilUnderMaxWeight()
     {
         int tryCount = 0;
-        while(currentInventoryItemSizeValue < backpackPanel.GetContainerValue())
+        while(currentInventoryItemSizeValue >= backpackPanel.GetContainerValue())
         {
             int index = inventory.Count-1;
-            if (inventory[index].itemData.itemType_ == ItemData.ItemType.Objects)
+            Debug.Log($"currentInventoryItemSizeValeu {currentInventoryItemSizeValue}");
+            Debug.Log($"backpackPanel.GetContainerValue() {backpackPanel.GetContainerValue()}");
+            Debug.Log($"inventory index {index}");
+            if(inventory.Count == 0)
+            {
+                currentInventoryItemSizeValue -= inventory[index].GetSize();
+                currentInventoryWeightValue -= inventory[index].GetWeight();
+                dropItemPanel.InsertItem(inventory[index].itemIcon);
+            }
+            else if (inventory[index].itemData.itemType == ItemData.ItemType.Objects)
             {
                 if (backpackPanel.GetContainerValue() < currentInventoryItemSizeValue - inventory[index].GetSize())
                 {
@@ -127,11 +211,7 @@ public class InventoryController : Singleton<InventoryController>
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
 
     public void CreateItemIcon(Item item)
@@ -149,13 +229,19 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void CreateItemIcon(DropItem dropItem)
     {
+        Debug.Log("CreateItemIcon to dropItem");
         GameObject itemIconGo = Instantiate(itemIconPrefab);
         dropItem.itemIcon = itemIconGo;
         ItemIcon itemIcon = itemIconGo.GetComponent<ItemIcon>();
         itemIcon.dropItem = dropItem.gameObject;
+        Debug.Log($"createItemIcon {itemIcon.dropItem}");
         Item item = new Item(dropItem.itemData, dropItem.quantity, dropItem.durability);
         itemIcon.SetItem(item);
         itemIconGo.name = $"{item.itemData.name}_ItemIcon";
+
+
+        //Test
+        selectedItemIcon_ = itemIcon;
     }
     public void CreateDropItem(ItemIcon itemIcon)
     {
@@ -283,18 +369,14 @@ public class InventoryController : Singleton<InventoryController>
 
     public void ExitDropItem(DropItem dropItem)
     {
-        Debug.Log("1");
         if(dropItem == null) { return; }
-        Debug.Log("2");
         if (dropItemList.Contains(dropItem))
         {
-            Debug.Log("3");
             dropItemList.Remove(dropItem);
             RemoveItemIcon(dropItem);
         }
         else
         {
-            Debug.Log("4");
             RemoveDropItem(dropItem);
         }
         /*Debug.Log(testDropITem);
@@ -336,6 +418,9 @@ public class InventoryController : Singleton<InventoryController>
     public void LoadInventoryItem(PlayerInventoryDB.InventoryItem inventoryItem)
     {
         Debug.Log($"아이템 로드중... {inventoryItem.itemName}");
+        Item item = new Item(Resources.Load<ItemData>($"ItemData/{inventoryItem.itemName}"), inventoryItem.quantity, inventoryItem.durability);
+        ItemIcon itemIcon = GetCreateItemIcon(item);
+        inventoryPanel.InsertItem(itemIcon);
         //TODO create itemIcon
         //TODO insert InventoryPanel
     }
@@ -347,19 +432,29 @@ public class InventoryController : Singleton<InventoryController>
         //TODO insert InventoryPanel
     }
 
+    public void LoadEquippedItem(WeaponDbSync.WearableItemDB equippedItem)
+    {
+        Debug.Log($"착용 아이템 로드중... {equippedItem.itemName}");
+        Item item = new Item(Resources.Load<ItemData>($"ItemData/{equippedItem.itemName}"), 1, equippedItem.durability);
+        ItemIcon itemIcon = GetCreateItemIcon(item);
+        weaponPanel.InsertItem(itemIcon);
+        //TODO create itemIcon
+        //TODO insert InventoryPanel
+    }
+
     public void SetPlayer(PlayerTrigger player)
     {
         if(this.player == null)
         {
             this.player = player;
             SetInventoryCanvas();
+            if(weaponSlotManager == null) weaponSlotManager = player.gameObject.GetComponent<WeaponSlotManager>();
         }
     }
 
     public void SetInventoryCanvas()
     {
-        //if (player == null) { return; }
-        if(PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.state == PlayerState.State.Inventory)
         {
             canvasGroup.alpha = 1;
         }
@@ -367,6 +462,20 @@ public class InventoryController : Singleton<InventoryController>
         {
             canvasGroup.alpha = 0;
         }
+
+    }
+
+    public void SetStoreInventory(bool input)
+    {
+        dropItemPanel.gameObject.SetActive(!input);
+        storeCanvas.gameObject.SetActive(input);
+        if (input) { PlayerState.Instance.ChangeState(PlayerState.State.Inventory); }
+        else { PlayerState.Instance.ChangeState(PlayerState.State.Idle); }
+    }
+
+    public void SetWareHouseInventory()
+    {
+
     }
 
    
@@ -420,6 +529,12 @@ public class InventoryController : Singleton<InventoryController>
     {
         //TODO player의 상태 Idle로 변경
 
+    }
+
+    public void SetPlayerInventory()
+    {
+        //Scene 이동 시 Inventory 내에서 적용 해야 할 아이템 적용 시키기
+        weaponPanel.SetWeapon();
     }
 
 }

@@ -30,12 +30,12 @@ public class DamageCollider : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            PlayerStats playerStats = collision.GetComponent<PlayerStats>();
+            /*PlayerStats playerStats = collision.GetComponent<PlayerStats>();
             
             if (playerStats != null)
             {
                 playerStats.TakeDamage(currentWeaponDamage);
-            }
+            }*/
         }
 
         if (collision.tag == "Enemy")

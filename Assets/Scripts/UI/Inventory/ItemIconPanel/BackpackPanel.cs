@@ -21,7 +21,7 @@ public class BackpackPanel : ItemPanel
     }
     public override void InsertItem(ItemIcon itemIcon)
     {
-        if(itemIcon.item.itemData.itemType_ != ItemData.ItemType.Backpack) { return; }
+        if(itemIcon.item.itemData.itemType != ItemData.ItemType.Backpack) { return; }
         if (backpackitemIcon != null)
         {
             ChangeBackpack();
@@ -74,5 +74,10 @@ public class BackpackPanel : ItemPanel
     {
         if (backpackitemIcon != null) { return backpackitemIcon.item.itemData.containerValue; }
         else { return defaultLoadValue; }
+    }
+
+    public override void RemoveItem(ItemIcon itemIcon)
+    {
+        
     }
 }

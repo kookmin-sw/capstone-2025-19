@@ -53,4 +53,9 @@ public class ItemPanel : MonoBehaviour
     {
         //TODO ItemIcon setActive false 시키기, 혹은 지우기
     }
+
+    public virtual void RemoveItem(ItemIcon itemIcon)
+    {
+
+    }
 }

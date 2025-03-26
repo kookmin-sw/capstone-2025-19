@@ -12,12 +12,12 @@ public class Guillotine_Trigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("player가 단두대에 맞음");
-            PlayerStats playerStats = other.GetComponent<PlayerStats>();
+            /*PlayerStats playerStats = other.GetComponent<PlayerStats>();
 
             if (playerStats != null)
             {
                 playerStats.TakeDamage(damage);
-            }
+            }*/
         }
     }
 }

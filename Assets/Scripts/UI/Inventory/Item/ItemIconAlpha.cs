@@ -24,6 +24,11 @@ public class ItemIconAlpha : MonoBehaviour
     {
         itemImage.sprite = item.itemData.itemIcon;
         itemNameText.text = item.itemData.name;
-        itemNameText.raycastTarget = false;
+    }
+
+    public void SetItem(ItemData itemData)
+    {
+        itemImage.sprite = itemData.itemIcon;
+        itemNameText.text = itemData.name;
     }
 }

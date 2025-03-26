@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1885624787403507652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 236860354327395820}
+  - component: {fileID: 236778833406097170}
+  m_Layer: 0
+  m_Name: DungeonController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &236860354327395820
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885624787403507652}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1000, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &236778833406097170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885624787403507652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc0f483f5a1dc6a489dda820a681e0fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noOfRooms: 5
+  entrance: {fileID: 2933166231360555509, guid: 4cbf9ba094c99074e9bbdfe8bde2bbbc,
+    type: 3}
+  rooms:
+  - {fileID: 2933166231360555509, guid: 4cbf9ba094c99074e9bbdfe8bde2bbbc, type: 3}
+  - {fileID: 4690462540910813970, guid: 73ba9ae8def5e664381c5083cef0ce56, type: 3}
+  - {fileID: 5248829835548127269, guid: 9046e9c0b94ee3c4c95cfedba627698f, type: 3}
+  - {fileID: 1382099109642499120, guid: ac213de8d3851ac42872628f82bb912e, type: 3}
+  specialRooms: []
+  alternateEntrances: []
+  hallways:
+  - {fileID: 503321049714542921, guid: e2480cc12b0e47f4db6fba6f03033287, type: 3}
+  door: {fileID: 0}
+  roomsLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  dontSelectedEntryGO: {fileID: 3914469935603822739, guid: 0512c6bcb10e78442813d0efd5e03e43,
+    type: 3}

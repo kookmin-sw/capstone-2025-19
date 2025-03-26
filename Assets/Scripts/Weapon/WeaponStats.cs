@@ -12,4 +12,11 @@ public class WeaponStats : ScriptableObject
     public string OH_Light_Attack_1;
     public string OH_Light_Attack_2;
     public string OH_Heavy_Attack_1;
+
+
+    public int attackPower;
+    public int speed;
+    public AnimatorOverrideController controller;
+
+
 }

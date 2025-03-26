@@ -8,8 +8,8 @@ public class MonsterMovement : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] Transform target;
-    [SerializeField] private float chaseDistance = 10f;   // ÃßÀû ½ÃÀÛ °Å¸®
-    [SerializeField] GameObject tempCollisionObject; //¸ó½ºÅÍ°¡ ½ÇÁ¦ ¹«±â¸¦ µé±â Àü ÀÓ½Ã »ç¿ë.
+    [SerializeField] private float chaseDistance = 10f;   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½
+    [SerializeField] GameObject tempCollisionObject; //ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½.
 
     Vector3 spawnPosition;
 
@@ -36,22 +36,22 @@ public class MonsterMovement : MonoBehaviour
     //[SerializeField] List<float> attackDistanceList = new List<float> {5f, 2f};
     //List<float> attackAniInitRotate = new List<float> {19f, 35f };
 
-    float attackDistance = 2f; // °ø°Ý °Å¸®
+    float attackDistance = 2f; // ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½
     string nextAttackMotion = "AttackDownward";
     private void chooseAttackMotion()
     {
         /*
-        //target°úÀÇ °Å¸®¸¦ ±â¹ÝÀ¸·Î °ø°Ý ¼±ÅÃ
+        //targetï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         float distanceToPlayer = CalculDistance();
         if (distanceToPlayer >= 5f)
         {
-            // Á¡ÇÁ °ø°Ý
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             nextAttackMotion = "JumpAttack";
             attackDistance = 5f;
         }
         else
         {
-            // ±ÙÁ¢ °ø°Ý
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             nextAttackMotion = "AttackDownward";
             attackDistance = 2f;
         }*/
@@ -73,7 +73,7 @@ public class MonsterMovement : MonoBehaviour
     {
         tempCollisionObject.SetActive(false);
 
-        //¸ó½ºÅÍ ½ºÆù ÁöÁ¡ ÀúÀå
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         spawnPosition = transform.position;
     }
 
@@ -84,50 +84,50 @@ public class MonsterMovement : MonoBehaviour
         {
             return;
         }
-        //Reaction update¸¦ ¾Æ¿¹ ¿©±â¼­ Ã³¸®
+        //Reaction updateï¿½ï¿½ ï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½â¼­ Ã³ï¿½ï¿½
 
         _state = MonsterState.Reaction;
-        // Reaction ¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý or Æ®¸®°Å
+        // Reaction ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ or Æ®ï¿½ï¿½ï¿½ï¿½
         animator.SetTrigger("Hit");
-        // Reaction »óÅÂ µ¿ÀÛ (¿¹: °æÁ÷, ´ë±â µî)
+        // Reaction ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ ï¿½ï¿½)
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
-        //ÀÌÀü¿¡ ÇÏ·Á Çß´ø Animation Æ®¸®°Å ¸®¼Â
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ß´ï¿½ Animation Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         AttackTriggerReset();
     }
 
     void Update()
     {
-        Debug.Log(_state);
+        //Debug.Log(_state);
         if (_state == MonsterState.Reaction)
         {
             return;
         }
 
-        //ÇÃ·¹ÀÌ¾î¿ÍÀÇ °Å¸®¸¦ È®ÀÎ
+        //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
         float distanceToPlayer = CalculDistance();
-        //Debug.Log($"½ÇÁ¦ °Å¸® : {distanceToPlayer}");
+        //Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ : {distanceToPlayer}");
 
-        // 1) °ø°Ý »ç°Å¸® ÀÌ³»ÀÎÁö?
+        // 1) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½?
         if (distanceToPlayer <= attackDistance)
         {
             _state = MonsterState.Attack;
         }
-        // 2) ÃßÀû »ç°Å¸® ÀÌ³»ÀÎÁö?
+        // 2) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½?
         else if (distanceToPlayer <= chaseDistance)
         {
             _state = MonsterState.Following;
         }
-        // 3) ±× ¹Û¿¡´Â Idle
+        // 3) ï¿½ï¿½ ï¿½Û¿ï¿½ï¿½ï¿½ Idle
         else
         {
             if (Vector3.Distance(transform.position, spawnPosition) < 1f) _state = MonsterState.Idle;
             else _state = MonsterState.BackToSpawn;
         }
 
-        // »óÅÂº° µ¿ÀÛ
+        // ï¿½ï¿½ï¿½Âºï¿½ ï¿½ï¿½ï¿½ï¿½
         switch (_state)
         {
             case MonsterState.Idle:
@@ -147,10 +147,10 @@ public class MonsterMovement : MonoBehaviour
 
     private float CalculDistance()
     {
-        // °æ·Î °è»ê
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (agent.CalculatePath(target.position, path))
         {
-            // ÄÚ³Ê °£ °Å¸®¸¦ ´õÇØ¼­ ÃÑ °æ·Î ±æÀÌ °è»ê
+            // ï¿½Ú³ï¿½ ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             distance = 0f;
             for (int i = 0; i < path.corners.Length - 1; i++)
             {
@@ -163,29 +163,29 @@ public class MonsterMovement : MonoBehaviour
 
     private void BackToSpawnPosition()
     {
-        // ÀÌµ¿ ½ÃÀÛ
+        // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         agent.isStopped = false;
         agent.SetDestination(spawnPosition);
 
-        //¾Ö´Ï¸ÞÀÌ¼Ç
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         animator.SetBool("Stop", false);
         animator.SetBool("Following", true);
     }
 
     private void UpdateFollowing()
     {
-        // ÀÌµ¿ ½ÃÀÛ
+        // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         agent.isStopped = false;
         agent.SetDestination(target.position);
 
-        //¾Ö´Ï¸ÞÀÌ¼Ç
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         animator.SetBool("Stop", false);
         animator.SetBool("Following", true);
     }
 
     private void UpdateAttack()
     {
-        // °ø°Ý ½Ã¿¡´Â ¸ØÃß°í ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß°ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
@@ -198,11 +198,11 @@ public class MonsterMovement : MonoBehaviour
 
     public void UpdateIdle()
     {
-        //¿òÁ÷ÀÓ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
-        //¾Ö´Ï¸ÞÀÌ¼Ç
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         animator.SetBool("Stop", true);
         animator.SetBool("Following", false);
     }
@@ -217,24 +217,24 @@ public class MonsterMovement : MonoBehaviour
         });
         chooseAttackMotion();
         Debug.Log("attack trigger reset");
-        Debug.Log($"·£´ý ¼±ÅÃ °ø°Ý ¸ð¼Ç : {nextAttackMotion}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ : {nextAttackMotion}");
     }
 
     public void WatchPlayer()
     {
-        // Å¸°Ù ¹Ù¶óº¸±â
+        // Å¸ï¿½ï¿½ ï¿½Ù¶óº¸±ï¿½
         //Vector3 dir = (target.position - transform.position).normalized;
-        //dir.y = 0f; // ¼öÁ÷ÃàÀº ¹«½Ã
+        //dir.y = 0f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //transform.rotation = Quaternion.LookRotation(dir);
     }
     public void OnReactionEnd()
     {
-        // Reaction ¾Ö´Ï¸ÞÀÌ¼Ç ³¡
+        // Reaction ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½
         _state = MonsterState.Idle;
 
         animator.ResetTrigger("Hit");
 
-        Debug.Log("OnReactionEnd È£Ãâ");
+        Debug.Log("OnReactionEnd È£ï¿½ï¿½");
     }
 
     public void OnJumpAttckEnd()
@@ -243,7 +243,7 @@ public class MonsterMovement : MonoBehaviour
 
         animator.ResetTrigger("JumpAttack");
 
-        Debug.Log("OnJumpAttckEnd È£Ãâ");
+        Debug.Log("OnJumpAttckEnd È£ï¿½ï¿½");
     }
 
     public void OnDownAttackEnd()
@@ -251,37 +251,37 @@ public class MonsterMovement : MonoBehaviour
         _state = MonsterState.Following;
 
         animator.ResetTrigger("AttackDownward");
-        Debug.Log("OnDownAttackEnd È£Ãâ");
+        Debug.Log("OnDownAttackEnd È£ï¿½ï¿½");
     }
 
     public void ColliderOn()
     {
-        //°ø°Ý ¹°Ã¼¿¡ collider ÄÑ±â
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ collider ï¿½Ñ±ï¿½
         tempCollisionObject.SetActive(true);
-        Debug.Log("Collider ÄÑÁü");
+        Debug.Log("Collider ï¿½ï¿½ï¿½ï¿½");
     }
 
     public void ColliderOff()
     {
-        //°ø°Ý ¹°Ã¼¿¡ collider ÄÑ±â
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ collider ï¿½Ñ±ï¿½
         tempCollisionObject.SetActive(false);
-        Debug.Log("Collider ²¨Áü");
+        Debug.Log("Collider ï¿½ï¿½ï¿½ï¿½");
     }
 
 }
 
-// Å¸°Ù ¹Ù¶óº¸±â
+// Å¸ï¿½ï¿½ ï¿½Ù¶óº¸±ï¿½
 //Vector3 dir = (target.position - transform.position).normalized;
-//dir.y = 0f; // ¼öÁ÷ÃàÀº ¹«½Ã
+//dir.y = 0f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //transform.rotation = Quaternion.LookRotation(dir);
 
-////°¢ °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç ¸¶´Ù ÃÊ±â È¸Àü°ª º¸Á¤
+////ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //int attackIndex = attackList.IndexOf(nextAttackMotion);
 //if (attackIndex >= 0)
 //{
-//    //Ãß°¡ È¸Àü °ª
+//    //ï¿½ß°ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½
 //    float initRotate = attackAniInitRotate[attackIndex];
 
-//    //transform¿¡ Ãß°¡ È¸ÀüÀ» °ö
+//    //transformï¿½ï¿½ ï¿½ß°ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 //    transform.rotation *= Quaternion.Euler(0f, initRotate, 0f);
 //}

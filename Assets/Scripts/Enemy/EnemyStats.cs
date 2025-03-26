@@ -36,7 +36,7 @@ public class EnemyStats : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            animator.Play("Death");
+            animator.Play("Dying");
         }
     }
 }

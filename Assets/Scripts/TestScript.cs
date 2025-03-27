@@ -4,56 +4,24 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public Collider targetCollider; // 검사할 Collider
-    public LayerMask layerMask; // 감지할 Layer 설정
-    void Start()
+    public int publicInt;
+    public float publicFloat;
+    public string publicString;
+    public bool publicBool;
+    public Vector2 publicVector2;
+    public Vector3 publicVector3;
+    public Quaternion publicQuaternion;
+    public Color publicColor;
+    public Rect publicRect;
+    public RectTransform publicRectTransform;
+    public List<GameObject> publicGameObjectList;
+    public testEnum publicEnum;
+
+    public enum testEnum
     {
-        
-    }
+        test1,
+        test2,
+        test3,
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (IsColliderOverlapping(targetCollider, layerMask))
-        {
-            Debug.Log("같은 Layer의 Collider가 내부에 있습니다!");
-        }
-        else
-        {
-            Debug.Log("곂치는 collider 없음");
-        }
-    }
-    bool IsColliderOverlapping(Collider target, LayerMask layerMask)
-    {
-        if (target == null) return false;
-
-        // OverlapBox로 충돌 감지 (bounds.extents 사용)
-        Collider[] hits = Physics.OverlapBox(
-            target.bounds.center,
-            target.bounds.extents,
-            Quaternion.identity,
-            layerMask
-        );
-
-        foreach (Collider hit in hits)
-        {
-            // 자기 자신은 제외하고 같은 Layer인지 확인
-            if (hit != target && hit.gameObject.layer == target.gameObject.layer)
-            {
-                return true; // 같은 Layer의 Collider가 있음
-            }
-        }
-
-        return false;
-    }
-
-    void OnDrawGizmos()
-    {
-        if (targetCollider != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(targetCollider.bounds.center, targetCollider.bounds.size);
-        }
     }
 }

@@ -17,7 +17,7 @@ public class PlayerInventory_ : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        weaponSlotManager.LoadWeaponOnSlot(rightWeapon, animator, false);
+        weaponSlotManager.LoadWeaponOnSlot(rightWeapon, false);
     }
 }
 

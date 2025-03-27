@@ -10,6 +10,13 @@ public class WeaponHolderSlot : MonoBehaviour
 
     public GameObject currentWeaponModel;
 
+    private Animator animator;
+
+    void Awake()
+    {
+        animator = GetComponentInParent<Animator>();
+    }
+
     public void UnloadWeapon()
     {
         if(currentWeaponModel != null)
@@ -25,7 +32,7 @@ public class WeaponHolderSlot : MonoBehaviour
             Destroy(currentWeaponModel);
         }
     }
-    public void LoadWeaponModel(WeaponStats weaponItem, Animator animator)
+    public void LoadWeaponModel(WeaponStats weaponItem)
     {
         UnloadWeaponAndDestroy();
 
@@ -35,17 +42,18 @@ public class WeaponHolderSlot : MonoBehaviour
             return;
         }
 
+        // current controller
         var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
         AnimatorOverrideController weaponOverride = weaponItem.weaponOverride;
-        print(weaponOverride.name);
-        if (weaponOverride != null)
+        if (weaponOverride != null && weaponOverride.runtimeAnimatorController == animator.runtimeAnimatorController)
         {
             animator.runtimeAnimatorController = weaponOverride;
         }
+        /*
         else if (overrideController != null)
         {
             animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
-        }
+        }*/
 
         GameObject model = Instantiate(weaponItem.weaponPrefab) as GameObject;
         if(model != null)
@@ -65,7 +73,5 @@ public class WeaponHolderSlot : MonoBehaviour
         }
 
         currentWeaponModel = model;
-        DamageCollider Sibal = currentWeaponModel.GetComponentInChildren<DamageCollider>();
-        print(Sibal);
     }
 }

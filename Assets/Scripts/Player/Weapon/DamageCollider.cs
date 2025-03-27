@@ -32,12 +32,12 @@ public class DamageCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (gameObject.tag == "Enemy" && collision.tag == "Player")
+        if (transform.root.tag == "Enemy" && collision.tag == "Player")
         {
             GetHit(collision.GetComponent<Health>());
         }
 
-        if (gameObject.tag == "Player" && collision.tag == "Enemy")
+        if (transform.root.tag == "Player" && collision.tag == "Enemy")
         {
             GetHit(collision.GetComponent<Health>());
         }

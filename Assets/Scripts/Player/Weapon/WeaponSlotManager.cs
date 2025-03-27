@@ -26,16 +26,16 @@ public class WeaponSlotManager : MonoBehaviour
         }
     }
 
-    public void LoadWeaponOnSlot(WeaponStats weaponItem, Animator animator, bool isLeft)
+    public void LoadWeaponOnSlot(WeaponStats weaponItem, bool isLeft)
     {
         if(isLeft)
         {
-            leftHandSlot.LoadWeaponModel(weaponItem, animator);
+            leftHandSlot.LoadWeaponModel(weaponItem);
             LoadLeftWeaponDamageCollider();
         }
         else
         {
-            rightHandSlot.LoadWeaponModel(weaponItem, animator);
+            rightHandSlot.LoadWeaponModel(weaponItem);
             LoadRightWeaponDamageCollider();
         }
     }

@@ -8,13 +8,13 @@ public class MonsterMovement : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] Transform target;
-    [SerializeField] private float chaseDistance = 10f;   
-    [SerializeField] GameObject tempCollisionObject;
+    [SerializeField] private float chaseDistance = 10f;
 
     Vector3 spawnPosition;
 
     NavMeshAgent agent;
     NavMeshPath path;
+    EnemyLocomotion enemyLocomotion;
     float distance = Mathf.Infinity;
 
     MonsterState _state = MonsterState.Idle;
@@ -28,7 +28,7 @@ public class MonsterMovement : MonoBehaviour
         Falling,
         Idle,
         Attack,
-        Reaction,
+        Hit,
         BackToSpawn
     }
 
@@ -37,97 +37,46 @@ public class MonsterMovement : MonoBehaviour
     //List<float> attackAniInitRotate = new List<float> {19f, 35f };
 
     float attackDistance = 2f;
-    string nextAttackMotion = "AttackDownward";
-    private void chooseAttackMotion()
-    {
-        /*
-        //target���� �Ÿ��� ������� ���� ����
-        float distanceToPlayer = CalculDistance();
-        if (distanceToPlayer >= 5f)
-        {
-            // ���� ����
-            nextAttackMotion = "JumpAttack";
-            attackDistance = 5f;
-        }
-        else
-        {
-            // ���� ����
-            nextAttackMotion = "AttackDownward";
-            attackDistance = 2f;
-        }*/
-        int randomAttackIndex = Random.Range(0, attackList.Count);
-
-        nextAttackMotion = attackList[randomAttackIndex];
-        //nextAttackMotion = "ComboAttack1";
-        //attackDistance = 2f;
-    }
+    string nextAttackMotion;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        enemyLocomotion = GetComponent<EnemyLocomotion>();
         path = new NavMeshPath();
     }
 
     private void Start()
     {
-        tempCollisionObject.SetActive(false);
-
-        //���� ���� ���� ����
         spawnPosition = transform.position;
     }
 
-    /*
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Monster"))
-        {
-            return;
-        }
-        //Reaction update�� �ƿ� ���⼭ ó��
-
-        _state = MonsterState.Reaction;
-        // Reaction �ִϸ��̼� ��� or Ʈ����
-        animator.SetTrigger("Hit");
-        // Reaction ���� ���� (��: ����, ��� ��)
-        agent.isStopped = true;
-        agent.velocity = Vector3.zero;
-
-        //������ �Ϸ� �ߴ� Animation Ʈ���� ����
-        AttackTriggerReset();
-    }*/
-
     void Update()
     {
-        //Debug.Log(_state);
-        if (_state == MonsterState.Reaction)
+        if (_state == MonsterState.Hit)
         {
             return;
         }
 
-        //�÷��̾���� �Ÿ��� Ȯ��
-        //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
-        float distanceToPlayer = CalculDistance();
-        //Debug.Log($"���� �Ÿ� : {distanceToPlayer}");
+        enemyLocomotion.HandleDetection();
 
-        // 1) ���� ��Ÿ� �̳�����?
+        float distanceToPlayer = CalculDistance();
+
         if (distanceToPlayer <= attackDistance)
         {
             _state = MonsterState.Attack;
         }
-        // 2) ���� ��Ÿ� �̳�����?
         else if (distanceToPlayer <= chaseDistance)
         {
             _state = MonsterState.Following;
         }
-        // 3) �� �ۿ��� Idle
         else
         {
             if (Vector3.Distance(transform.position, spawnPosition) < 1f) _state = MonsterState.Idle;
             else _state = MonsterState.BackToSpawn;
         }
 
-        // ���º� ����
         switch (_state)
         {
             case MonsterState.Idle:
@@ -147,65 +96,55 @@ public class MonsterMovement : MonoBehaviour
 
     private float CalculDistance()
     {
-        // ��� ���
         if (agent.CalculatePath(target.position, path))
         {
-            // �ڳ� �� �Ÿ��� ���ؼ� �� ��� ���� ���
             distance = 0f;
             for (int i = 0; i < path.corners.Length - 1; i++)
             {
                 distance += Vector3.Distance(path.corners[i], path.corners[i + 1]);
             }
         }
-
         return distance;
     }
 
     private void BackToSpawnPosition()
     {
-        // �̵� ����
         agent.isStopped = false;
         agent.SetDestination(spawnPosition);
 
-        //�ִϸ��̼�
         animator.SetBool("Stop", false);
         animator.SetBool("Following", true);
     }
 
     private void UpdateFollowing()
     {
-        // �̵� ����
         agent.isStopped = false;
         agent.SetDestination(target.position);
 
-        //�ִϸ��̼�
         animator.SetBool("Stop", false);
         animator.SetBool("Following", true);
     }
 
     private void UpdateAttack()
     {
-        // ���� �ÿ��� ���߰� �ִϸ��̼� ����
+        transform.LookAt(target);
+
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
         animator.SetBool("Following", false);
-        //animator.SetBool("Stop", true);
+        chooseAttackMotion();
         animator.SetTrigger(nextAttackMotion);
     }
 
     public void UpdateIdle()
     {
-        //������
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
-        //�ִϸ��̼�
         animator.SetBool("Stop", true);
         animator.SetBool("Following", false);
     }
-
-    
 
     public void AttackTriggerReset()
     {
@@ -213,19 +152,9 @@ public class MonsterMovement : MonoBehaviour
         {
             animator.ResetTrigger(attack);
         });
-        chooseAttackMotion();
     }
-
-    public void WatchPlayer()
+    public void OnHitEnd()
     {
-        // Ÿ�� �ٶ󺸱�
-        //Vector3 dir = (target.position - transform.position).normalized;
-        //dir.y = 0f; // �������� ����
-        //transform.rotation = Quaternion.LookRotation(dir);
-    }
-    public void OnReactionEnd()
-    {
-        // Reaction �ִϸ��̼� ��
         _state = MonsterState.Idle;
 
         animator.ResetTrigger("Hit");
@@ -245,32 +174,10 @@ public class MonsterMovement : MonoBehaviour
         animator.ResetTrigger("AttackDownward");
     }
 
-    public void ColliderOn()
+        private void chooseAttackMotion()
     {
-        //���� ��ü�� collider �ѱ�
-        tempCollisionObject.SetActive(true);
-    }
+        int randomAttackIndex = Random.Range(0, attackList.Count);
 
-    public void ColliderOff()
-    {
-        //���� ��ü�� collider �ѱ�
-        tempCollisionObject.SetActive(false);
+        nextAttackMotion = attackList[randomAttackIndex];
     }
-
 }
-
-// Ÿ�� �ٶ󺸱�
-//Vector3 dir = (target.position - transform.position).normalized;
-//dir.y = 0f; // �������� ����
-//transform.rotation = Quaternion.LookRotation(dir);
-
-////�� ���� �ִϸ��̼� ���� �ʱ� ȸ���� ����
-//int attackIndex = attackList.IndexOf(nextAttackMotion);
-//if (attackIndex >= 0)
-//{
-//    //�߰� ȸ�� ��
-//    float initRotate = attackAniInitRotate[attackIndex];
-
-//    //transform�� �߰� ȸ���� ��
-//    transform.rotation *= Quaternion.Euler(0f, initRotate, 0f);
-//}

@@ -42,18 +42,12 @@ public class WeaponHolderSlot : MonoBehaviour
             return;
         }
 
-        // current controller
-        var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
         AnimatorOverrideController weaponOverride = weaponItem.weaponOverride;
+        // check override controller matches original controller = when attacker is player
         if (weaponOverride != null && weaponOverride.runtimeAnimatorController == animator.runtimeAnimatorController)
         {
             animator.runtimeAnimatorController = weaponOverride;
         }
-        /*
-        else if (overrideController != null)
-        {
-            animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
-        }*/
 
         GameObject model = Instantiate(weaponItem.weaponPrefab) as GameObject;
         if(model != null)

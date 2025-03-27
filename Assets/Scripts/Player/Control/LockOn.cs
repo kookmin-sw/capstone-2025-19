@@ -21,8 +21,8 @@ namespace PlayerControl
 
         [Header("Debug")]
         public bool isFindTarget = false;
-        public Enemy currentTarget;
-        public List<Enemy> targetEnemies = new List<Enemy>();
+        public LockOnTarget currentTarget;
+        public List<LockOnTarget> targetEnemies = new List<LockOnTarget>();
         
         private InputHandler input;
         private bool isLockOn = false;
@@ -95,7 +95,7 @@ namespace PlayerControl
 
             foreach (Collider findTarget in findTargets)
             {
-                Enemy target = findTarget.GetComponent<Enemy>();
+                LockOnTarget target = findTarget.GetComponent<LockOnTarget>();
 
                 if(target != null)
                 {

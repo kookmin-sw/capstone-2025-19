@@ -19,6 +19,7 @@ public class EnemyLocomotion : MonoBehaviour
 
         for (int i=0; i<colliders.Length; i++)
         {
+            print(colliders[i].name);
             Health player = colliders[i].transform.GetComponent<Health>();
             if (player != null)
             {
@@ -31,5 +32,11 @@ public class EnemyLocomotion : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

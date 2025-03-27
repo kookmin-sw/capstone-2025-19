@@ -44,26 +44,9 @@ public class LongMonsterMovement : MonoBehaviour
     private string nextAttackMotion;
     private void chooseAttackMotion()
     {
-        /*
-        //target과의 거리를 기반으로 공격 선택
-        float distanceToPlayer = CalculDistance();
-        if (distanceToPlayer >= 5f)
-        {
-            // 점프 공격
-            nextAttackMotion = "JumpAttack";
-            attackDistance = 5f;
-        }
-        else
-        {
-            // 근접 공격
-            nextAttackMotion = "AttackDownward";
-            attackDistance = 2f;
-        }*/
         int randomAttackIndex = Random.Range(0, attackList.Count);
 
         nextAttackMotion = attackList[randomAttackIndex];
-        //nextAttackMotion = "ComboAttack1";
-        //attackDistance = 2f;
     }
 
     private void Awake()
@@ -116,21 +99,16 @@ public class LongMonsterMovement : MonoBehaviour
         //플레이어와의 거리를 확인
         float distanceToPlayer = Vector3.Distance(transform.position, target.position);
         //float distanceToPlayer = CalculDistance();
-        //Debug.Log($"실제 거리 : {distanceToPlayer}");
 
-        // 1) 공격 사거리 이내인지?
+        //Is in attackDistance
         if (distanceToPlayer <= attackDistance)
         {
-            if (HasLineOfSight(target)) //캐릭터가 보이면
+            if (HasLineOfSight(target)) 
             {
-                animator.SetBool("SeeTarget", true);
-                animator.SetBool("Follow", false);
-                Debug.Log("캐릭터 보임");
                 _state = MonsterState.Attack;
             }
             else
             {
-                animator.SetBool("SeeTarget", false);
                 _state = MonsterState.Following;
             }
             
@@ -218,6 +196,7 @@ public class LongMonsterMovement : MonoBehaviour
         agent.SetDestination(target.position);
 
         //애니메이션
+        animator.SetBool("SeeTarget", false);
         animator.SetBool("Follow", true);
     }
 
@@ -227,12 +206,12 @@ public class LongMonsterMovement : MonoBehaviour
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
 
-        //animator.SetTrigger("Attack");
-
         Vector3 dir = (target.position - transform.position).normalized;
         dir.y = 0f; // 수직축은 무시
         transform.rotation = Quaternion.LookRotation(dir);
-        
+
+        animator.SetBool("SeeTarget", true);
+        animator.SetBool("Follow", false);
     }
 
     public void UpdateIdle()
@@ -255,9 +234,7 @@ public class LongMonsterMovement : MonoBehaviour
         Vector3 dir = (targetPos - startPos).normalized;
         float distance = Vector3.Distance(startPos, targetPos);
 
-        // 레이캐스트 검사
-        // LayerMask를 지정해줄 수 있으면, 장애물이 될 레이어만 체크할 수 있도록 해주는 것이 좋습니다.
-        // 예: if (Physics.Raycast(startPos, dir, out RaycastHit hit, distance, obstacleLayerMask))
+        // if (Physics.Raycast(startPos, dir, out RaycastHit hit, distance, obstacleLayerMask))
         if (Physics.Raycast(startPos, dir, out RaycastHit hit, distance))
         {
             if (hit.collider.CompareTag("Player"))
@@ -340,7 +317,8 @@ public class LongMonsterMovement : MonoBehaviour
         animator.SetBool("ShotWait", true);
         agent.isStopped = true;
 
-        yield return new WaitForSeconds(3f);
+        float waitTime = Random.Range(3, 6);
+        yield return new WaitForSeconds(waitTime);
         animator.SetBool("ShotWait", false);
         agent.isStopped = false;
         Debug.Log("Shot 후 대기 종료, 다음 상태로 전환");
@@ -358,7 +336,11 @@ public class LongMonsterMovement : MonoBehaviour
             Transform arrowTransform = ArrowPosition.transform.GetChild(0);
             arrowTransform.SetParent(null);
             ArrowProjectile arrowProj = arrowTransform.GetComponent<ArrowProjectile>();
-            Vector3 shootDirection = transform.forward;
+
+            Vector3 arrowPos = arrowTransform.position;
+            Vector3 targetCenter = target.position + new Vector3(0, 1.0f, 0);
+
+            Vector3 shootDirection = (targetCenter - arrowPos).normalized; //transform.forward;
             arrowProj.SetDirection(shootDirection);
         }
     }

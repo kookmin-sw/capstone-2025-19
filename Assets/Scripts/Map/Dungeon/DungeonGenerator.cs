@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine;
 
 
@@ -31,7 +32,9 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private DungeonPart playerSpawnDungeonPart;
 
-   
+    [HideInInspector] public NavMeshSurface surface;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,11 +54,27 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         Generate(); //던전 생성
         //GenerateAlternateEntrances(); //다른 입구 생성 -> 일단 보류. 알고리즘 자체는 던전 방 생성과 똑같음
         //FillEmptyEntrances(); //모든 방이 생성된 이후 남은 입구 벽으로 막기
+
+        NvigationBake();
+        SpawnRandomObject();
         PlayerSpawn();
         isGenerated = true;
     }
 
-    
+    private void NvigationBake()
+    {
+        surface.BuildNavMesh();
+    }
+
+    private void SpawnRandomObject()
+    {
+        foreach(DungeonPart room in generatedRooms)
+        {
+            room.SpawnItem();
+            room.SpawnMonster();
+            room.SpawnObject();
+        }
+    }
 
     private void Generate()
     {

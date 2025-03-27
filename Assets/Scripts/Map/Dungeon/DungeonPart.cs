@@ -24,6 +24,9 @@ public class DungeonPart : MonoBehaviour
     [SerializeField] GameObject fillerWall; //던전이 다 생성되고 사용되지 않은 빈 입구를 이걸로 채움 -> 재질이 비슷한 벽으로 할당해야 함
     [SerializeField] public RoomUse roomUse;
     [SerializeField] public Transform spawnPoint;
+    [SerializeField] List<ItemRandomSpawner> spawnItemList;
+    [SerializeField] List<MonsterRandomSpawner> spawnMonsterList;
+    // chest object randomSpawn List
     //TODO EnemySpawn Point functiion
     public List<Transform> entryPoints; // 방에 있는 문
     public new Collider collider; //new의 기능 :부모의 같은 이름을 가진 오브젝트를 숨김. 부모 클래스에 Collider collider가 있으면 그거를 base.collider로 쓰게 하고 새로운 collider를 생성.
@@ -180,6 +183,24 @@ public class DungeonPart : MonoBehaviour
             if(!entry.GetComponent<EntryPoint>().IsOccupied()) emptyList.Add(entry);
         }
         return emptyList;
+    }
+
+    public void SpawnItem()
+    {
+        foreach(ItemRandomSpawner spawner in spawnItemList)
+        {
+            spawner.SpawnItem();
+        }
+    }
+
+    public void SpawnMonster()
+    {
+        //TODO Monster Spawner
+    }
+
+    public void SpawnObject()
+    {
+        //TODO Obeject Spawner
     }
     
 }

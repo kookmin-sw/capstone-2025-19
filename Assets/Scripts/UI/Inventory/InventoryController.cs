@@ -243,6 +243,13 @@ public class InventoryController : Singleton<InventoryController>
         //Test
         selectedItemIcon_ = itemIcon;
     }
+    public GameObject GetCreateDropItem(Item item)
+    {
+        GameObject dropItem = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/DropItem"));
+        DropItem dropItem_ = dropItem.GetComponent<DropItem>();
+        //TODO SetItem;
+        return dropItem;
+    }
     public void CreateDropItem(ItemIcon itemIcon)
     {
         GameObject dropItemGo;

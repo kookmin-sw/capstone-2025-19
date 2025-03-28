@@ -6,10 +6,11 @@ using UnityEngine;
 
 public class DamageCollider : MonoBehaviour
 {
-    Collider damageCollider;
+    public Collider damageCollider;
     public GameObject trailRenderer;
 
-    public float damage = 10;
+    public float damage;
+    public float tenacity;
 
     void Awake()
     {

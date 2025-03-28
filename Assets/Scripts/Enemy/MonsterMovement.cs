@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 public class MonsterMovement : MonoBehaviour
-{
+{    
     [SerializeField] Animator animator;
     [SerializeField] Transform target;
     [SerializeField] private float chaseDistance = 10f;
@@ -16,7 +17,7 @@ public class MonsterMovement : MonoBehaviour
     NavMeshPath path;
     float distance = Mathf.Infinity;
 
-    MonsterState _state = MonsterState.Idle;
+    public MonsterState _state = MonsterState.Idle;
 
     public enum MonsterState
     {
@@ -28,10 +29,11 @@ public class MonsterMovement : MonoBehaviour
         Idle,
         Attack,
         Hit,
-        BackToSpawn
+        BackToSpawn,
+        Invincible
     }
 
-    [SerializeField] List<string> attackList = new List<string>{ "AttackDownward", "ComboAttack1"};
+    [SerializeField] List<string> attackList = new List<string>{ "AttackPattern1", "AttackPattern2"};
     //[SerializeField] List<float> attackDistanceList = new List<float> {5f, 2f};
     //List<float> attackAniInitRotate = new List<float> {19f, 35f };
 

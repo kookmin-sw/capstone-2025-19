@@ -10,4 +10,5 @@ public class WeaponStats : ScriptableObject
     public AnimatorOverrideController weaponOverride;
     public float damage;
     public bool rightHandOnly;
+    public float tenacity;
 }

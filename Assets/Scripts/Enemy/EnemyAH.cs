@@ -1,29 +1,18 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationHandler : MonoBehaviour
+public class EnemyAH : MonoBehaviour
 {
     private Animator animator;
 
     public enum AnimParam
     {
-        Speed,
-        Grounded,
-        Jump,
-        FreeFall,
-        MotionSpeed,
-        Attack,
+        Stop,
+        Following,
         Attacking,
-        Hit,
         Die,
-        Rolling,
-        UseItem,
-        PickUp,
-        Interacting,
-        Blocking,
-        CanDoCombo
+        Hit
     }
 
     private readonly Dictionary<AnimParam, int> animParamIDs = new();
@@ -32,21 +21,11 @@ public class AnimationHandler : MonoBehaviour
     {
         animator = GetComponent<Animator>();
 
-        animParamIDs[AnimParam.Speed] = Animator.StringToHash("Speed");
-        animParamIDs[AnimParam.Grounded] = Animator.StringToHash("Grounded");
-        animParamIDs[AnimParam.Jump] = Animator.StringToHash("Jump");
-        animParamIDs[AnimParam.FreeFall] = Animator.StringToHash("FreeFall");
-        animParamIDs[AnimParam.MotionSpeed] = Animator.StringToHash("MotionSpeed");
-        animParamIDs[AnimParam.Attack] = Animator.StringToHash("Attack");
+        animParamIDs[AnimParam.Stop] = Animator.StringToHash("Stop");
+        animParamIDs[AnimParam.Following] = Animator.StringToHash("Following");
         animParamIDs[AnimParam.Attacking] = Animator.StringToHash("Attacking");
         animParamIDs[AnimParam.Hit] = Animator.StringToHash("Hit");
         animParamIDs[AnimParam.Die] = Animator.StringToHash("Die");
-        animParamIDs[AnimParam.Rolling] = Animator.StringToHash("Rolling");
-        animParamIDs[AnimParam.UseItem] = Animator.StringToHash("UseItem");
-        animParamIDs[AnimParam.PickUp] = Animator.StringToHash("PickUp");
-        animParamIDs[AnimParam.Interacting] = Animator.StringToHash("Interacting");
-        animParamIDs[AnimParam.Blocking] = Animator.StringToHash("Blocking");
-        animParamIDs[AnimParam.CanDoCombo] = Animator.StringToHash("CanDoCombo");
     }
 
     public void SetBool(AnimParam param, bool value)
@@ -98,9 +77,13 @@ public class AnimationHandler : MonoBehaviour
         }
     }
 
+    public Animator GetAnimator()
+    {
+        return animator;
+    }
+
     public void RootMotion(bool value)
     {
         animator.applyRootMotion = value;
     }
 }
-

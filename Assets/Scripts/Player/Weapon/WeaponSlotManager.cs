@@ -50,7 +50,6 @@ public class WeaponSlotManager : MonoBehaviour
     private void LoadRightWeaponDamageCollider()
     {
         rightHandDamageCollider = rightHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
-        print(rightHandDamageCollider);
     }
 
     public void OpenRightDamageCollider()

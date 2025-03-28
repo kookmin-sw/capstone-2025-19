@@ -32,48 +32,50 @@ public class WeaponHolderSlot : MonoBehaviour
             Destroy(currentWeaponModel);
         }
     }
-    public void LoadWeaponModel(WeaponStats weaponItem)
+    public void LoadWeaponModel(WeaponStats weaponStats)
     {
         UnloadWeaponAndDestroy();
 
-        if (weaponItem == null)
+        if (weaponStats == null)
         {
             UnloadWeapon();
             return;
         }
 
+        GameObject weapon = Instantiate(weaponStats.weaponPrefab) as GameObject;
+        DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();
 
-        GameObject model = Instantiate(weaponItem.weaponPrefab) as GameObject;
-        DamageCollider collider = model.GetComponentInChildren<DamageCollider>();
+        weaponCollider.damage = weaponStats.damage;
+        weaponCollider.tenacity = weaponStats.tenacity;
 
-        AnimatorOverrideController weaponOverride = weaponItem.weaponOverride;
+        AnimatorOverrideController weaponOverride = weaponStats.weaponOverride;
         // check override controller matches original controller = when attacker is player
         if (weaponOverride != null && weaponOverride.runtimeAnimatorController == animator.runtimeAnimatorController)
         {
             animator.runtimeAnimatorController = weaponOverride;
-            collider.tag = "PlayerWeapon";
+            weaponCollider.tag = "PlayerWeapon";
         }
         else
         {
-            collider.tag = "EnemyWeapon";
+            weaponCollider.tag = "EnemyWeapon";
         }
         
-        if(model != null)
+        if(weapon != null)
         {
             if(parentOverride != null)
             {
-                model.transform.parent = parentOverride;
+                weapon.transform.parent = parentOverride;
             }
             else
             {
-                model.transform.parent = transform;
+                weapon.transform.parent = transform;
             }
 
-            model.transform.localPosition = Vector3.zero;
-            model.transform.localRotation = Quaternion.identity;
-            model.transform.localScale = Vector3.one;
+            weapon.transform.localPosition = Vector3.zero;
+            weapon.transform.localRotation = Quaternion.identity;
+            weapon.transform.localScale = Vector3.one;
         }
 
-        currentWeaponModel = model;
+        currentWeaponModel = weapon;
     }
 }

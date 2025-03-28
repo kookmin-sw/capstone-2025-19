@@ -283,6 +283,7 @@ namespace PlayerControl
                 animationHandler.SetTrigger(AnimationHandler.AnimParam.Rolling);
                 animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                 animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                PlayerState.Instance.state = PlayerState.State.Invincible;
             }
         }
 
@@ -299,6 +300,7 @@ namespace PlayerControl
                     animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Attacking, true);
                 }
             }
         }
@@ -397,6 +399,7 @@ namespace PlayerControl
 
         public void ForceJumpStop()
         {
+            animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, false);
             _input.jump = false;
             _jumpTimeoutDelta = 0;
             _fallTimeoutDelta = FallTimeout;

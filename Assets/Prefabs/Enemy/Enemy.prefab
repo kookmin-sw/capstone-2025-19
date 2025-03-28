@@ -47,7 +47,6 @@ GameObject:
   - component: {fileID: 6132172653247053190}
   - component: {fileID: 7526315267440151769}
   - component: {fileID: 4433254973299494373}
-  - component: {fileID: 9033348277181248053}
   - component: {fileID: 7088157759346372762}
   m_Layer: 8
   m_Name: Enemy
@@ -109,6 +108,7 @@ MonoBehaviour:
   animator: {fileID: 9109563814488615581}
   target: {fileID: 0}
   chaseDistance: 12
+  _state: 5
   attackList:
   - AttackDownward
 --- !u!195 &3299457952285871328
@@ -194,25 +194,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rightWeapon: {fileID: 11400000, guid: 037b1da7ab3cbd740ab6c0b65532598c, type: 2}
---- !u!114 &9033348277181248053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2501358193076484567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e15684ddd9a5b004a89ab976cf860951, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectionRadius: 5
-  minimumDetectAngle: -50
-  maximumDetectAngle: 50
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  currentTarget: {fileID: 0}
 --- !u!114 &7088157759346372762
 MonoBehaviour:
   m_ObjectHideFlags: 0

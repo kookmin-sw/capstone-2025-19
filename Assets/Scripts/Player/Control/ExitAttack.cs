@@ -12,6 +12,7 @@ public class ExitAttack : StateMachineBehaviour
     const string CANDOCOMBO_LABEL = "CanDoCombo";
     const string INTERACTING_LABEL = "Interacting";
     const string BLOCKING_LABEL = "Blocking";
+    const string ATTACKING_LABEL = "Attacking";
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -42,6 +43,7 @@ public class ExitAttack : StateMachineBehaviour
         animator.ResetTrigger(triggerName);
         animator.SetBool(BLOCKING_LABEL, false);
         animator.SetBool(INTERACTING_LABEL, false);
+        animator.SetBool(ATTACKING_LABEL, false);
         animator.applyRootMotion = false;
     }
 }

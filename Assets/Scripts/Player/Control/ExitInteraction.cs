@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using RPGCharacterAnims.Actions;
 using UnityEngine;
 
 public class ExitInteraction : StateMachineBehaviour
@@ -28,6 +29,11 @@ public class ExitInteraction : StateMachineBehaviour
         {
             animator.SetBool(INTERACTING_LABEL, false);
             animator.applyRootMotion = false;
+        }
+
+        if (PlayerState.Instance.state == PlayerState.State.Invincible)
+        {
+            PlayerState.Instance.state = PlayerState.State.Idle;
         }
     }
 }

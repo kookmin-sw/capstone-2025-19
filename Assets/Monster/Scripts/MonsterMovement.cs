@@ -14,7 +14,6 @@ public class MonsterMovement : MonoBehaviour
 
     NavMeshAgent agent;
     NavMeshPath path;
-    EnemyLocomotion enemyLocomotion;
     float distance = Mathf.Infinity;
 
     MonsterState _state = MonsterState.Idle;
@@ -43,7 +42,6 @@ public class MonsterMovement : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        enemyLocomotion = GetComponent<EnemyLocomotion>();
         path = new NavMeshPath();
     }
 
@@ -58,8 +56,6 @@ public class MonsterMovement : MonoBehaviour
         {
             return;
         }
-
-        enemyLocomotion.HandleDetection();
 
         float distanceToPlayer = CalculDistance();
 

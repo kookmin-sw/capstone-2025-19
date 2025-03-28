@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggerName: Attack
   freeProgressRate: 0.75
+  End: 0
 --- !u!1101 &-8530315238933861066
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggerName: Hit
   freeProgressRate: 0.9
+  End: 1
 --- !u!1109 &-7500108647737711747
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -587,6 +589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggerName: PickUp
   freeProgressRate: 0.9
+  End: 0
 --- !u!1101 &-1356596453866694462
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -622,7 +625,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GetHit
+  m_Name: Hit
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1115,6 +1118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggerName: Rolling
   freeProgressRate: 0.75
+  End: 0
 --- !u!114 &4937512254200469355
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1129,6 +1133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggerName: UseItem
   freeProgressRate: 0.75
+  End: 0
 --- !u!1101 &5185278855704465556
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1298,8 +1303,7 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 1657602633327794031, guid: 8269a9f8cf495034c817722ac21f309f,
-      type: 3}
+    m_Motion: {fileID: 7400000, guid: d7357c8748975de4ab7d6bbdc216e3c1, type: 2}
     m_Threshold: 2
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1307,8 +1311,7 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 6564411413370888346, guid: 16114d403eabb53438de032c6f0d1deb,
-      type: 3}
+    m_Motion: {fileID: 7400000, guid: 8a1ecc3db93bd5a43b1bcd922ead45d4, type: 2}
     m_Threshold: 6
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1

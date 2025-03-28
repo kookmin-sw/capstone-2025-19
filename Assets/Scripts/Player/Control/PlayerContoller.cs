@@ -8,6 +8,7 @@ namespace PlayerControl
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(InputHandler))]
+    [RequireComponent(typeof(AnimationHandler))]
 
     public class PlayerController : MonoBehaviour
     {
@@ -92,29 +93,13 @@ namespace PlayerControl
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
-        private float rotation;
-
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
-        // animation IDs
-        private int _animIDSpeed;
-        private int _animIDGrounded;
-        private int _animIDJump;
-        private int _animIDFreeFall;
-        private int _animIDMotionSpeed;
-        private int _animIDRolling;
-        private int _animIDUseItem;
-        private int _animIDPickUP;
-        private int _animIDAttackCount;
-        private int _animIDInteracting;
-        private int _animIDBlocking;
-        private int _animIDCanDoCombo;
-
         private bool test_useItem;
 
-        private Animator _animator;
+        private AnimationHandler animationHandler;
         private CharacterController _controller;
         private InputHandler _input;
         private GameObject _mainCamera;
@@ -140,12 +125,10 @@ namespace PlayerControl
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
-            TryGetComponent(out _animator);
+            animationHandler = GetComponent<AnimationHandler>();
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<InputHandler>();
             _lockOn = GetComponent<LockOn>();
-
-            AssignAnimationIDs();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
@@ -168,22 +151,6 @@ namespace PlayerControl
             CameraRotation();
         }
 
-        private void AssignAnimationIDs()
-        {
-            _animIDSpeed = Animator.StringToHash("Speed");
-            _animIDGrounded = Animator.StringToHash("Grounded");
-            _animIDJump = Animator.StringToHash("Jump");
-            _animIDFreeFall = Animator.StringToHash("FreeFall");
-            _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-            _animIDRolling = Animator.StringToHash("Rolling");
-            _animIDUseItem = Animator.StringToHash("UseItem");
-            _animIDPickUP = Animator.StringToHash("PickUp");
-            _animIDAttackCount = Animator.StringToHash("AttackCount");
-            _animIDInteracting = Animator.StringToHash("Interacting");
-            _animIDBlocking = Animator.StringToHash("Blocking");
-            _animIDCanDoCombo = Animator.StringToHash("CanDoCombo");
-        }
-
         private void GroundedCheck()
         {
             // set sphere position, with offset
@@ -192,7 +159,7 @@ namespace PlayerControl
             Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
                 QueryTriggerInteraction.Ignore);
 
-            _animator.SetBool(_animIDGrounded, Grounded);
+            animationHandler.SetBool(AnimationHandler.AnimParam.Grounded, Grounded);
         }
 
         private void CameraRotation()
@@ -212,7 +179,7 @@ namespace PlayerControl
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
             /* Camera Folling to LockOn Target (It is weird so i turned off)
-            if (_lockOn.isFindTarget && _lockOn.currentTarget != null && !_animator.GetBool(_animIDInteracting))
+            if (_lockOn.isFindTarget && _lockOn.currentTarget != null && !animationHandler.GetBool(_animIDInteracting))
             {
                 Vector3 direction = (_lockOn.currentTarget.lockOnTarget.transform.position - CinemachineCameraTarget.transform.position).normalized;
                 direction.y = _cameraDirectionY;
@@ -288,21 +255,21 @@ namespace PlayerControl
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
                 // rotate to face input direction relative to camera position
-                if (!_lockOn.isFindTarget && !_animator.GetBool(_animIDInteracting))
+                if (!_lockOn.isFindTarget && !animationHandler.GetBool(AnimationHandler.AnimParam.Interacting))
                 {
                     transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
                 }
             }
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
-            _speed = _animator.GetBool(_animIDInteracting) ? 0 : _speed;
+            _speed = animationHandler.GetBool(AnimationHandler.AnimParam.Interacting) ? 0 : _speed;
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
             // update animator if using character
-            _animator.SetFloat(_animIDSpeed, _animationBlend);
-            _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+            animationHandler.SetFloat(AnimationHandler.AnimParam.Speed, _animationBlend);
+            animationHandler.SetFloat(AnimationHandler.AnimParam.MotionSpeed, inputMagnitude);
         }
 
         private void Rolling()
@@ -310,12 +277,12 @@ namespace PlayerControl
             if (_input.rolling)
             {
                 _input.rolling = false;
-                if (_animator.GetBool(_animIDBlocking) || !Grounded) return;
+                if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
                 transform.rotation = Quaternion.Euler(0.0f, _targetRotation, 0.0f);
-                _animator.applyRootMotion = true;
-                _animator.SetTrigger(_animIDRolling);
-                _animator.SetBool(_animIDInteracting, true);
-                _animator.SetBool(_animIDBlocking, true);
+                animationHandler.RootMotion(true);
+                animationHandler.SetTrigger(AnimationHandler.AnimParam.Rolling);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
             }
         }
 
@@ -325,12 +292,13 @@ namespace PlayerControl
             {
                 _input.attack = false;
                 if (!Grounded) return;
-                if (!_animator.GetBool(_animIDBlocking) || _animator.GetBool(_animIDCanDoCombo))
+                if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
+                    || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
                 {
-                    _animator.applyRootMotion = true;
-                    _animator.SetTrigger("Attack");
-                    _animator.SetBool(_animIDInteracting, true);
-                    _animator.SetBool(_animIDBlocking, true);
+                    animationHandler.RootMotion(true);
+                    animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
                 }
             }
         }
@@ -341,9 +309,9 @@ namespace PlayerControl
             {
                 _input.useItem = false;
                 // 대충 아이템 확인하는 조건문 들어가야함
-                if (_animator.GetBool(_animIDBlocking) || !Grounded) return;
-                _animator.SetTrigger(_animIDUseItem);
-                _animator.SetBool(_animIDBlocking, true);
+                if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
+                animationHandler.SetTrigger(AnimationHandler.AnimParam.UseItem);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
                 test_useItem = true;
             }
         }
@@ -353,10 +321,10 @@ namespace PlayerControl
             if (_input.pickup)
             {
                 _input.pickup = false;
-                if (_animator.GetBool(_animIDBlocking) || !Grounded) return;
-                _animator.SetTrigger(_animIDPickUP);
-                _animator.SetBool(_animIDInteracting, true);
-                _animator.SetBool(_animIDBlocking, true);
+                if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
+                animationHandler.SetTrigger(AnimationHandler.AnimParam.PickUp);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
             }
         }
 
@@ -368,7 +336,7 @@ namespace PlayerControl
 
         private void JumpAndGravity()
         {
-            if (_animator.GetBool(_animIDBlocking)) 
+            if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)) 
             {
                 _input.jump = false;
                 return;
@@ -378,8 +346,8 @@ namespace PlayerControl
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
 
-                _animator.SetBool(_animIDJump, false);
-                _animator.SetBool(_animIDFreeFall, false);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Jump, false);
+                animationHandler.SetBool(AnimationHandler.AnimParam.FreeFall, false);
 
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
@@ -392,7 +360,7 @@ namespace PlayerControl
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-                    _animator.SetBool(_animIDJump, true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Jump, true);
                 }
 
                 // jump timeout
@@ -413,7 +381,7 @@ namespace PlayerControl
                 }
                 else
                 {
-                    _animator.SetBool(_animIDFreeFall, true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.FreeFall, true);
                 }
 
                 // if we are not grounded, do not jump
@@ -425,6 +393,13 @@ namespace PlayerControl
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
+        }
+
+        public void ForceJumpStop()
+        {
+            _input.jump = false;
+            _jumpTimeoutDelta = 0;
+            _fallTimeoutDelta = FallTimeout;
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

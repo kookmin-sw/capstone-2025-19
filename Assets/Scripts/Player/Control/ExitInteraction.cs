@@ -8,9 +8,11 @@ public class ExitInteraction : StateMachineBehaviour
     [Range(0, 0.99f)]public float freeProgressRate = 0.75f;
     const string INTERACTING_LABEL = "Interacting";
     const string BLOCKING_LABEL = "Blocking";
+    public bool End = false;
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (!End) return;
         float progress = stateInfo.normalizedTime;
         if (progress >= freeProgressRate && progress < 1.0f)
         {      
@@ -22,5 +24,10 @@ public class ExitInteraction : StateMachineBehaviour
     {
         animator.ResetTrigger(triggerName);
         animator.SetBool(BLOCKING_LABEL, false);
+        if (End)
+        {
+            animator.SetBool(INTERACTING_LABEL, false);
+            animator.applyRootMotion = false;
+        }
     }
 }

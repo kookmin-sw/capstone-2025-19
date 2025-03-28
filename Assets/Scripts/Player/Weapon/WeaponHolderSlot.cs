@@ -42,14 +42,22 @@ public class WeaponHolderSlot : MonoBehaviour
             return;
         }
 
+
+        GameObject model = Instantiate(weaponItem.weaponPrefab) as GameObject;
+        DamageCollider collider = model.GetComponentInChildren<DamageCollider>();
+
         AnimatorOverrideController weaponOverride = weaponItem.weaponOverride;
         // check override controller matches original controller = when attacker is player
         if (weaponOverride != null && weaponOverride.runtimeAnimatorController == animator.runtimeAnimatorController)
         {
             animator.runtimeAnimatorController = weaponOverride;
+            collider.tag = "PlayerWeapon";
         }
-
-        GameObject model = Instantiate(weaponItem.weaponPrefab) as GameObject;
+        else
+        {
+            collider.tag = "EnemyWeapon";
+        }
+        
         if(model != null)
         {
             if(parentOverride != null)

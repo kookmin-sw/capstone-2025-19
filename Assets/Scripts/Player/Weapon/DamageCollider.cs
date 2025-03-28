@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
+using PlayerControl;
 using UnityEngine;
 
 public class DamageCollider : MonoBehaviour
@@ -8,7 +9,7 @@ public class DamageCollider : MonoBehaviour
     Collider damageCollider;
     public GameObject trailRenderer;
 
-    public int currentWeaponDamage = 25;
+    public float damage = 10;
 
     void Awake()
     {
@@ -28,28 +29,5 @@ public class DamageCollider : MonoBehaviour
     {
         damageCollider.enabled = false;
         if (trailRenderer != null) trailRenderer.SetActive(false);
-    }
-
-    void OnTriggerEnter(Collider collision)
-    {
-        if (transform.root.tag == "Enemy" && collision.tag == "Player")
-        {
-            GetHit(collision.GetComponent<Health>());
-        }
-
-        if (transform.root.tag == "Player" && collision.tag == "Enemy")
-        {
-            GetHit(collision.GetComponent<Health>());
-        }
-    }
-
-    private void GetHit(Health target)
-    {
-        if (target != null)
-        {
-            print(target.name + " hit");
-            target.TakeDamage(currentWeaponDamage);
-        }
-
     }
 }

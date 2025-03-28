@@ -6,23 +6,7 @@ public class Health : MonoBehaviour
 {
     public int healthLevel = 10;
     public int maxHealth;
-    public int currentHealth;
-
-    private int animIDHit;
-    private int animIDDie;
-    private int animIDInteracting;
-    private int animIDBlocking;
-
-    Animator animator;
-
-    void Awake()
-    {
-        animator = GetComponent<Animator>();
-        animIDHit = Animator.StringToHash("Hit");
-        animIDDie = Animator.StringToHash("Die");
-
-
-    }
+    public float currentHealth;
 
     void Start()
     {
@@ -34,22 +18,5 @@ public class Health : MonoBehaviour
     {
         maxHealth = healthLevel * 10;
         return maxHealth;
-    }
-
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        animator.SetTrigger(animIDHit);
-        if (gameObject.tag == "Player")
-        {
-            animator.SetBool(animIDInteracting, true);
-            animator.SetBool(animIDBlocking, true);
-        }
-
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-            animator.SetTrigger(animIDDie);
-        }
     }
 }

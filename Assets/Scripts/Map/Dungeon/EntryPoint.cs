@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class EntryPoint : MonoBehaviour
 {
+    public enum NeedRoomType
+    {
+        None,
+        Stair,
+        Hallway,
+        BossRoom,
+        TrapRoom,
+
+    }
     //occupied  사용중인
     private bool isOccupied = false;
 

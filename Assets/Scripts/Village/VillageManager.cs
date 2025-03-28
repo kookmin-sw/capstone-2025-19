@@ -24,7 +24,7 @@ public class VillageManager : MonoBehaviour
     {
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer_Village"));
         player.transform.position = playerSpawnPosition.position;
-        InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
+        InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());
         //TODO Player MainCamera »ý¼º
         GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         GameObject playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));

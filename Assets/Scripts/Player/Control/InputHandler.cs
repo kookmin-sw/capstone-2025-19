@@ -26,7 +26,14 @@ namespace PlayerControl
 		public bool cursorInputForLook = true;
 		[Range(0.1f, 10)] public float mouseSensitivity = 1f;
 
-		public void OnMove(InputValue value)
+		[SerializeField] public PlayerTrigger playerTrigger;
+
+        private void Awake()
+        {
+            playerTrigger = GetComponent<PlayerTrigger>();
+        }
+
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}
@@ -76,9 +83,9 @@ namespace PlayerControl
 
         public void OnInventory(InputValue value)
         {
-			Debug.Log("PlayerInventory test");
             if (PlayerState.Instance.state == PlayerState.State.Inventory)
 			{
+				InventoryController.Instance.SetStoreInventory(false);
 				PlayerState.Instance.ChangeState(PlayerState.State.Idle);
 				Cursor.lockState = CursorLockMode.None;
 
@@ -90,6 +97,10 @@ namespace PlayerControl
 			}
         }
 
+		public void OnInteract(InputValue value)
+		{
+			playerTrigger.InteractObject();
+		}
 		
 		public void MoveInput(Vector2 newMoveDirection)
 		{

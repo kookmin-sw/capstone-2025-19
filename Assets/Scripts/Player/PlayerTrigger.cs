@@ -18,6 +18,7 @@ public class PlayerTrigger : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Trigger test");
         if (other.CompareTag("DropItem"))
         {
 
@@ -58,10 +59,26 @@ public class PlayerTrigger : MonoBehaviour
                 InventoryController.Instance.ExitDropItem(other.GetComponent<DropItem>());
             }
 
+        }else if (other.CompareTag("Money"))
+        {
+            InventoryController.Instance.RemoveMoneyItemIcon(other.GetComponent<MoneyDropItem>());
         }
         if (other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
         {
             triggerUI.EndEvent();
+        }
+    }
+
+    public void InteractObject()
+    {
+        if(InventoryController.Instance.dropItemList.Count > 0)
+        {
+            DropItem item = InventoryController.Instance.dropItemList[0];
+            InventoryController.Instance.PickupDropItem(item);
+        }
+        else
+        {
+            //TODO Use InteractObject ex) Open the door, Open the chest, Insert Potal
         }
     }
 }

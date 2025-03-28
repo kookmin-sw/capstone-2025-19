@@ -248,6 +248,7 @@ public class InventoryController : Singleton<InventoryController>
         GameObject dropItem = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/DropItem"));
         DropItem dropItem_ = dropItem.GetComponent<DropItem>();
         //TODO SetItem;
+        dropItem_.SetItem(item);
         return dropItem;
     }
     public void CreateDropItem(ItemIcon itemIcon)
@@ -366,6 +367,14 @@ public class InventoryController : Singleton<InventoryController>
         dropItemPanel.InsertItem(dropItem.item.itemIcon.GetComponent<ItemIcon>());
         //TODO ItemIcon 만들어서 dropItemPanel.InsertItem() 하기*/
     }
+
+    public void PickupDropItem(DropItem dropItem)
+    {
+        dropItemList.Remove(dropItem);
+        if(dropItem.itemIcon == null) { CreateItemIcon(dropItem); }
+        dropItemPanel.InsertItem(dropItem.itemIcon.GetComponent<ItemIcon>());
+
+    }
     private void TakeOutDropItemPanel(DropItem dropItem)
     {
         /*if(dropItem.item.itemIcon != null)
@@ -455,7 +464,8 @@ public class InventoryController : Singleton<InventoryController>
         {
             this.player = player;
             SetInventoryCanvas();
-            if(weaponSlotManager == null) weaponSlotManager = player.gameObject.GetComponent<WeaponSlotManager>();
+            Debug.Log($"Player test {player}");
+            if(weaponSlotManager == null) weaponSlotManager = player.transform.parent.gameObject.GetComponent<WeaponSlotManager>();
         }
     }
 

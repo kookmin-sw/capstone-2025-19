@@ -39,6 +39,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     void Start()
     {
         generatedRooms = new List<DungeonPart>();
+        surface = GetComponent<NavMeshSurface>();
         //StartCoroutine(Generated_());
         StartGeneration();
     }
@@ -885,7 +886,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         //지금 당장은 PhotonView를 쓰는 것이 아님
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer"));
         player.transform.localPosition = playerSpawnDungeonPart.spawnPoint.position;
-        InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
+        InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());
         Debug.Log(player.transform.position);
         player_ = player;
         StartCoroutine(ResetPlayerPosition());

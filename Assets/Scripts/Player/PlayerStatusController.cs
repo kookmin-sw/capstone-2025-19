@@ -1,188 +1,303 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStatusController : Singleton<PlayerStatusController>
 {
-    public PlayerStatus playerStatus;
-    // Start is called before the first frame update
+    [Header("Slider bar")]
+    [SerializeField] Slider HpBar;
+    [SerializeField] Slider SpBar;
+
+    [Header("Stat_Text")]
+    [SerializeField] TextMeshProUGUI LevelText;
+    [SerializeField] TextMeshProUGUI ExpText;
+    [SerializeField] TextMeshProUGUI ApText;
+    [SerializeField] Button LevelUpButton;
+    [SerializeField] Button PointDecomposeCompleteBnt;
+    [SerializeField] TextMeshProUGUI LevelUpPoint;
+
+    [Header("LevelUp")]
+    [SerializeField] GameObject PlusButton;
+    [SerializeField] TextMeshProUGUI AP_Result;
+
+    [Header("Stamina")]
+    [SerializeField] float recoverSpValue = 3f;
+    [SerializeField] float sprintStamina = 5f;
+    [SerializeField] float rollingStamina = 5f;
+    [SerializeField] float attackStamina = 5f;
+
+    [Header("player move bool")]
+    public bool canSprint;
+    public bool canRolling;
+    public bool canAttack;
+
+    //현재 플레이어 체력 (max체력은 realValue["Hp"]값
+    [HideInInspector]
+    public float curHp;
+    [HideInInspector]
+    public float curSp;
+
+    int playerLevel;
+    int needExpPoint; //다음까지 필요한 경험치
+
+    int levelPoint; //레벨업 시 얻는 포인트
+
+    //플레이어 스탯 종류 (Dic 저장된)
+    //Hp
+    //Sp
+    //Ap - 공격력
+    //Wp - 적재량
+
+    //현재 장착중인 아이템의 효과 -> 저장시 Hp 같이 첫글자만 대문자
+    Dictionary<string, float> itemStatus = new Dictionary<string, float>();
+    //현재 플레이어에게 적용되는 버프 혹은 저주 효과
+    Dictionary<string, float> itemBuffStatus = new Dictionary<string, float>();
+    //아이템 효과 반영 안된 플레이어의 스탯
+    Dictionary<string, float> playerStatusValue = new Dictionary<string, float>();
+    //전체를 다 계산한 스탯 효과
+    Dictionary<string, float> realValue = new Dictionary<string, float>();
 
     protected override void Awake()
     {
         base.Awake();
-        playerStatus = new PlayerStatus();
     }
     void Start()
     {
-        //TODO player 관련 UI 최신화
+        PlusButton.SetActive(false);
+        LevelUpButton.gameObject.SetActive(false);
+        PointDecomposeCompleteBnt.gameObject.SetActive(false);
+        LevelUpPoint.gameObject.SetActive(false);
+
+        InitPlayerStatus(); //Dic에 기본 값들 생성 -> VillageManger에서 DB에 동기화된 값으로 후에 업데이트
+        //나중에는 DB에서 동기화해오는 걸로 바꿔야 함.
+        InitReal();
+
+        //스탯이 DB에서 동기화 된 후
+        UpdateStatusText();
+    }
+
+    private void InitPlayerStatus()
+    {
+        //key만 생성
+        playerStatusValue["Exp"] = 0;
+        playerStatusValue["Hp"] = 0;
+        playerStatusValue["Sp"] = 0;
+        playerStatusValue["Ap"] = 0;
+        playerStatusValue["Wp"] = 0;
+    }
+
+    public void InitReal()
+    {
+        //원래는 아무것도 없어야 하지만 아직 DB를 하지 못한 관계로 임시
+        playerLevel = 1;
+        needExpPoint = 10;
+        //원래는 playerStatusValue Dic에다가 저장하고 realValue에 최종 계산해야 하지만 나중에
+        playerStatusValue["Exp"] = 0;
+        playerStatusValue["Hp"] = 1000;
+        playerStatusValue["Sp"] = 10;
+        playerStatusValue["Ap"] = 10;
+        playerStatusValue["Wp"] = 20;
+
+        StatusCalculate();
+
+        curHp = realValue["Hp"];
+        curSp = realValue["Sp"];
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //체력, 스테미나 바 업데이트
+        UpdateHpBar();
+        UpdateSpBar();
+        UpdateBehaviorBool();
+
+        //스테미나 회복
+        RecoverStamina(recoverSpValue);
     }
 
-    public void SettingItemBuff()
+    
+
+    //스테미나 상태에 따라서 행동이 가능한지 
+    void UpdateBehaviorBool()
     {
-        //TODO ItemBuff 효과
+        //달리기 가능
+        if(curSp < sprintStamina) canSprint = false;
+        else canSprint = true;
+
+        //구르기 가능
+        if (curSp < rollingStamina) canRolling = false;
+        else canRolling = true;
+
+        //공격 가능
+        if (curSp < attackStamina) canAttack = false;
+        else canAttack = true;
     }
-    public void UseStamina(float value)
+
+    void UpdateHpBar()
     {
-        //TODO 실시간 Player StaminaBar에 반영
+        HpBar.value = curHp / realValue["Hp"];
     }
-
-    //원하는 타입의 status 변화
-    public void ChangeStatus(string type, int value)
+    void UpdateSpBar()
     {
-        playerStatus.SetPlayerStatusValue(type, value);
-        //TODO 관련 UI 최신화
+        SpBar.value = curSp / realValue["Sp"];
     }
 
-
-    public class PlayerStatus
+    private void UpdateStatusText()
     {
-        //Hp
-        //Sp
-        //Weight
-        //Attack
+        //처음 게임 실행하고 계산된 RealStatus를 text에 전달
+        LevelText.text = playerLevel.ToString();
+        ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
+        ApText.text = realValue["Ap"].ToString();
+    }
 
-        public int currentHealth;
-        public float currentStamina;
+    //계산 시점
+    //아이템이 장착되는 시점 + 물약이나 저주 + 레벨업
+    //playerStatus를 기준으로 realValue를 업데이트
+    private void StatusCalculate()
+    {
+        realValue["Exp"] = playerStatusValue["Exp"];
+        realValue["Hp"] = playerStatusValue["Hp"];
+        realValue["Sp"] = playerStatusValue["Sp"] * 100.0f + playerLevel * 0.0f;
+        realValue["Ap"] = playerStatusValue["Ap"];
+        //realValue["Cp"] = playerStatusValue["Cp"] * 10.0f + playerLevel * 1.0f;
+        needExpPoint = 10 * playerLevel;
+    }
 
-        public int playerLevel;
-        public int needExpPoint;
-        public int expPoint;
+    void StatusUpdate()
+    {
+        //playerStatusValue를 기준으로 realValue를 업데이트
+        StatusCalculate();
 
+        //업데이트된 realValue의 값을 text와 동기화
+        UpdateStatusText();
+    }
 
-        Dictionary<string, float> calculateValue;
+    //플레이어 데미지
+    public void getDamage(int damage)
+    {
+        curHp -= damage;
+        //Debug.Log($"남은 체력 : {curHp}");
+    }
+    
+    //public void UseStamina(float value)
+    //{
+    //    curSp -= value;
+    //    Debug.Log($"남은 스테미나 : {curSp}");
+    //}
 
+    public void rolling()
+    {
+        curSp -= rollingStamina;
+    }
 
-        Dictionary<string, float> itemStatus;
+    public void sprint()
+    {
+        curSp -= sprintStamina * Time.deltaTime;
+    }
 
+    public void attack()
+    {
+        curSp -= attackStamina;
+    }
 
-        Dictionary<string, int> playerStatusValue;
-
-
-        Dictionary<string, float> realValue;
-
-
-        #region InitDictionary
-        private void InitPlayerStatusDic()
+    private void RecoverStamina(float recoverSpValue)
+    {
+        if (realValue["Sp"] > curSp) 
         {
-            playerStatusValue = new Dictionary<string, int>();
-            playerStatusValue.Add("Hp", 5);
-            playerStatusValue.Add("Sp", 1);
-            playerStatusValue.Add("CP", 1);
-            playerStatusValue.Add("AP", 1);
-        }
-
-        private void InitItemDic()
-        {
-            itemStatus = new Dictionary<string, float>();
-            itemStatus.Add("Hp", 0);
-            itemStatus.Add("Sp", 0);
-            itemStatus.Add("CP", 0);
-            itemStatus.Add("AP", 0);
-        }
-
-        private void InitCalculateDic()
-        {
-            calculateValue = new Dictionary<string, float>();
-            calculateValue.Add("Hp", 0);
-            calculateValue.Add("Sp", 0);
-            calculateValue.Add("CP", 0);
-            calculateValue.Add("AP", 0);
-        }
-
-        private void InitRealValueDic()
-        {
-            realValue = new Dictionary<string, float>();
-            realValue.Add("Hp", 0);
-            realValue.Add("Sp", 0);
-            realValue.Add("CP", 0);
-            realValue.Add("AP", 0);
-        }
-        #endregion
-
-        public PlayerStatus()
-        {
-            InitCalculateDic();
-            InitItemDic();
-            InitPlayerStatusDic();
-            InitRealValueDic();
-
-            playerLevel = 1;
-            StatusCalculate();
-            currentHealth = (int)realValue["Hp"];
-            currentStamina = realValue["Sp"];
-        }
-
-        private void StatusCalculate()
-        {
-            realValue["Hp"] = playerStatusValue["Hp"];
-            realValue["Sp"] = playerStatusValue["Sp"] * 100.0f + playerLevel * 0.0f;
-            realValue["CP"] = playerStatusValue["CP"] * 10.0f + playerLevel * 1.0f;
-            realValue["AP"] = 0;
-            needExpPoint = 1000 * playerLevel + 2000;
-        }
-
-        public int GetCalculateValue(string type)
-        {
-            return (int)realValue[type] + (int)itemStatus[type];
-        }
-        public float GetItemStatusValue(string type)
-        {
-            return itemStatus[type];
-        }
-        public int GetPlayerStatusValue(string type)
-        {
-            return playerStatusValue[type];
-        }
-
-        public void SetCalculateValue(string type, float value)
-        {
-            calculateValue[type] = value;
-        }
-
-        public void SetItemStatusValue(string type, float value)
-        {
-            itemStatus[type] = value;
-        }
-        private void SetRealValue(string type, float value)
-        {
-            realValue[type] = value;
-        }
-        public void SetPlayerStatusValue(string type, int value)
-        {
-            playerStatusValue[type] = value;
-            StatusCalculate();
-        }
-
-
-        //Item사용으로 Status 변화
-        /*public void SetItem(ItemStatus itemStatus, int sign)
-        {
-
-            this.itemStatus["Hp"] += itemStatus.hpValue * sign;
-            this.itemStatus["Sp"] += itemStatus.staminaPoint * sign;
-            this.itemStatus["CP"] += itemStatus.overLoadValue * sign;
-            this.itemStatus["AP"] += itemStatus.attackValue * sign;
-        }*/
-
-
-        public void ClearItemStatus()
-        {
-            itemStatus["Hp"] = 0;
-            itemStatus["Sp"] = 0;
-            itemStatus["CP"] = 0;
-            itemStatus["AP"] = 0;
-        }
-
-        public void CalculateLevel(int sign)
-        {
-            playerLevel += sign;
-            StatusCalculate();
+            curSp += recoverSpValue* Time.deltaTime;
         }
     }
+
+
+    private void Die()
+    {
+        if(curHp <= 0)
+        {
+            //플레이어 죽음.
+            Debug.Log("플레이어 사망");
+        }
+    }
+
+    //player 경험치가 다 차면 레벨업 가능
+    public void getExp(int exp)
+    {
+        playerStatusValue["Exp"] += exp;
+        realValue["Exp"] = playerStatusValue["Exp"];
+
+        //경험치 얻은거 상태 업데이트
+        ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
+
+        if (realValue["Exp"] >= needExpPoint)
+        {
+            LevelUpButton.gameObject.SetActive(true);
+        }
+    }
+
+    //플레이어가 LevelUp버튼을 눌렀을 경우
+    public void LevelUpStep1()
+    {
+        //UI 작동
+        PlusButton.SetActive(true);
+        LevelUpButton.gameObject.SetActive(false);
+        PointDecomposeCompleteBnt.gameObject.SetActive(true);
+        LevelUpPoint.gameObject.SetActive(true);
+        PointDecomposeCompleteBnt.interactable = false; //보이기만 하고 아직 클릭은 못하도록
+
+        //능력치 포인트 및 표시
+        levelPoint = 5;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+
+        //+ 옆에 표시할 완료 이후 능력치들
+        //주의할 점은 realValue가 아닌 playerStatusValue를 사용해서 계산해야 한다. 
+        AP_Result.text = playerStatusValue["Ap"].ToString();
+    }
+
+    //Ap+버튼을 눌렀을 경우 실행
+    public void ApPlusButton()
+    {
+        AP_Result.text = (float.Parse(AP_Result.text) + 1).ToString();
+        levelPoint--;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    public void ApMinusButton()
+    {
+        AP_Result.text = (float.Parse(AP_Result.text) - 1).ToString();
+        levelPoint++;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    private void isLevelPoint0()
+    {
+        if(levelPoint <= 0)
+        {
+            PointDecomposeCompleteBnt.interactable = true;
+        }
+        else
+        {
+            PointDecomposeCompleteBnt.interactable = false;
+        }
+    }
+
+    public void PressPointDecomposeCompleteBnt()
+    {
+        //Exp 소모
+        playerStatusValue["Exp"] -= needExpPoint;
+
+        //바뀐 능력치를 저장
+        playerStatusValue["Ap"] = float.Parse(AP_Result.text);
+
+        playerLevel++;
+        StatusUpdate();
+        PointDecomposeCompleteBnt.gameObject.SetActive(false);
+        LevelUpPoint.gameObject.SetActive(false);
+        PlusButton.SetActive(false);
+    }
+
 }

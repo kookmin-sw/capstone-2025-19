@@ -11,6 +11,7 @@ public class DamageCollider : MonoBehaviour
 
     public float damage;
     public float tenacity;
+    public bool dontOpenCollider = false;
 
     void Awake()
     {
@@ -22,13 +23,22 @@ public class DamageCollider : MonoBehaviour
 
     public void EnableDamageCollider()
     {
-        damageCollider.enabled = true;
-        if (trailRenderer != null) trailRenderer.SetActive(true);
+        if (!dontOpenCollider)
+        {
+            damageCollider.enabled = true;
+            if (trailRenderer != null) trailRenderer.SetActive(true);
+        }
+        else
+        {
+            print("Attack Canceled");
+            dontOpenCollider = false;
+        }
     }
 
     public void UnableDamageCollider()
     {
         damageCollider.enabled = false;
+        dontOpenCollider = false;
         if (trailRenderer != null) trailRenderer.SetActive(false);
     }
 }

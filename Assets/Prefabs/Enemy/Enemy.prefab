@@ -41,10 +41,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5816157079486553017}
   - component: {fileID: 9109563814488615581}
-  - component: {fileID: 4334278678782575056}
   - component: {fileID: 3299457952285871328}
   - component: {fileID: 3631139039049027114}
   - component: {fileID: 6132172653247053190}
+  - component: {fileID: 4462074392351301247}
+  - component: {fileID: 4334278678782575056}
   - component: {fileID: 7526315267440151769}
   - component: {fileID: 4433254973299494373}
   - component: {fileID: 7088157759346372762}
@@ -93,24 +94,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4334278678782575056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2501358193076484567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b060d81f45fb4646905d2cc18879aed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 9109563814488615581}
-  target: {fileID: 0}
-  chaseDistance: 12
-  _state: 5
-  attackList:
-  - AttackDownward
 --- !u!195 &3299457952285871328
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -121,8 +104,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 1
-  m_Acceleration: 100
+  m_Speed: 1.5
+  m_Acceleration: 50
   avoidancePriority: 50
   m_AngularSpeed: 8000
   m_StoppingDistance: 0
@@ -169,6 +152,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockOnTarget: {fileID: 1509527512868291909}
+--- !u!114 &4462074392351301247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2501358193076484567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ed75e02b84de441a257ddf5f541d2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+--- !u!114 &4334278678782575056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2501358193076484567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b060d81f45fb4646905d2cc18879aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  basicSpeed: 0
+  chaseDistance: 12
+  dwellingTime: 2
+  patrolPath: {fileID: 0}
+  waypointDwellingTime: 2
+  patrolSpeed: 5
+  waypointTolerance: 1
+  attackList:
+  - AttackPattern1
 --- !u!114 &7526315267440151769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795545348f2a65740b800c10315c1de3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthLevel: 10
+  healthLevel: 555
   maxHealth: 0
   currentHealth: 0
 --- !u!1 &5701036141808041751

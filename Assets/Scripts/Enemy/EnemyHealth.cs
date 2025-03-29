@@ -5,12 +5,12 @@ using UnityEngine;
 public class EnemyHealth : Health
 {
     private Animator animator;
-    private MonsterMovement enemy;
+    private EnemyState enemyState;
 
     void Awake()
     {
         animator = GetComponent<Animator>();
-        enemy = GetComponent<MonsterMovement>();
+        enemyState = GetComponent<EnemyState>();
     }
 
     void OnTriggerEnter(Collider collision)
@@ -19,35 +19,42 @@ public class EnemyHealth : Health
         {
             #region Escape
             // when Enemy is invincible
-            if (enemy._state == MonsterMovement.MonsterState.Invincible)
+            if (enemyState.state == EnemyState.State.Invincible)
             {
-                print("Invincible");
+                //print("Invincible");
                 return;
             }
 
             DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
             DamageCollider opponentWeaponCollider = collision.GetComponent<DamageCollider>();
 
-            // when my weapon is more heavier
-            if (enemy._state == MonsterMovement.MonsterState.Attack && myWeaponCollider.tenacity > opponentWeaponCollider.tenacity)
+            if (myWeaponCollider == null) return;
+
+            if (animator.GetBool("Attacking"))
             {
-                print("Tenacity wins");
-                return;
+                // when my weapon is more heavier
+                if (myWeaponCollider.tenacity > opponentWeaponCollider.tenacity)
+                {
+                    //print("Tenacity wins");
+                    return;
+                }
+
+                else
+                {
+                    myWeaponCollider.dontOpenCollider = true;
+                    if (myWeaponCollider.damageCollider.enabled)
+                    {
+                        myWeaponCollider.UnableDamageCollider();
+                    }
+                }
             }
             #endregion
 
             #region Hit
             currentHealth -= opponentWeaponCollider.damage;
             animator.SetTrigger("Hit");
-            enemy._state = MonsterMovement.MonsterState.Invincible;
+            enemyState.state = EnemyState.State.Invincible;
             #endregion
-
-            // when attack canceled
-            if (myWeaponCollider != null && myWeaponCollider.damageCollider.enabled)
-            {
-                //print("Collider collapse");
-                myWeaponCollider.UnableDamageCollider();
-            }
 
             // die
             if (currentHealth <= 0)

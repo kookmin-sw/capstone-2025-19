@@ -220,10 +220,6 @@ namespace PlayerControl
             }
 
             float distance = (transform.position - currentTarget.transform.position).magnitude;
-            print(currentTarget.gameObject.name);
-            print(distance);
-            
-
             if (distance > lockOnRadius)
             {
                 return false;

@@ -22,18 +22,32 @@ public class PlayerHealth : Health
             // when player is invincible
             if (PlayerState.Instance.state == PlayerState.State.Invincible)
             {
-                print("Invincible");
+                //print("Invincible");
                 return;
             }
 
             DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
             DamageCollider opponentWeaponCollider = collision.GetComponent<DamageCollider>();
 
-            // when my weapon is more heavier
-            if (animationHandler.GetBool(AnimationHandler.AnimParam.Attacking) && myWeaponCollider.tenacity > opponentWeaponCollider.tenacity)
+            if (myWeaponCollider == null) return;
+
+            if (animationHandler.GetBool(AnimationHandler.AnimParam.Attacking))
             {
-                print("Tenacity wins");
-                return;
+                // when my weapon is more heavier
+                if (myWeaponCollider.tenacity > opponentWeaponCollider.tenacity)
+                {
+                    //print("Tenacity wins");
+                    return;
+                }
+
+                else
+                {
+                    myWeaponCollider.dontOpenCollider = true;
+                    if (myWeaponCollider.damageCollider.enabled)
+                    {
+                        myWeaponCollider.UnableDamageCollider();
+                    }
+                }
             }
             #endregion
 
@@ -51,13 +65,6 @@ public class PlayerHealth : Health
             if (animationHandler.GetBool(AnimationHandler.AnimParam.Jump))
             {
                 player.ForceJumpStop();
-            }
-
-            // when attack canceled
-            if (myWeaponCollider != null && myWeaponCollider.damageCollider.enabled)
-            {
-                //print("Collider collapse");
-                myWeaponCollider.UnableDamageCollider();
             }
 
             // die

@@ -13,10 +13,13 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     [Space(10)]
     [SerializeField, Tooltip("시작지점 방")] private GameObject entrance; //던전의 시작지점 방
     [SerializeField, Tooltip("일반적인 방")] private List<GameObject> rooms;
+    [SerializeField, Tooltip("계단")] private List<GameObject> stairs;
     [SerializeField, Tooltip("특별한 방(던전 생성시 같은 방 하나 이상 생성 안됨. ex) 폴가이즈 식 함정방)")] private List<GameObject> specialRooms; //전리품이 있을 수 있는 특별한 방
     [SerializeField, Tooltip("대체 입구 -> 안쓸거니 넣으면 안됨")] private List<GameObject> alternateEntrances; //대체 입구 ex)리썰 컴퍼니의 비상구 -> 필요 없을 듯
     [SerializeField, Tooltip("복도. 생성시 방 카운트에 적용 안됨")] private List<GameObject> hallways;
     [SerializeField, Tooltip("문. 아직 작동 안함")] private GameObject door;
+
+    private List<List<GameObject>> allRoomsModules;
     //영상에선 이 오브젝트의 존재가 맵의 영향을 주지 않도록 y의 값을 -1000을 했음 아닌가? 내가 해석을 잘못했나?
     [Space(10)]
     [Header("던전매니저 구성, 바뀌면 안됨")]
@@ -38,6 +41,13 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     // Start is called before the first frame update
     void Start()
     {
+        //Add room list;
+        allRoomsModules = new List<List<GameObject>>();
+        allRoomsModules.Add(rooms);
+        allRoomsModules.Add(stairs);
+        allRoomsModules.Add(hallways);
+
+
         generatedRooms = new List<DungeonPart>();
         surface = GetComponent<NavMeshSurface>();
         //StartCoroutine(Generated_());

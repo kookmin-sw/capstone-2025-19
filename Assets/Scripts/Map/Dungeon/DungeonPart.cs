@@ -20,12 +20,13 @@ public class DungeonPart : MonoBehaviour
 
     }
     [SerializeField] private LayerMask roomsLayermask;
-    [SerializeField] private DungeonPartType dungeonPartType;
+    [SerializeField] public DungeonPartType dungeonPartType;
     [SerializeField] GameObject fillerWall; //던전이 다 생성되고 사용되지 않은 빈 입구를 이걸로 채움 -> 재질이 비슷한 벽으로 할당해야 함
     [SerializeField] public RoomUse roomUse;
     [SerializeField] public Transform spawnPoint;
     [SerializeField] List<ItemRandomSpawner> spawnItemList;
     [SerializeField] List<MonsterRandomSpawner> spawnMonsterList;
+    [SerializeField] List<Collider> colliderList;
     // chest object randomSpawn List
     //TODO EnemySpawn Point functiion
     public List<Transform> entryPoints; // 방에 있는 문

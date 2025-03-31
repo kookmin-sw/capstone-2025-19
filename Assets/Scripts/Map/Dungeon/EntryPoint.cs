@@ -13,6 +13,8 @@ public class EntryPoint : MonoBehaviour
         TrapRoom,
 
     }
+
+    public NeedRoomType needRoomType;
     //occupied  사용중인
     private bool isOccupied = false;
 

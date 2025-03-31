@@ -164,35 +164,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 354607084463678811}
     m_Modifications:
-    - target: {fileID: 1702047957059522208, guid: 66ce283ec060da34e85aab983e04674d,
-        type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1702047957059522208, guid: 66ce283ec060da34e85aab983e04674d,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6132653828418631018, guid: 66ce283ec060da34e85aab983e04674d,
         type: 3}
       propertyPath: m_Name
       value: Weapon_04
-      objectReference: {fileID: 0}
-    - target: {fileID: 6678389185620637314, guid: 66ce283ec060da34e85aab983e04674d,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 23.473024
-      objectReference: {fileID: 0}
-    - target: {fileID: 6678389185620637314, guid: 66ce283ec060da34e85aab983e04674d,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 23.473024
-      objectReference: {fileID: 0}
-    - target: {fileID: 6678389185620637314, guid: 66ce283ec060da34e85aab983e04674d,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 23.473024
       objectReference: {fileID: 0}
     - target: {fileID: 6678389185620637314, guid: 66ce283ec060da34e85aab983e04674d,
         type: 3}
@@ -247,31 +222,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6132653828418631018, guid: 66ce283ec060da34e85aab983e04674d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4977024424703190432}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66ce283ec060da34e85aab983e04674d, type: 3}
---- !u!1 &4889406405327677029 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6132653828418631018, guid: 66ce283ec060da34e85aab983e04674d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1639654490376737551}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4977024424703190432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4889406405327677029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccf25e4a7ae124b49b2e7a0821281678, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 10
 --- !u!4 &5363609614967235981 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6678389185620637314, guid: 66ce283ec060da34e85aab983e04674d,

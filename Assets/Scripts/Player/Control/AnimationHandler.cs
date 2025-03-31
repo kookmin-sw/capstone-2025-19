@@ -16,6 +16,7 @@ public class AnimationHandler : MonoBehaviour
         FreeFall,
         MotionSpeed,
         Attack,
+        DashAttack,
         Attacking,
         Hit,
         Die,
@@ -40,6 +41,7 @@ public class AnimationHandler : MonoBehaviour
         animParamIDs[AnimParam.FreeFall] = Animator.StringToHash("FreeFall");
         animParamIDs[AnimParam.MotionSpeed] = Animator.StringToHash("MotionSpeed");
         animParamIDs[AnimParam.Attack] = Animator.StringToHash("Attack");
+        animParamIDs[AnimParam.DashAttack] = Animator.StringToHash("DashAttack");
         animParamIDs[AnimParam.Attacking] = Animator.StringToHash("Attacking");
         animParamIDs[AnimParam.Hit] = Animator.StringToHash("Hit");
         animParamIDs[AnimParam.Die] = Animator.StringToHash("Die");
@@ -81,6 +83,18 @@ public class AnimationHandler : MonoBehaviour
         if (animParamIDs.TryGetValue(param, out int id))
         {
             animator.SetTrigger(id);
+        }
+        else
+        {
+            Debug.LogWarning($"Animator Param {param} not found");
+        }
+    }
+
+    public void ResetTrigger(AnimParam param)
+    {
+        if (animParamIDs.TryGetValue(param, out int id))
+        {
+            animator.ResetTrigger(id);
         }
         else
         {

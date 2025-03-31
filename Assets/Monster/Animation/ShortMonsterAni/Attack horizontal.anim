@@ -74794,17 +74794,17 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.1
-    functionName: ColliderOn
+    functionName: OpenRightDamageCollider
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: 8b060d81f45fb4646905d2cc18879aed,
+    objectReferenceParameter: {fileID: 11500000, guid: ef1a0b314d40e5b44908162dbe2e77b7,
       type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 2.3333333
-    functionName: ColliderOff
+    functionName: CloseRightDamageCollider
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: 8b060d81f45fb4646905d2cc18879aed,
+    objectReferenceParameter: {fileID: 11500000, guid: ef1a0b314d40e5b44908162dbe2e77b7,
       type: 3}
     floatParameter: 0
     intParameter: 0

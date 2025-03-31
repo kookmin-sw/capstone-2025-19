@@ -1,4 +1,5 @@
 using System.Collections;
+using Photon.Realtime;
 using PlayerControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -81,6 +82,19 @@ namespace PlayerControl
         [Header("Item")]
         public float _useItemSpeed = 1.5f;
 
+        [Header("Short Dash")]
+        public float _dashDuration = 0.2f;
+        public float _dashMaxAmount = 5f;
+        private float _dashCurrentAmount = 0f;
+        private Vector3 _dashDirection;
+        private bool _IsDashing = false;
+
+        [Header("Ghost Effect")]
+        public float _ghostDuration = 0.15f;
+
+
+        private bool _characterRollFreeze = false;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -105,6 +119,8 @@ namespace PlayerControl
         private GameObject _mainCamera;
         private LockOn _lockOn;
 
+        [SerializeField] PlayerGhostEffect playerGhostEffect;
+
         private const float _threshold = 0.01f;
 
         private void Awake()
@@ -123,6 +139,8 @@ namespace PlayerControl
 
         private void Start()
         {
+            CreateAfterImages();
+    
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
             animationHandler = GetComponent<AnimationHandler>();
@@ -133,6 +151,12 @@ namespace PlayerControl
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+        }
+
+        void CreateAfterImages()
+        {
+            playerGhostEffect = GetComponent<PlayerGhostEffect>();
+            playerGhostEffect.Setup(transform.GetComponentInChildren<SkinnedMeshRenderer>(), 10, _ghostDuration);
         }
 
         private void Update()
@@ -262,10 +286,18 @@ namespace PlayerControl
             }
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
-            _speed = animationHandler.GetBool(AnimationHandler.AnimParam.Interacting) ? 0 : _speed;
+            if (_IsDashing)
+            {
+                _controller.Move(_dashDirection * (_dashCurrentAmount * Time.deltaTime) +
+                            new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                return;
+            }
+
+            if (animationHandler.GetBool(AnimationHandler.AnimParam.Interacting)) _speed = 0;
+        
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                                new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
             // update animator if using character
             animationHandler.SetFloat(AnimationHandler.AnimParam.Speed, _animationBlend);
@@ -279,11 +311,14 @@ namespace PlayerControl
                 _input.rolling = false;
                 if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
                 transform.rotation = Quaternion.Euler(0.0f, _targetRotation, 0.0f);
-                animationHandler.RootMotion(true);
+                _dashDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
                 animationHandler.SetTrigger(AnimationHandler.AnimParam.Rolling);
+                StartCoroutine(SmallDash());
+                /*
+                animationHandler.RootMotion(true);
                 animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                 animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
-                PlayerState.Instance.state = PlayerState.State.Invincible;
+                PlayerState.Instance.state = PlayerState.State.Invincible;*/
             }
         }
 
@@ -292,6 +327,15 @@ namespace PlayerControl
             if (_input.attack)
             {
                 _input.attack = false;
+                if (_IsDashing)
+                {
+                    StopCoroutine(SmallDash());
+                    CancelDash();
+                    animationHandler.SetTrigger(AnimationHandler.AnimParam.DashAttack);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                    return;
+                }
                 if (!Grounded) return;
                 if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
                     || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
@@ -334,6 +378,36 @@ namespace PlayerControl
         public void TestUseItemEnd()
         {
             test_useItem = false;
+        }
+
+        private IEnumerator SmallDash()
+        {
+            float delta = 0;
+            _IsDashing = true;
+
+            playerGhostEffect.Create(true);
+            animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+            animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+            PlayerState.Instance.state = PlayerState.State.Invincible;
+            
+            while (delta < _dashDuration)
+            {
+                _dashCurrentAmount = Mathf.Lerp(0, _dashMaxAmount, delta / _dashDuration);
+                delta += Time.deltaTime;
+                yield return null;
+            }
+            CancelDash();
+        }
+
+        private void CancelDash()
+        {
+            playerGhostEffect.Create(false);
+            _IsDashing = false;
+
+            animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, false);
+            animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, false);
+            animationHandler.ResetTrigger(AnimationHandler.AnimParam.Rolling);
+            PlayerState.Instance.state = PlayerState.State.Idle;
         }
 
         private void JumpAndGravity()

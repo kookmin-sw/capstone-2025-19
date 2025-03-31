@@ -41,7 +41,7 @@ public class EnemyHealth : Health
 
                 else
                 {
-                    myWeaponCollider.dontOpenCollider = true;
+                    //myWeaponCollider.dontOpenCollider = true;
                     if (myWeaponCollider.damageCollider.enabled)
                     {
                         myWeaponCollider.UnableDamageCollider();

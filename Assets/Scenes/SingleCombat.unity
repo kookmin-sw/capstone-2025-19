@@ -195,12 +195,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1793400712}
   m_SourcePrefab: {fileID: 100100000, guid: 6dcae7204dd466c4c862bc640ea7c02e, type: 3}
---- !u!4 &213418557 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 392693318308769334, guid: 9bcd27ee4efe448ecb13b16eb6fe9de3,
-    type: 3}
-  m_PrefabInstance: {fileID: 1995406660}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &236963338
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,7 +432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c340ca2ef64ef7a40adcca9d255f33f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 213418557}
+  player: {fileID: 0}
   mouseSensitivity: 5
   virtualCamera: {fileID: 95499885}
   rotationSmoothTime: 0
@@ -1397,12 +1391,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Follow
       value: 
-      objectReference: {fileID: 213418557}
+      objectReference: {fileID: 0}
     - target: {fileID: 5506860625879892770, guid: a35a66a144f11ac4286b7b01e050862d,
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 213418557}
+      objectReference: {fileID: 0}
     - target: {fileID: 8278727221934677857, guid: a35a66a144f11ac4286b7b01e050862d,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -6,6 +6,7 @@ using UnityEngine;
 public class AnimationHandler : MonoBehaviour
 {
     private Animator animator;
+    public float animationSpeed = 1.0f;
 
     public enum AnimParam
     {
@@ -31,6 +32,7 @@ public class AnimationHandler : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        animator.speed = animationSpeed;
 
         animParamIDs[AnimParam.Speed] = Animator.StringToHash("Speed");
         animParamIDs[AnimParam.Grounded] = Animator.StringToHash("Grounded");

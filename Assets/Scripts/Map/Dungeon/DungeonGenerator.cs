@@ -620,20 +620,42 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
         }
     }
+    private bool HandleIntersection(DungeonPart dungeonPart)
+    {
+        bool didIntersect = false;
 
-    private bool HandleIntersection(DungeonPart dungeonPart)// 생성한 방(혹은 복도)가 서로 곂치는지 확인
+        foreach (var collider in dungeonPart.colliderList)
+        {
+            Collider[] hits = Physics.OverlapBox(collider.bounds.center, collider.bounds.size / 2, Quaternion.identity, roomsLayerMask);
+
+            foreach (var hit in hits)
+            {
+                if (!dungeonPart.colliderList.Contains(hit)) // 자기 자신에 속하지 않은 콜라이더만 검사
+                {
+                    didIntersect = true;
+                    break;
+                }
+            }
+
+            if (didIntersect) break;
+        }
+
+        return didIntersect;
+    }
+    //기존 코드
+    /*private bool HandleIntersection(DungeonPart dungeonPart)// 생성한 방(혹은 복도)가 서로 곂치는지 확인
     {
         bool didIntersect = false;
         Collider[] hits = Physics.OverlapBox(dungeonPart.collider.bounds.center, dungeonPart.collider.bounds.size / 2, Quaternion.identity, roomsLayerMask);
 
         foreach(Collider hit in hits)
         {
-            /*if (hit == dungeonPart.collider) continue;
+            *//*if (hit == dungeonPart.collider) continue;
             if(hit != dungeonPart.collider)
             {
                 didIntersect = true;
                 break;
-            }*/
+            }*//*
             if (hit != dungeonPart.collider) // 자기 자신과 충돌이 아닌 경우만 검사
             {
                 didIntersect = true;
@@ -641,7 +663,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
         }
         return didIntersect;
-    }
+    }*/
 
     private void AlignRooms(Transform room2, Transform room1Entry, Transform room2Entry) // room1과 room2의 입구가 정확하게 일치하게 만드는것 room1은 사용 안함 room1Entry만 필요
     {

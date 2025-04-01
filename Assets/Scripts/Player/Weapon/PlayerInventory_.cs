@@ -6,6 +6,7 @@ public class PlayerInventory_ : MonoBehaviour
 {
     WeaponSlotManager weaponSlotManager;
     public WeaponStats weapon;
+    public bool isRanged;
 
     void Awake()
     {
@@ -15,5 +16,6 @@ public class PlayerInventory_ : MonoBehaviour
     void Start()
     {
         weaponSlotManager.LoadWeaponOnSlot(weapon, weapon.isLeft);
+        isRanged = weapon.isRanged;
     }
 }

@@ -18,6 +18,8 @@ public class EnemyExitInteraction : StateMachineBehaviour
         animator.ResetTrigger(triggerName);
         animator.SetBool(INTERACTING_LABEL, false);
         animator.SetBool(ATTACKING_LABEL, false);
+        DamageCollider damageCollider = animator.GetComponentInChildren<DamageCollider>();
+        if (damageCollider != null) damageCollider.UnableDamageCollider();
 
         if (enemyState.state == EnemyState.State.Invincible)
         {

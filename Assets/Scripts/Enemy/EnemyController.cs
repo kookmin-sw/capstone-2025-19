@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float basicSpeed;
     [SerializeField] float attackDistance;
     [SerializeField] float chaseDistance = 10f;
+    [SerializeField] int maxPatterns = 1;
 
     [Header("Patrol Settings")]
     [SerializeField] PatrolPath patrolPath;
@@ -26,11 +27,10 @@ public class EnemyController : MonoBehaviour
     Vector3 spawnPosition;
     NavMeshAgent agent;
     NavMeshPath path;
-    [SerializeField] List<string> attackList = new List<string>();
     float distance = Mathf.Infinity;
     int waypointIndex;
     private float timeSinceArrivedWaypoint = 0;
-    string nextAttackMotion;
+    private int attackPatternNo = 0;
 
     private void Awake()
     {
@@ -122,8 +122,9 @@ public class EnemyController : MonoBehaviour
         agent.velocity = Vector3.zero;
 
         animator.SetBool("Following", false);
-        chooseAttackMotion();
-        animator.SetTrigger(nextAttackMotion);
+        attackPatternNo = Random.Range(0, maxPatterns);
+        animator.SetTrigger("Attack");
+        animator.SetInteger("AttackPatternNo", attackPatternNo);
         animator.SetBool("Attacking", true);
     }
 
@@ -181,19 +182,4 @@ public class EnemyController : MonoBehaviour
         return distanceToWaypoint < waypointTolerance;
     }
     #endregion
-
-    public void AttackTriggerReset()
-    {
-        attackList.ForEach(attack => 
-        {
-            animator.ResetTrigger(attack);
-        });
-    }
-
-        private void chooseAttackMotion()
-    {
-        int randomAttackIndex = Random.Range(0, attackList.Count);
-
-        nextAttackMotion = attackList[randomAttackIndex];
-    }
 }

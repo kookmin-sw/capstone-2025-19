@@ -142,14 +142,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crossbow_4_Brown
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3539187496203636980, guid: 588c07045f854a643a5d63ad6c81306a, type: 3}
+    - {fileID: -8191589895340857520, guid: 588c07045f854a643a5d63ad6c81306a, type: 3}
+    - {fileID: 2903379351399659230, guid: 588c07045f854a643a5d63ad6c81306a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 588c07045f854a643a5d63ad6c81306a,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7732581107505999423}
+      addedObject: {fileID: 4489374259428504649}
   m_SourcePrefab: {fileID: 100100000, guid: 588c07045f854a643a5d63ad6c81306a, type: 3}
 --- !u!1 &6006927666058023679 stripped
 GameObject:
@@ -157,7 +160,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6889818256116805550}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7732581107505999423
+--- !u!114 &4489374259428504649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -166,14 +169,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6006927666058023679}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 507436c01029ac74395113b002d5fd38, type: 3}
+  m_Script: {fileID: 11500000, guid: 29c1b73b65393ff459b566cebf9c555e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageCollider: {fileID: 0}
-  trailRenderer: {fileID: 0}
-  damage: 0
-  tenacity: 0
-  dontOpenCollider: 0
+  projectilePrefab: {fileID: 1553037693107922051, guid: 75bbdd2a15027d8489b7bd0722d1957a,
+    type: 3}
 --- !u!4 &6347599710561929285 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 588c07045f854a643a5d63ad6c81306a,

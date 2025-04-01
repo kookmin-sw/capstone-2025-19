@@ -15,6 +15,7 @@ public class AnimationHandler : MonoBehaviour
         FreeFall,
         MotionSpeed,
         Attack,
+        RangedAttack,
         DashAttack,
         Attacking,
         Hit,
@@ -39,6 +40,7 @@ public class AnimationHandler : MonoBehaviour
         animParamIDs[AnimParam.FreeFall] = Animator.StringToHash("FreeFall");
         animParamIDs[AnimParam.MotionSpeed] = Animator.StringToHash("MotionSpeed");
         animParamIDs[AnimParam.Attack] = Animator.StringToHash("Attack");
+        animParamIDs[AnimParam.RangedAttack] = Animator.StringToHash("RangedAttack");
         animParamIDs[AnimParam.DashAttack] = Animator.StringToHash("DashAttack");
         animParamIDs[AnimParam.Attacking] = Animator.StringToHash("Attacking");
         animParamIDs[AnimParam.Hit] = Animator.StringToHash("Hit");

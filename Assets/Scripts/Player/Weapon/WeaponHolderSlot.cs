@@ -43,22 +43,16 @@ public class WeaponHolderSlot : MonoBehaviour
         }
 
         GameObject weapon = Instantiate(weaponStats.weaponPrefab) as GameObject;
-        DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();
 
-        weaponCollider.damage = weaponStats.damage;
-        weaponCollider.tenacity = weaponStats.tenacity;
-
-        AnimatorOverrideController weaponOverride = weaponStats.weaponOverride;
-        // check override controller matches original controller = when attacker is player
-        if (weaponOverride != null && weaponOverride.runtimeAnimatorController == animator.runtimeAnimatorController)
+        if(!weaponStats.isRanged)
         {
-            animator.runtimeAnimatorController = weaponOverride;
-            weaponCollider.tag = "PlayerWeapon";
+            DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();    
+            weaponCollider.damage = weaponStats.damage;
+            weaponCollider.tenacity = weaponStats.tenacity;
+            weaponCollider.tag = transform.root.tag == "Player" ? "PlayerWeapon" : "EnemyWeapon";
         }
-        else
-        {
-            weaponCollider.tag = "EnemyWeapon";
-        }
+        
+        if (transform.root.tag == "Player") animator.runtimeAnimatorController = weaponStats.weaponOverride;
         
         if(weapon != null)
         {

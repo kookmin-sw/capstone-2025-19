@@ -118,6 +118,7 @@ namespace PlayerControl
         private InputHandler _input;
         private GameObject _mainCamera;
         private LockOn _lockOn;
+        private PlayerInventory_ _p;
 
         [SerializeField] PlayerGhostEffect playerGhostEffect;
 
@@ -147,6 +148,7 @@ namespace PlayerControl
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<InputHandler>();
             _lockOn = GetComponent<LockOn>();
+            _p = GetComponent<PlayerInventory_>();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
@@ -331,8 +333,9 @@ namespace PlayerControl
                 if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
                     || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
                 {
+                    if (!_p.isRanged) animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
+                    else animationHandler.SetTrigger(AnimationHandler.AnimParam.RangedAttack);
                     animationHandler.RootMotion(true);
-                    animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Attacking, true);

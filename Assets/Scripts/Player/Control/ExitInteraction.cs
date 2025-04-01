@@ -24,6 +24,8 @@ public class ExitInteraction : StateMachineBehaviour
     {
         animator.ResetTrigger(triggerName);
         animator.SetBool(BLOCKING_LABEL, false);
+        DamageCollider damageCollider = animator.GetComponentInChildren<DamageCollider>();
+        if (damageCollider != null) damageCollider.UnableDamageCollider();
         if (End)
         {
             animator.SetBool(INTERACTING_LABEL, false);
@@ -35,4 +37,5 @@ public class ExitInteraction : StateMachineBehaviour
             PlayerState.Instance.state = PlayerState.State.Idle;
         }
     }
+    
 }

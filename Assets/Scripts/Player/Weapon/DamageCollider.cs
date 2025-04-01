@@ -13,12 +13,14 @@ public class DamageCollider : MonoBehaviour
     public float tenacity;
     public bool dontOpenCollider = false;
 
+    public bool isRanged;
+
     void Awake()
     {
         damageCollider = GetComponent<Collider>();
         damageCollider.gameObject.SetActive(true);
         damageCollider.isTrigger = true;
-        damageCollider.enabled = false;
+        damageCollider.enabled = isRanged;
     }
 
     public void EnableDamageCollider()

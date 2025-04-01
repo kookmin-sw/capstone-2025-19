@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,9 @@ public class WeaponSlotManager : MonoBehaviour
 
     DamageCollider leftHandDamageCollider;
     DamageCollider rightHandDamageCollider;
+
+    ProjectileShooter leftShooter;
+    ProjectileShooter rightShooter;
 
     void Awake()
     {
@@ -32,13 +36,16 @@ public class WeaponSlotManager : MonoBehaviour
         {
             leftHandSlot.LoadWeaponModel(weaponItem);
             LoadLeftWeaponDamageCollider();
+            LoadLeftProejctileShooter();
         }
         else
         {
             rightHandSlot.LoadWeaponModel(weaponItem);
             LoadRightWeaponDamageCollider();
+            LoadRightProejctileShooter();
         }
     }
+
 
     #region Handle Weapon's Damage Collider
 
@@ -47,9 +54,19 @@ public class WeaponSlotManager : MonoBehaviour
         leftHandDamageCollider = leftHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
     }
 
+    private void LoadLeftProejctileShooter()
+    {
+        leftShooter = rightHandSlot.currentWeaponModel.GetComponentInChildren<ProjectileShooter>();
+    }
+
     private void LoadRightWeaponDamageCollider()
     {
         rightHandDamageCollider = rightHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
+    }
+
+    private void LoadRightProejctileShooter()
+    {
+        rightShooter = rightHandSlot.currentWeaponModel.GetComponentInChildren<ProjectileShooter>();
     }
 
     public void OpenRightDamageCollider()
@@ -57,9 +74,19 @@ public class WeaponSlotManager : MonoBehaviour
         rightHandDamageCollider.EnableDamageCollider();
     }
 
+    public void ShootRight()
+    {
+        rightShooter.Shoot();
+    }
+
     public void OpenLeftDamageCollider()
     {
         leftHandDamageCollider.EnableDamageCollider();
+    }
+
+    public void ShootLeft()
+    {
+        leftShooter.Shoot();
     }
 
     public void CloseRightDamageCollider()

@@ -6,7 +6,6 @@ using UnityEngine;
 public class AnimationHandler : MonoBehaviour
 {
     private Animator animator;
-    public float animationSpeed = 1.0f;
 
     public enum AnimParam
     {
@@ -33,7 +32,6 @@ public class AnimationHandler : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        animator.speed = animationSpeed;
 
         animParamIDs[AnimParam.Speed] = Animator.StringToHash("Speed");
         animParamIDs[AnimParam.Grounded] = Animator.StringToHash("Grounded");
@@ -107,6 +105,18 @@ public class AnimationHandler : MonoBehaviour
         if (animParamIDs.TryGetValue(param, out int id))
         {
             animator.SetFloat(id, value);
+        }
+        else
+        {
+            Debug.LogWarning($"Animator Param {param} not found");
+        }
+    }
+
+    public void SetInteger(AnimParam param, int value)
+    {
+        if (animParamIDs.TryGetValue(param, out int id))
+        {
+            animator.SetInteger(id, value);
         }
         else
         {

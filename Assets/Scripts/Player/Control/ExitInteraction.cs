@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using RPGCharacterAnims.Actions;
 using UnityEngine;
 
 public class ExitInteraction : StateMachineBehaviour

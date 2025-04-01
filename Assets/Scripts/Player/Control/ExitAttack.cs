@@ -44,6 +44,7 @@ public class ExitAttack : StateMachineBehaviour
         animator.SetBool(BLOCKING_LABEL, false);
         animator.SetBool(INTERACTING_LABEL, false);
         animator.SetBool(ATTACKING_LABEL, false);
+        animator.GetComponentInChildren<DamageCollider>().UnableDamageCollider();
         animator.applyRootMotion = false;
     }
 }

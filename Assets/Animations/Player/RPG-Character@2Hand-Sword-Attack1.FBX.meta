@@ -701,7 +701,7 @@ ModelImporter:
     second: 2Hand-Sword
   - first:
       74: 7400000
-    second: 2Hand-Sword-Attack1
+    second: Attack03
   - first:
       95: 9500000
     second: //RootNode
@@ -750,11 +750,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: 2Hand-Sword-Attack1
+      name: Attack03
       takeName: Take 001
       internalID: 7400000
-      firstFrame: 5.6
-      lastFrame: 20
+      firstFrame: 0.8
+      lastFrame: 35.5
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -774,7 +774,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.07730673
+      - time: 0.3241895
         functionName: OpenRightDamageCollider
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: ef1a0b314d40e5b44908162dbe2e77b7,
@@ -782,7 +782,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 1
+      - time: 0.6084788
         functionName: CloseRightDamageCollider
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: ef1a0b314d40e5b44908162dbe2e77b7,

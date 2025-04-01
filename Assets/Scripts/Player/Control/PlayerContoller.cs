@@ -327,15 +327,6 @@ namespace PlayerControl
             if (_input.attack)
             {
                 _input.attack = false;
-                if (_IsDashing)
-                {
-                    StopCoroutine(SmallDash());
-                    CancelDash();
-                    animationHandler.SetTrigger(AnimationHandler.AnimParam.DashAttack);
-                    animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
-                    animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
-                    return;
-                }
                 if (!Grounded) return;
                 if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
                     || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
@@ -379,7 +370,6 @@ namespace PlayerControl
         {
             test_useItem = false;
         }
-
         private IEnumerator SmallDash()
         {
             float delta = 0;

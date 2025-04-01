@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInventory_ : MonoBehaviour
 {
     WeaponSlotManager weaponSlotManager;
-    public WeaponStats rightWeapon;
+    public WeaponStats weapon;
 
     void Awake()
     {
@@ -14,6 +14,6 @@ public class PlayerInventory_ : MonoBehaviour
 
     void Start()
     {
-        weaponSlotManager.LoadWeaponOnSlot(rightWeapon, false);
+        weaponSlotManager.LoadWeaponOnSlot(weapon, weapon.isLeft);
     }
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
 using System;
-using RPGCharacterAnims.Actions;
 
 public class PlayerMover : MonoBehaviourPun
 {

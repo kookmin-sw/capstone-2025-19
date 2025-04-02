@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DungeonPart : MonoBehaviour
 {
-    //¹æ ÇÏ³ªÇÏ³ª¿¡ µé¾î°¡´Â ÄÄÆ÷³ÍÆ® ½ºÅ©¸³Æ®
+    //ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½î°¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Å©ï¿½ï¿½Æ®
     public enum DungeonPartType
     {
         Room,
@@ -21,61 +21,58 @@ public class DungeonPart : MonoBehaviour
     }
     [SerializeField] private LayerMask roomsLayermask;
     [SerializeField] public DungeonPartType dungeonPartType;
-    [SerializeField] GameObject fillerWall; //´øÀüÀÌ ´Ù »ı¼ºµÇ°í »ç¿ëµÇÁö ¾ÊÀº ºó ÀÔ±¸¸¦ ÀÌ°É·Î Ã¤¿ò -> ÀçÁúÀÌ ºñ½ÁÇÑ º®À¸·Î ÇÒ´çÇØ¾ß ÇÔ
+    [SerializeField] GameObject fillerWall; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô±ï¿½ï¿½ï¿½ ï¿½Ì°É·ï¿½ Ã¤ï¿½ï¿½ -> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½
     [SerializeField] public RoomUse roomUse;
     [SerializeField] public Transform spawnPoint;
     [SerializeField] List<ItemRandomSpawner> spawnItemList;
     [SerializeField] List<MonsterRandomSpawner> spawnMonsterList;
-    [SerializeField] List<Collider> colliderList;
+    [SerializeField] public List<Collider> colliderList;
     // chest object randomSpawn List
     //TODO EnemySpawn Point functiion
-    public List<Transform> entryPoints; // ¹æ¿¡ ÀÖ´Â ¹®
-    public new Collider collider; //newÀÇ ±â´É :ºÎ¸ğÀÇ °°Àº ÀÌ¸§À» °¡Áø ¿ÀºêÁ§Æ®¸¦ ¼û±è. ºÎ¸ğ Å¬·¡½º¿¡ Collider collider°¡ ÀÖÀ¸¸é ±×°Å¸¦ base.collider·Î ¾²°Ô ÇÏ°í »õ·Î¿î collider¸¦ »ı¼º.
-                                  //ÀÌ collider´Â Áö±İ »ı¼ºµÈ ¹æÀÌ ÀÌÀü »ı¼ºµÈ ¹æ°ú ÈÄ¡°Ô »ı¼ºµÇ´ÂÁö È®ÀÎÇÏ´Â ¿ëµµ. ±×³É ´Ü¼øÇÑ box collider¿©µµ µÊ(Trigger)
-                                  //°áÄÚ ÀÔ±¸¸¦ ¿ÏÀüÈ÷ µ¤¾î¼­´Â ¾ÈµÊ(colldier´Â ¹æ Å©±âº¸´Ù ¹Ì¹¦ÇÏ°Ô ÀÛ¾Æ¾ß ÇÔ) -> ±×·¯¸é ÀÔ±¸¿¡ ºóÆ´ÀÌ »ı±â´Ï±î? 
-                                  // entryÀÇ À§Ä¡°¡ colliderÀÇ ¹Û¿¡ ÀÖ¾î¾ß ÇÔ
+    public List<Transform> entryPoints; // ï¿½æ¿¡ ï¿½Ö´ï¿½ ï¿½ï¿½
+    //public new Collider collider; 
                      
-    public bool HasAvailableEntryPoint(out Transform entrypoint)//EntrypointµéÀ» È®ÀÎÇÏ°í ÇÒ´ç ¾ÈµÈ(´Ù¸¥ ¹æ, º¹µµ¿Í ¿¬°áÀÌ ¾ÈµÈ) entryPoint¸¦ ¸®ÅÏÇÏ´Â 
+    public bool HasAvailableEntryPoint(out Transform entrypoint)//Entrypointï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ò´ï¿½ ï¿½Èµï¿½(ï¿½Ù¸ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½) entryPointï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ 
     {
         Transform resultingEntry = null;
-        bool result = false;//Ã£¾Ò´ÂÁö ¾Æ´ÑÁö °á°ú
+        bool result = false;//Ã£ï¿½Ò´ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
-        int totalRetries = 100; //¾ÈÀüÀåÄ¡
+        int totalRetries = 100; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡
         int retryIndex = 0;
 
-        if(entryPoints.Count == 1) //¹æ¿¡ ÀÔ±¸°¡ ÇÏ³ªÀÎ °æ¿ì. -> ³­ ¾øÀ» µí. ±×³É ÀÔ±¸ 2°³ ÀÌ»ó ¸¸µé¾î ³õ°í ¸¶Áö¸·¿¡ ÀÔ±¸ Áö¿ì´Â Çü½ÄÀ¸·Î °¥°Í °°À½ (Æú°¡ÀÌÁî ¹æÀÇ °æ¿ì¿¡´Â ÀÔ±¸°¡ ÇÏ³ª?)
+        if(entryPoints.Count == 1) //ï¿½æ¿¡ ï¿½Ô±ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. -> ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. ï¿½×³ï¿½ ï¿½Ô±ï¿½ 2ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½Ô±ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½?)
         {
-            Transform entry = entryPoints[0]; // ÀÔ±¸ ÇÏ³ª´Ï±î ±×³É Á¤ÇÏ°í ½ÃÀÛ
-            if(entry.TryGetComponent<EntryPoint>(out EntryPoint res)) // ÀÔ±¸ ÄÄÆ÷³ÍÆ®ÀÎ EntryPoint ¹Ş°í (ÄÄÆ÷³ÍÆ® ÀÖ´ÂÁöµµ µ¿½Ã¿¡ È®ÀÎ)
+            Transform entry = entryPoints[0]; // ï¿½Ô±ï¿½ ï¿½Ï³ï¿½ï¿½Ï±ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+            if(entry.TryGetComponent<EntryPoint>(out EntryPoint res)) // ï¿½Ô±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ EntryPoint ï¿½Ş°ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½ È®ï¿½ï¿½)
             {
-                if (res.IsOccupied())//ÇÒ´ç µÇ¾ú´ÂÁö È®ÀÎ
+                if (res.IsOccupied())//ï¿½Ò´ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
                 {
-                    //ÀÌ¹Ì ÇÒ´ç µÈ entry¸é °á°ú´Â false
+                    //ï¿½Ì¹ï¿½ ï¿½Ò´ï¿½ ï¿½ï¿½ entryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ false
                     result = false;
-                    resultingEntry = null; //º¸³¾ entryµµ ¾øÀ¸´Ï null ÇÒ´ç
+                    resultingEntry = null; //ï¿½ï¿½ï¿½ï¿½ entryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ null ï¿½Ò´ï¿½
                 }
                 else
                 {
-                    //ÇÒ´ç ¾ÈµÈ entry¸é °á°ú true
+                    //ï¿½Ò´ï¿½ ï¿½Èµï¿½ entryï¿½ï¿½ ï¿½ï¿½ï¿½ true
                     result = true;
-                    resultingEntry = entry; // ÇÒ´ç ¾ÈµÈ entry ÇÒ´ç
-                    res.SetOccupied();  //ÀÌ entry ÇÒ´ç µÇ¾ú´Ù°í º¯°æ
+                    resultingEntry = entry; // ï¿½Ò´ï¿½ ï¿½Èµï¿½ entry ï¿½Ò´ï¿½
+                    res.SetOccupied();  //ï¿½ï¿½ entry ï¿½Ò´ï¿½ ï¿½Ç¾ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½
                 }
                 entrypoint = resultingEntry;
                 return result;
             }
         }
-        //¹æ¿¡ ÀÔ±¸°¡ ÇÏ³ª°¡ ¾Æ´Ò °æ¿ì ¾î¶² ÀÔ±¸¸¦ ¾µÁö °ñ¶ó¾ß ÇÔ
-        while (resultingEntry == null && retryIndex < totalRetries)// ÃÖÁ¾ÀûÀ¸·Î ¾µ entry Á¤ÇØÁö±âÀü ±îÁö (¹«ÇÑ·çÇÁ ¸·±â¿ëÀ¸·Î 100¹ø ¹İº¹±îÁö)
+        //ï¿½æ¿¡ ï¿½Ô±ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ ï¿½î¶² ï¿½Ô±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        while (resultingEntry == null && retryIndex < totalRetries)// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ entry ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Ñ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 100ï¿½ï¿½ ï¿½İºï¿½ï¿½ï¿½ï¿½ï¿½)
         {
-            //±Ùµ¥ ÀÌ·¯¸é ÇÒ´çµÈ entry¸¸ È®ÀÎÇÏ´Ù°¡ ³¡³¯ ¼ö ÀÖÁö ¾Ê³ª? <- ÀÌ°Å ´õ ÁÁÀº »ı°¢ ÀÖÀ¸¸é ¶°¿Ã·Áº¸±â
-            int randomEntryIndex = UnityEngine.Random.Range(0, entryPoints.Count);//·£´ıÀ¸·Î ÀÔ±¸ ÇÏ³ª °í¸£±â
+            //ï¿½Ùµï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ entryï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê³ï¿½? <- ï¿½Ì°ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½
+            int randomEntryIndex = UnityEngine.Random.Range(0, entryPoints.Count);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô±ï¿½ ï¿½Ï³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             Transform entry = entryPoints[randomEntryIndex];
             if(entry.TryGetComponent<EntryPoint>(out EntryPoint entryPoint))
             {
-                if (!entryPoint.IsOccupied())//ÇÒ´ç ¾ÈµÈ °æ¿ì
+                if (!entryPoint.IsOccupied())//ï¿½Ò´ï¿½ ï¿½Èµï¿½ ï¿½ï¿½ï¿½
                 {
-                    //ÇÒ´ç½ÃÅ°±â
+                    //ï¿½Ò´ï¿½ï¿½Å°ï¿½ï¿½
                     resultingEntry = entry;
                     result = true;
                     entryPoint.SetOccupied();
@@ -88,7 +85,7 @@ public class DungeonPart : MonoBehaviour
         return result;
     }
     
-    public void UnuseEntrypoint(Transform entrypoint)//¾²·Á°í entrypoint¿¡ ÇÒ´çÇÔ ¼³Á¤Çß´Ù°¡ ¿©·¯ ÀÌÀ¯·Î ¹æÀÌ³ª º¹µµ¸¦ ¼³Á¤ ¸øÇÏ°Ô µÈ °æ¿ì ´Ù½Ã ¾È¾´´Ù°í ¼³Á¤ÇÏ´Â ¸Ş¼­µå ÀÎµí
+    public void UnuseEntrypoint(Transform entrypoint)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ entrypointï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½È¾ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½ ï¿½Îµï¿½
     {
         if(entrypoint.TryGetComponent<EntryPoint>(out EntryPoint entry))
         {
@@ -96,7 +93,7 @@ public class DungeonPart : MonoBehaviour
         }
     }
     
-    public void FillEmptyDoors()//¾È¾²´Â entry¸¦ º®À¸·Î ¸¸µå´Â ¸Ş¼­µå
+    public void FillEmptyDoors()//ï¿½È¾ï¿½ï¿½ï¿½ entryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
     {
         entryPoints.ForEach((entry) =>
         {
@@ -105,8 +102,8 @@ public class DungeonPart : MonoBehaviour
                 if (!entryPoint.IsOccupied())
                 {
                     GameObject wall = Instantiate(fillerWall);
-                    //wall.GetComponent<NetworkObject>().Spawn(true);//¸ÖÆ¼ÇÃ·¹ÀÌ½Ã¿¡ ÇÊ¿äÇÑ ÄÚµå. PhotonNetwork.Instatiate()·Î ÇØ¾ß ÇÒµí
-                    //entry Æ÷ÀÎÆ®¿¡ ³Ö¾î³õÀº °Å±â ¶§¹®¿¡ ÁÂÇ¥°¡ Æ²¾îÁú ¼ö ÀÖÀ½ (¹®Áö¹æÀÇ Å©±â¸¦ Á¶±İ ´Ã¸®°í ¹®Áö¹æÀ» entry·Î ¼³Á¤ÇÒ±î?)
+                    //wall.GetComponent<NetworkObject>().Spawn(true);//ï¿½ï¿½Æ¼ï¿½Ã·ï¿½ï¿½Ì½Ã¿ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½Úµï¿½. PhotonNetwork.Instatiate()ï¿½ï¿½ ï¿½Ø¾ï¿½ ï¿½Òµï¿½
+                    //entry ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ ï¿½Å±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ Æ²ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ entryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½?)
                     wall.transform.position = entry.transform.position;
                     wall.transform.rotation = entry.transform.rotation;
                 }
@@ -114,14 +111,17 @@ public class DungeonPart : MonoBehaviour
         });
     }
 
-    /*void OnDrawGizmos() //Unity Scene ºä¿¡¼­ µğ¹ö±ëÀ» À§ÇØ ±âÁî¸ğ¸¦ ±×¸®´Â ÇÔ¼ö. °ÔÀÓÀÌ ½ÇÇàµÇÁö ¾Ê¾Æµµ Scene ºä¿¡¼­ ½Ã°¢ÀûÀ¸·Î Á¤º¸¸¦ Ç¥½ÃÇÏ´Âµ¥ »ç¿ëÇÔ
+    void OnDrawGizmos()
     {
-        //ÀÌ boxCollider(½ÇÁúÀû ¹æ Å©±â)¸¦ ³ë¶õ»ö ¼±À¸·Î Ç¥½Ã
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(collider.bounds.center, collider.bounds.size);
-    }*/
+        foreach(Collider collider in colliderList)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(collider.bounds.center, collider.bounds.size);
+        }
+        
+    }
 
-    /*public NetWorkObject GetNetworkObject() //¸ÖÆ¼ÇÃ·¹ÀÌ ¿ä¼Ò
+    /*public NetWorkObject GetNetworkObject() //ï¿½ï¿½Æ¼ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     {
         return NetworkObject;
     }*/
@@ -135,46 +135,36 @@ public class DungeonPart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (IsColliderOverlapping())
-        {
-            Debug.Log("°°Àº LayerÀÇ Collider°¡ ³»ºÎ¿¡ ÀÖ½À´Ï´Ù!");
-        }
-        else
-        {
-            Debug.Log("ÈÄ¡´Â collider ¾øÀ½");
-        }*/
+       
     }
     public bool IsColliderOverlapping()
     {
-        if (collider == null) return false;
+        if (GetComponent<Collider>() == null) return false;
 
-        // OverlapBox·Î Ãæµ¹ °¨Áö (bounds.extents »ç¿ë)
         Collider[] hits = Physics.OverlapBox(
-            collider.bounds.center,
-            collider.bounds.extents,
+            GetComponent<Collider>().bounds.center,
+            GetComponent<Collider>().bounds.extents,
             Quaternion.identity,
             roomsLayermask
         );
 
         foreach (Collider hit in hits)
         {
-            // ÀÚ±â ÀÚ½ÅÀº Á¦¿ÜÇÏ°í °°Àº LayerÀÎÁö È®ÀÎ
-            if (hit != collider && hit.gameObject.layer == collider.gameObject.layer)
+            if (hit != GetComponent<Collider>() && hit.gameObject.layer == GetComponent<Collider>().gameObject.layer)
             {
-                return true; // °°Àº LayerÀÇ Collider°¡ ÀÖÀ½
             }
         }
 
         return false;
     }
-    void OnDrawGizmos()
+    /*void OnDrawGizmos()
     {
-        if (collider != null)
+        if (GetComponent<Collider>() != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(collider.bounds.center, collider.bounds.size);
+            Gizmos.DrawWireCube(GetComponent<Collider>().bounds.center, GetComponent<Collider>().bounds.size);
         }
-    }
+    }*/
 
     public List<Transform> GetEntryPointList()
     {

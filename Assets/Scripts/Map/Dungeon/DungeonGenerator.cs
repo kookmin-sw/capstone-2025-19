@@ -127,20 +127,27 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                     switch (room1EntryPoint.GetComponent<EntryPoint>().needRoomType)
                     {
                         case EntryPoint.NeedRoomType.Stair:
-                            int randommRoom2Index = UnityEngine.Random.Range(0, stairs.Count);
-                            room2 = stairs[randommRoom2Index].GetComponent<DungeonPart>();
-                            if(!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); continue; }
+                            int randomStairIndex = UnityEngine.Random.Range(0, stairs.Count);
+                            Debug.Log($"random value test {randomStairIndex},{stairs.Count}");
+                            room2 = Instantiate(stairs[randomStairIndex]).GetComponent<DungeonPart>();
+
+                            if(!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); Destroy(room2); continue; }
                             break;
                         case EntryPoint.NeedRoomType.Hallway:
-                            int randomRoom2Index = UnityEngine.Random.Range(0, hallways.Count);
-                            room2 = hallways[randomRoom2Index].GetComponent<DungeonPart>();
-                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); continue; }
+                            int randomHallwaysIndex = UnityEngine.Random.Range(0, hallways.Count);
+                            room2 = Instantiate(hallways[randomHallwaysIndex]).GetComponent<DungeonPart>();
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); Destroy(room2); continue; }
+                            break;
+                        case EntryPoint.NeedRoomType.Room:
+                            int randomRoomsIndex = UnityEngine.Random.Range(0, rooms.Count);
+                            room2 = Instantiate(rooms[randomRoomsIndex]).GetComponent<DungeonPart>();
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); Destroy(room2); continue; }
                             break;
                         case EntryPoint.NeedRoomType.None:
                             int randomRoom2Index_ = UnityEngine.Random.Range(0, allRoomsModules.Count);
                             int randomRoom2Index__ = UnityEngine.Random.Range(0, allRoomsModules[randomRoom2Index_].Count);
-                            room2 = allRoomsModules[randomRoom2Index_][randomRoom2Index__].GetComponent<DungeonPart>();
-                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); continue; }
+                            room2 = Instantiate(allRoomsModules[randomRoom2Index_][randomRoom2Index__]).GetComponent<DungeonPart>();
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint);  Destroy(room2); continue; }
                             break;
                     }
                     generatedRooms.Add(room2);

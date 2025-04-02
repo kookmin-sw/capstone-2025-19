@@ -611,79 +611,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 131b091b4f478ef488b88da0a1f77fdc, type: 3}
---- !u!1001 &2314378603086858410
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2484360320992799949, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_Name
-      value: Miregwan
-      objectReference: {fileID: 0}
-    - target: {fileID: 2484360320992799949, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 12.724957
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 18.245457
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -26.027365
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5228030793054922605, guid: 06c6f7ea3ced6c248a6344303300bbd6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 06c6f7ea3ced6c248a6344303300bbd6, type: 3}
 --- !u!1001 &2763705369673512958
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -696,13 +623,82 @@ PrefabInstance:
         type: 3}
       propertyPath: entrance
       value: 
+      objectReference: {fileID: 2484360320992799949, guid: 06c6f7ea3ced6c248a6344303300bbd6,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: rooms.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: stairs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: hallways.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: rooms.Array.data[3]
+      value: 
+      objectReference: {fileID: 2484360320992799949, guid: 06c6f7ea3ced6c248a6344303300bbd6,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: rooms.Array.data[4]
+      value: 
       objectReference: {fileID: 1839266451309113298, guid: f7f6d34a61f3692468b0510604a54469,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: rooms.Array.data[5]
+      value: 
+      objectReference: {fileID: 2597701822076250434, guid: 01eae5d570543244a8ae14f27af2aefb,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: stairs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1382099109642499120, guid: ac213de8d3851ac42872628f82bb912e,
         type: 3}
     - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
         type: 3}
       propertyPath: roomsLayerMask.m_Bits
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: hallways.Array.data[1]
+      value: 
+      objectReference: {fileID: 8515470845408962666, guid: d69307717acaa344081118e17c3b371a,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: hallways.Array.data[2]
+      value: 
+      objectReference: {fileID: 975602598891651452, guid: 00d3cd24905af624ca98dce1d0dcdf02,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: hallways.Array.data[3]
+      value: 
+      objectReference: {fileID: 5722230678197234652, guid: cb8024c3e71d96548b7148f04e253a8e,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: hallways.Array.data[4]
+      value: 
+      objectReference: {fileID: 1055053789658726513, guid: b3cd734c64bb9774c9173fab1886ffef,
+        type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: hallways.Array.data[5]
+      value: 
+      objectReference: {fileID: 2136317762696972953, guid: c1e08d4e8add6b141be17dc0f02c4840,
+        type: 3}
     - target: {fileID: 236860354327395820, guid: e22e78ae6ea601244a2221c8631ceac7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -963,6 +959,5 @@ SceneRoots:
   - {fileID: 1355838127}
   - {fileID: 863606592}
   - {fileID: 1676754167}
-  - {fileID: 2314378603086858410}
   - {fileID: 9208699939963494465}
   - {fileID: 3989328522416254734}

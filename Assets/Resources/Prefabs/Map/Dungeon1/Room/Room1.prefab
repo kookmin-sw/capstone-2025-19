@@ -1,58 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &260634688515812772
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3161723208329122785}
-  - component: {fileID: 3732284957060622744}
-  m_Layer: 0
-  m_Name: FloorCollder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3161723208329122785
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 260634688515812772}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.02, y: 3.66, z: 34.51}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3429823805077363961}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3732284957060622744
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 260634688515812772}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 16.05, y: 0.3, z: 16.74}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1175024113604936420
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 576194918413806404}
 --- !u!1 &2919279465679587235
 GameObject:
@@ -242,6 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 7269995444309466564}
 --- !u!1 &5248829835548127269
 GameObject:
@@ -278,7 +227,6 @@ Transform:
   - {fileID: 1426910532843973766}
   - {fileID: 255190136061561720}
   - {fileID: 4146337414327672328}
-  - {fileID: 3161723208329122785}
   - {fileID: 5365473075325357503}
   - {fileID: 2985540458895539007}
   m_Father: {fileID: 0}
@@ -300,10 +248,15 @@ MonoBehaviour:
     m_Bits: 8
   dungeonPartType: 0
   fillerWall: {fileID: 0}
+  roomUse: 0
+  spawnPoint: {fileID: 0}
+  spawnItemList: []
+  spawnMonsterList: []
+  colliderList:
+  - {fileID: 1943149225777973764}
   entryPoints:
   - {fileID: 1426910532843973766}
   - {fileID: 255190136061561720}
-  collider: {fileID: 1943149225777973764}
 --- !u!1 &6035956069905564693
 GameObject:
   m_ObjectHideFlags: 0

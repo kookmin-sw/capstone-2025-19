@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 5691485177710175556}
 --- !u!1 &2373891839850825430
 GameObject:
@@ -142,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 6671872719886912591}
 --- !u!1 &6346776784418006568
 GameObject:
@@ -207,8 +209,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8515470845408962666}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.157493, y: -14.561369, z: -6.8475366}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 20.872591, y: -1032.8069, z: 144.86986}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -238,10 +240,15 @@ MonoBehaviour:
     m_Bits: 8
   dungeonPartType: 1
   fillerWall: {fileID: 0}
+  roomUse: 0
+  spawnPoint: {fileID: 0}
+  spawnItemList: []
+  spawnMonsterList: []
+  colliderList:
+  - {fileID: 8141685840461989879}
   entryPoints:
   - {fileID: 741711192559694345}
   - {fileID: 181543653760885086}
-  collider: {fileID: 8141685840461989879}
 --- !u!1 &9183611614733439271
 GameObject:
   m_ObjectHideFlags: 0

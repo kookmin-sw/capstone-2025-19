@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 7798680238382481399}
 --- !u!1 &1163112709984964059
 GameObject:
@@ -258,6 +259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 6467488330696543673}
 --- !u!1 &5722230678197234652
 GameObject:
@@ -318,11 +320,16 @@ MonoBehaviour:
     m_Bits: 8
   dungeonPartType: 0
   fillerWall: {fileID: 0}
+  roomUse: 0
+  spawnPoint: {fileID: 0}
+  spawnItemList: []
+  spawnMonsterList: []
+  colliderList:
+  - {fileID: 3798584276035752093}
   entryPoints:
   - {fileID: 6768374677836459343}
   - {fileID: 8251238296156213461}
   - {fileID: 6085732921231800917}
-  collider: {fileID: 3798584276035752093}
 --- !u!1 &8514801956111239038
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,6 +374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 3041282753657335333}
 --- !u!1001 &156748342945325144
 PrefabInstance:

@@ -176,12 +176,13 @@ MonoBehaviour:
   - {fileID: 6171201224084818192}
   - {fileID: 4239372444541518581}
   spawnMonsterList: []
+  colliderList:
+  - {fileID: 1336987648867833137}
   entryPoints:
   - {fileID: 3346701552818922550}
   - {fileID: 9003955306281503444}
   - {fileID: 4764929702460846610}
   - {fileID: 3231351866155305177}
-  collider: {fileID: 1336987648867833137}
 --- !u!1 &1858200984805393240
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,6 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 1699219043090941109}
 --- !u!1 &2420916887417026436
 GameObject:
@@ -354,6 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 2913693330860044647}
 --- !u!1 &2913693330860044647
 GameObject:
@@ -609,6 +612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 3155480537845853236}
 --- !u!1 &4127643432542291446
 GameObject:
@@ -864,6 +868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b54da92453cec147b54acb5fef133b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  needRoomType: 0
   testCube: {fileID: 5700286157216641012}
 --- !u!1 &7788306826978089652
 GameObject:

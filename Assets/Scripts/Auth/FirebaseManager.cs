@@ -16,6 +16,8 @@ public class FirebaseManager : Singleton<FirebaseManager>
     // 초기화 여부
     public bool IsReady { get; private set; }
 
+    public bool isLoginComplete = false;
+
     protected override void Awake()
     {
         base.Awake();

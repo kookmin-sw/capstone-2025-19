@@ -7,10 +7,18 @@ using UnityEngine;
 public class VillageManager : MonoBehaviour
 {
     [SerializeField] Transform playerSpawnPosition;
-    // Start is called before the first frame update
+    [SerializeField] GameObject mainCamera;
+    [SerializeField] GameObject LoginCanvas;
+
+    [SerializeField] CinemachineVirtualCamera loginVirtualCamera;
+    [HideInInspector]
+    public GameObject playerFollowCamera;
+
+    
+
     void Start()
     {
-        SpawnPlayer();
+        
     }
 
     // Update is called once per frame
@@ -20,18 +28,36 @@ public class VillageManager : MonoBehaviour
     }
 
 
-    private void SpawnPlayer()
+    public void CloseLoginCanvas()
+    {
+        LoginCanvas.SetActive(false);
+        Debug.Log("LoginCanvas 지우기 완료");
+    }
+
+    public void SpawnPlayer()
     {
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer_Village"));
+        
         player.transform.position = playerSpawnPosition.position;
         InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
         //TODO Player MainCamera 생성
-        GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
-        GameObject playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));
+        //GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
+        playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));
         CinemachineVirtualCamera virtualCamera = playerFollowCamera.GetComponent<CinemachineVirtualCamera>();
         virtualCamera.Follow = player.transform.Find("PlayerCameraRoot");
 
         player.GetComponent<PlayerController>().SetMainCamera(mainCamera);
-        //TODO Firebase 정보 받아서 Player 장비 최신화
+        //카메라 캐릭터에게로 회전
+        OnLoginComplete(); 
+        CloseLoginCanvas();
+    }
+
+    public void OnLoginComplete()
+    {
+        // 1) 플레이어 카메라 우선순위를 높게
+        playerFollowCamera.GetComponent<CinemachineVirtualCamera>().Priority = 11;
+
+        // 2) 로그인 카메라는 우선순위를 낮추거나
+        loginVirtualCamera.Priority = 1;
     }
 }

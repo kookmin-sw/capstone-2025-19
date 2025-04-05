@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyHealth : Health
@@ -13,43 +14,68 @@ public class EnemyHealth : Health
         enemyState = GetComponent<EnemyState>();
     }
 
-    void OnTriggerEnter(Collider collision)
+
+    //void OnTriggerEnter(Collider collision)
+    //{
+    //    if (collision.tag == "PlayerWeapon")
+    //    {
+    //        #region Escape
+    //        // when Enemy is invincible
+    //        if (enemyState.state == EnemyState.State.Invincible)
+    //        {
+    //            //print("Invincible");
+    //            return;
+    //        }
+
+    //        DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
+    //        DamageCollider opponentWeaponCollider = collision.GetComponent<DamageCollider>();
+
+    //        if (myWeaponCollider == null) return;
+
+    //        if (animator.GetBool("Attacking"))
+    //        {
+    //            // when my weapon is more heavier
+    //            if (myWeaponCollider.tenacity > opponentWeaponCollider.tenacity)
+    //            {
+    //                //print("Tenacity wins");
+    //                return;
+    //            }
+
+    //            else
+    //            {
+    //                //myWeaponCollider.dontOpenCollider = true;
+    //                if (myWeaponCollider.damageCollider.enabled)
+    //                {
+    //                    myWeaponCollider.UnableDamageCollider();
+    //                }
+    //            }
+    //        }
+    //        #endregion
+
+    //        #region Hit
+    //        currentHealth -= opponentWeaponCollider.damage;
+    //        animator.SetTrigger("Hit");
+    //        enemyState.state = EnemyState.State.Invincible;
+    //        #endregion
+
+    //        // die
+    //        if (currentHealth <= 0)
+    //        {
+    //            currentHealth = 0;
+    //            animator.SetTrigger("Die");
+    //        }
+
+    //    }
+    //}
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.tag == "PlayerWeapon")
+        if (other.CompareTag("PlayerWeapon"))
         {
-            #region Escape
-            // when Enemy is invincible
-            if (enemyState.state == EnemyState.State.Invincible)
-            {
-                //print("Invincible");
-                return;
-            }
+            Debug.Log("플레이어한테 맞음");
 
-            DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
-            DamageCollider opponentWeaponCollider = collision.GetComponent<DamageCollider>();
 
-            if (myWeaponCollider == null) return;
-
-            if (animator.GetBool("Attacking"))
-            {
-                // when my weapon is more heavier
-                if (myWeaponCollider.tenacity > opponentWeaponCollider.tenacity)
-                {
-                    //print("Tenacity wins");
-                    return;
-                }
-
-                else
-                {
-                    //myWeaponCollider.dontOpenCollider = true;
-                    if (myWeaponCollider.damageCollider.enabled)
-                    {
-                        myWeaponCollider.UnableDamageCollider();
-                    }
-                }
-            }
-            #endregion
-
+            DamageCollider opponentWeaponCollider = other.GetComponent<DamageCollider>();
             #region Hit
             currentHealth -= opponentWeaponCollider.damage;
             animator.SetTrigger("Hit");
@@ -62,7 +88,6 @@ public class EnemyHealth : Health
                 currentHealth = 0;
                 animator.SetTrigger("Die");
             }
-
         }
     }
 }

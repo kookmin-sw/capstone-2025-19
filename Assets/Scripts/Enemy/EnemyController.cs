@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 public class EnemyController : MonoBehaviour
 {    
     [SerializeField] Transform target;
+    [SerializeField] GameObject enemyManager;
 
     [Header("Basic Settings")]
     [SerializeField] float basicSpeed;
@@ -32,11 +33,15 @@ public class EnemyController : MonoBehaviour
     private float timeSinceArrivedWaypoint = 0;
     private int attackPatternNo = 0;
 
+    //Player Detection test
+    EnemyDetection enemyDetection;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();
+        enemyDetection = enemyManager.GetComponent<EnemyDetection>();
     }
 
     private void Start()
@@ -46,6 +51,10 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        if(target == null)
+        {
+            target = enemyDetection.GetClosestPlayer();
+        }
         if (animator.GetBool("IsInteracting")) return;
 
         float distanceToPlayer = CalculDistance();
@@ -60,6 +69,8 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            //test
+            target = null;
             if (patrolPath != null)
             {
                 Patrol();

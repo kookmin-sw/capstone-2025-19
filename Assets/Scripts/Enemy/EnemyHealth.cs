@@ -29,23 +29,24 @@ public class EnemyHealth : Health
 
     private void OnTriggerEnter(Collider other)
     {
-        if (animator.GetBool("IsInteracting") || enemyState.state == EnemyState.State.Invincible) return;
+        if (animator.GetBool("IsInteracting") || enemyState.state == EnemyState.State.Invincible || currentHealth <= 0) return;
         if (other.CompareTag("PlayerWeapon"))
         {
 
             DamageCollider opponentWeaponCollider = other.GetComponent<DamageCollider>();
-            #region Hit
             currentHealth -= opponentWeaponCollider.damage;
-            animator.SetTrigger("Hit");
-            enemyState.state = EnemyState.State.Invincible;
-            #endregion
 
-            // die
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
                 animator.SetTrigger("Die");
             }
+            else
+            {
+                animator.SetTrigger("Hit");
+                enemyState.state = EnemyState.State.Invincible;
+            }
+            
         }
     }
 }

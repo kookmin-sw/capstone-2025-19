@@ -11,7 +11,6 @@ using UnityEngine.UIElements;
 public class EnemyController : MonoBehaviour
 {    
     [SerializeField] Transform target;
-    [SerializeField] GameObject enemyManager;
 
     [Header("Basic Settings")]
     [SerializeField] float basicSpeed;
@@ -43,7 +42,7 @@ public class EnemyController : MonoBehaviour
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();
-        enemyDetection = enemyManager.GetComponent<EnemyDetection>();
+        enemyDetection = this.GetComponent<EnemyDetection>();
     }
 
     private void Start()

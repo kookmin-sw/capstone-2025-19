@@ -16,6 +16,11 @@ public class EntryPoint : MonoBehaviour
     }
     [Header("연결되어야 하는 방 타입 (상관 없을경우 None)")]
     public NeedRoomType needRoomType;
+    [Header("입구")]
+    [SerializeField] GameObject entrance;
+    [Header("연결 된 방이 없을 경우 대체 할 벽")]
+    [SerializeField] GameObject wallObject;
+
     //occupied  사용중인
     private bool isOccupied = false;
 
@@ -25,6 +30,13 @@ public class EntryPoint : MonoBehaviour
         isOccupied = value;
         //testCube.SetActive(!value);
     }
+    public void SetEmptyEntrance()
+    {
+        Vector3 entrancePosition = entrance.transform.position;
+        Destroy(entrance);
+        Instantiate(wallObject).transform.position = entrancePosition;
+    }
+
     public bool IsOccupied() => isOccupied;
     [Header("할당된 입구 확인용")]
     public GameObject testCube;

@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class PlayerTrigger : MonoBehaviour
 {
+    public List<InteractGo> interactGoList = new List<InteractGo>();
     public Transform dropItemPosition;
+
+    public bool eType = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +22,16 @@ public class PlayerTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Trigger test");
-        if (other.CompareTag("DropItem"))
+        if (other.CompareTag("Interact"))
+        {
+            InteractGo interact = other.GetComponent<InteractGo>();
+            if (!interactGoList.Contains(interact))
+            {
+                interactGoList.Add(interact);
+            }
+            Debug.Log($"testset {interactGoList.Count}");
+        }
+        /*if (other.CompareTag("DropItem"))
         {
 
             //TODO 인벤토리에 ItemIcon넣기
@@ -35,7 +47,13 @@ public class PlayerTrigger : MonoBehaviour
         }else if (other.CompareTag("Money"))
         {
             InventoryController.Instance.SetMoneyItemIcon(other.GetComponent<MoneyDropItem>());
-        }
+        }else if (other.CompareTag("Trigger"))
+        {
+            if (!interactGoList.Contains(other.GetComponent<InteractGo>()))
+            {
+                interactGoList.Add(other.GetComponent<InteractGo>());
+            }
+        }*/
         if(other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
         {
             Debug.Log("1");
@@ -46,7 +64,16 @@ public class PlayerTrigger : MonoBehaviour
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
     {
-        //DebugText.Instance.Debug("trigger exit test");
+        if (other.CompareTag("Interact"))
+        {
+            Debug.Log($"test {interactGoList.Count}");
+            InteractGo interact = other.GetComponent<InteractGo>();
+            if (interactGoList.Contains(interact))
+            {
+                interactGoList.Remove(interact);
+            }
+        }
+       /* //DebugText.Instance.Debug("trigger exit test");
         if (other.CompareTag("DropItem"))
         {
             //TODO 인벤토리에 ItemIcon 빼기
@@ -63,15 +90,26 @@ public class PlayerTrigger : MonoBehaviour
         {
             InventoryController.Instance.RemoveMoneyItemIcon(other.GetComponent<MoneyDropItem>());
         }
+        else if (other.CompareTag("Trigger"))
+        {
+            if (interactGoList.Contains(other.GetComponent<InteractGo>())) { interactGoList.Remove(other.GetComponent<InteractGo>()); }
+        }
         if (other.TryGetComponent<TriggerUI>(out TriggerUI triggerUI))
         {
             triggerUI.EndEvent();
-        }
+        }*/
     }
 
     public void InteractObject()
     {
-        if(InventoryController.Instance.dropItemList.Count > 0)
+        Debug.Log($"trigger test {interactGoList.Count}");
+        if(interactGoList.Count > 0)
+        {
+            InteractGo go = interactGoList[0];
+            go.InteractObject();
+        }
+
+        /*if (InventoryController.Instance.dropItemList.Count > 0)
         {
             DropItem item = InventoryController.Instance.dropItemList[0];
             InventoryController.Instance.PickupDropItem(item);
@@ -79,6 +117,8 @@ public class PlayerTrigger : MonoBehaviour
         else
         {
             //TODO Use InteractObject ex) Open the door, Open the chest, Insert Potal
-        }
+            
+        }*/
+
     }
 }

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
+using Photon.Pun;
 
 
 public class DungeonGenerator : Singleton<DungeonGenerator>
@@ -42,6 +43,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     void Start()
     {
         //Add room list;
+        SceneController.Instance.SubscribeGo(this.gameObject);
         allRoomsModules = new List<List<GameObject>>();
         allRoomsModules.Add(rooms);
         allRoomsModules.Add(stairs);
@@ -56,20 +58,119 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     //서버 관련
     public void StartGeneration()
     {
-        StartGenerationServerRpc();
+        if(SceneController.Instance.GetCurrentSceneName() == "Multiplay")
+        {
+            
+        }
+        else
+        {
+            StartGenerationServerRpc();
+        }
+    }
+
+    private void StartGeneratedServerRpc()
+    {
+        
     }
 
     //[ServerRpc(RequireOwnership = false)]
     private void StartGenerationServerRpc()
     {
-        Generate(); //던전 생성
-        //GenerateAlternateEntrances(); //다른 입구 생성 -> 일단 보류. 알고리즘 자체는 던전 방 생성과 똑같음
-        //FillEmptyEntrances(); //모든 방이 생성된 이후 남은 입구 벽으로 막기
+        if(SceneController.Instance.GetCurrentSceneName() == "MultiplayRoomTest")
+        {
+            //TODO PhotonView Instance
+            Generate_MultiPlay();
+            //FillEmptyEntrances_MultiPlay();
+        }
+        else
+        {
+            Generate(); //던전 생성
+            //GenerateAlternateEntrances(); //다른 입구 생성 -> 일단 보류. 알고리즘 자체는 던전 방 생성과 똑같음
+            //FillEmptyEntrances(); //모든 방이 생성된 이후 남은 입구 벽으로 막기
+        }
 
         NvigationBake();
         SpawnRandomObject();
         PlayerSpawn();
         isGenerated = true;
+    }
+
+    private void Generate_MultiPlay()
+    {
+        for (int i = 0; i < noOfRooms - alternateEntrances.Count; i++)
+        {
+            if (generatedRooms.Count < 1) //아직 생성된 방이 없다면
+            {
+                //지금 당장은 처음 만든 방이 플레이어 스폰 방임
+                GameObject generatedRoom = PhotonNetwork.Instantiate("Prefabs/Map/Entrance", transform.position, transform.rotation);
+                //GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation); //여기에 있는 entrance가 던전의 시작점이 될것임
+                generatedRoom.transform.SetParent(null);
+                //멀티플레이 요소임
+                if (generatedRoom.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))
+                {
+                    //dungeonPart.GetNetworkObject().Spawn(true); //모든 클라이언트에 대한 게임 객체를 생성하는 
+                    generatedRooms.Add(dungeonPart); //방 만든거 List에 추가
+                    SetPlayerSpawnRoom(dungeonPart);
+                }
+            }
+            else
+            {
+                float randomValue = UnityEngine.Random.Range(0f, 1f);
+                bool shouldPlaceHallway = false;
+                if (randomValue > 0.6f) shouldPlaceHallway = true;
+                //bool shouldPlaceHallway = UnityEngine.Random.Range(0f, 1f) > 0.6f; //복도를 생성할 확률 50%
+                Debug.Log($"random value is {randomValue}");
+                DungeonPart room1 = null; //이미 던전 내부에 무작위로 생성된 방
+                Transform room1EntryPoint = null; // 이전에 생성된 방의 진입점이 될 변형점.
+                                                  // 기본적으로 방A와 방B가 있을 때 방 A와 방B가 연결 될 수 있기에 그 방A(이전 방)의 진입점(입구, 문)을 나타내는 포인트
+
+                int totalRetries = 100; //전체 리트라이 횟수. 안전장치라는데
+                int retryIndex = 0;
+
+                if (retryIndex > totalRetries) { Debug.LogError("Create room error!!"); break; }
+                int ramdomGenerateRoomIndex = UnityEngine.Random.Range(0, generatedRooms.Count);
+                room1 = generatedRooms[ramdomGenerateRoomIndex];
+                if (room1.HasAvailableEntryPoint(out room1EntryPoint))
+                {
+                    DungeonPart room2 = null;
+                    switch (room1EntryPoint.GetComponent<EntryPoint>().needRoomType)
+                    {
+                        case EntryPoint.NeedRoomType.Stair:
+                            int randomStairIndex = UnityEngine.Random.Range(0, stairs.Count);
+                            Debug.Log($"random value test {randomStairIndex},{stairs.Count}");
+                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/Multiplay/AllRooms/{stairs[randomStairIndex].name}"
+                                , transform.position, transform.rotation).GetComponent<DungeonPart>();
+                            
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); continue; }
+                            break;
+                        case EntryPoint.NeedRoomType.Hallway:
+                            int randomHallwaysIndex = UnityEngine.Random.Range(0, hallways.Count);
+                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/Multiplay/AllRooms/{hallways[randomHallwaysIndex]}"
+                                , transform.position, transform.rotation).GetComponent<DungeonPart>();
+
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); continue; }
+                            break;
+                        case EntryPoint.NeedRoomType.Room:
+                            int randomRoomsIndex = UnityEngine.Random.Range(0, rooms.Count);
+                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/Multiplay/AllRooms/{rooms[randomRoomsIndex]}"
+                                , transform.position, transform.rotation).GetComponent<DungeonPart>();
+
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); continue; }
+                            break;
+                        case EntryPoint.NeedRoomType.None:
+                            int randomRoom2Index_ = UnityEngine.Random.Range(0, allRoomsModules.Count);
+                            int randomRoom2Index__ = UnityEngine.Random.Range(0, allRoomsModules[randomRoom2Index_].Count);
+                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/Multiplay/AllRooms/{allRoomsModules[randomRoom2Index_][randomRoom2Index__]}"
+                                , transform.position, transform.rotation).GetComponent<DungeonPart>();
+
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); continue; }
+                            break;
+                    }
+                    generatedRooms.Add(room2);
+                    if (room2.dungeonPartType == DungeonPart.DungeonPartType.Hallway) { continue; }
+                }
+            }
+        }
     }
 
     private void NvigationBake()
@@ -364,7 +465,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 if (generatedRoom.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))
                 {
                     //멀티플레이 요소임
-                    //dungeonPart.GetNetworkObject().Spawn(true); //모든 클라이언트에 대한 게임 객체를 생성하는 -> photonView.Instantiate()형식
+                    //dungeonPart.GetNetworkObject().Spawn(true); //모든 클라이언트에 대한 게임 객체를 생성하는 -> PhotonNetwork.Instantiate()형식
                     generatedRooms.Add(dungeonPart); //방 만든거 List에 추가
                 }
             }
@@ -741,10 +842,20 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private void PlayerSpawn()
     {
-        //지금 당장은 PhotonView를 쓰는 것이 아님
-        GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer"));
-        player.transform.localPosition = playerSpawnDungeonPart.spawnPoint.position;
+        while(playerSpawnDungeonPart == null || playerSpawnDungeonPart.dungeonPartType == DungeonPart.DungeonPartType.SpecialRoom)
+        {
+            playerSpawnDungeonPart = generatedRooms[UnityEngine.Random.Range(0, generatedRooms.Count)];
+            if(playerSpawnDungeonPart.playerSpawnPoints.Count <= 0) { playerSpawnDungeonPart =null; }
+        }
+        Transform playerSpawnPosition = playerSpawnDungeonPart.playerSpawnPoints[0];
+        GameObject player;
+        if (SceneController.Instance.GetCurrentSceneName() == "MultiplayRoomTestScene")
+        {
+            player = PhotonNetwork.Instantiate("Prefabs/Player/DemoPlayer_Multiplay", playerSpawnPosition.position, Quaternion.identity);
+        }
+        else { player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer"), playerSpawnPosition.position, Quaternion.identity); }
         InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());
+        playerSpawnDungeonPart.roomUse = DungeonPart.RoomUse.PlayerSpawn;
         Debug.Log(player.transform.position);
         player_ = player;
         StartCoroutine(ResetPlayerPosition());
@@ -755,8 +866,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     IEnumerator ResetPlayerPosition()
     {
         yield return new WaitForSeconds(1f);
-        Debug.LogError($"player position {player_.transform.position}");
-        player_.transform.position = playerSpawnDungeonPart.spawnPoint.position;
+        /*Debug.LogError($"player position {player_.transform.position}");
+        player_.transform.position = playerSpawnDungeonPart.spawnPoint.position;*/
         SetPlayer();
     }
 

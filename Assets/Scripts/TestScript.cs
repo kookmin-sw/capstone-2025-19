@@ -4,24 +4,8 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-    public int publicInt;
-    public float publicFloat;
-    public string publicString;
-    public bool publicBool;
-    public Vector2 publicVector2;
-    public Vector3 publicVector3;
-    public Quaternion publicQuaternion;
-    public Color publicColor;
-    public Rect publicRect;
-    public RectTransform publicRectTransform;
-    public List<GameObject> publicGameObjectList;
-    public testEnum publicEnum;
-
-    public enum testEnum
+    public void OnTriggerEnter(Collider other)
     {
-        test1,
-        test2,
-        test3,
-
+        Debug.Log("test");
     }
 }

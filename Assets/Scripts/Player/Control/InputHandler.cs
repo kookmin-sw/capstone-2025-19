@@ -30,7 +30,7 @@ namespace PlayerControl
 
         private void Awake()
         {
-            playerTrigger = GetComponent<PlayerTrigger>();
+            //playerTrigger = GetComponent<PlayerTrigger>();
         }
 
         public void OnMove(InputValue value)
@@ -99,6 +99,7 @@ namespace PlayerControl
 
 		public void OnInteract(InputValue value)
 		{
+			Debug.Log("Input test");
 			playerTrigger.InteractObject();
 		}
 		

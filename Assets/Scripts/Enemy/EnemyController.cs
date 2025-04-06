@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float attackDistance;
     [SerializeField] float chaseDistance = 10f;
     [SerializeField] int maxPatterns = 1;
+    [SerializeField] float attackWaitTime;
 
     [Header("Patrol Settings")]
     [SerializeField] PatrolPath patrolPath;
@@ -32,6 +33,7 @@ public class EnemyController : MonoBehaviour
     int waypointIndex;
     private float timeSinceArrivedWaypoint = 0;
     private int attackPatternNo = 0;
+    private bool inCoroutine = false;
 
     //Player Detection test
     EnemyDetection enemyDetection;
@@ -53,6 +55,7 @@ public class EnemyController : MonoBehaviour
     {
         if(target == null)
         {
+            //Find closest player
             target = enemyDetection.GetClosestPlayer();
         }
         if (animator.GetBool("IsInteracting")) return;
@@ -127,6 +130,8 @@ public class EnemyController : MonoBehaviour
 
     private void Attack()
     {
+        //Think
+        //Is if(animator.GetBool("Attacking")) return; need?
         transform.LookAt(target);
 
         agent.isStopped = true;
@@ -137,6 +142,20 @@ public class EnemyController : MonoBehaviour
         animator.SetTrigger("Attack");
         animator.SetInteger("AttackPatternNo", attackPatternNo);
         animator.SetBool("Attacking", true);
+
+        if (inCoroutine) return;
+        StartCoroutine("InBattleIdle");
+    }
+
+    IEnumerator InBattleIdle()
+    {
+        inCoroutine = true;
+        float waitTime = Random.Range(attackWaitTime, attackWaitTime * 2);
+        yield return new WaitForSeconds(waitTime);
+        animator.SetBool("IsInteracting", true);
+        animator.SetTrigger("ExitBattleIdle");
+       
+        inCoroutine = false;
     }
 
     private void Idle()

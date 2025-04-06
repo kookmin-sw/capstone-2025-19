@@ -2328,6 +2328,11 @@ PrefabInstance:
       propertyPath: chaseDistance
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 1960575004171887687, guid: 433a831b00ce40d38355ed87cd4effd8,
+        type: 3}
+      propertyPath: attackWaitTime
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5709431530124572802, guid: 433a831b00ce40d38355ed87cd4effd8,
         type: 3}
       propertyPath: Enemy
@@ -3177,6 +3182,7 @@ MonoBehaviour:
   attackDistance: 0
   chaseDistance: 10
   maxPatterns: 1
+  attackWaitTime: 0
   patrolPath: {fileID: 0}
   waypointDwellingTime: 2
   waypointTolerance: 2
@@ -3443,6 +3449,7 @@ MonoBehaviour:
   attackDistance: 0
   chaseDistance: 10
   maxPatterns: 1
+  attackWaitTime: 0
   patrolPath: {fileID: 0}
   waypointDwellingTime: 2
   waypointTolerance: 2
@@ -3945,6 +3952,7 @@ MonoBehaviour:
   attackDistance: 0
   chaseDistance: 10
   maxPatterns: 1
+  attackWaitTime: 0
   patrolPath: {fileID: 0}
   waypointDwellingTime: 2
   waypointTolerance: 2
@@ -4515,8 +4523,8 @@ SceneRoots:
   - {fileID: 2020130702}
   - {fileID: 392819221}
   - {fileID: 70117108}
-  - {fileID: 264466769}
   - {fileID: 1072407654}
+  - {fileID: 264466769}
   - {fileID: 1693348134}
   - {fileID: 1807010743}
   - {fileID: 1925732880}

@@ -29,10 +29,9 @@ public class EnemyHealth : Health
 
     private void OnTriggerEnter(Collider other)
     {
+        if (animator.GetBool("IsInteracting") || enemyState.state == EnemyState.State.Invincible) return;
         if (other.CompareTag("PlayerWeapon"))
         {
-            Debug.Log("플레이어한테 맞음");
-
 
             DamageCollider opponentWeaponCollider = other.GetComponent<DamageCollider>();
             #region Hit

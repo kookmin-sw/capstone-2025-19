@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
 using Photon.Pun;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
 
 
 public class DungeonGenerator : Singleton<DungeonGenerator>
@@ -60,18 +62,30 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     {
         if(SceneController.Instance.GetCurrentSceneName() == "Multiplay")
         {
-            
+            if (PhotonNetwork.IsMasterClient)
+            {
+                //TODO Host createRoom
+                Generate_MultiPlay();
+                PlayerSpawn();
+            }
+            else
+            {
+                //Waiting host createRoom
+                //SpawnPlayer()
+                RequestPlayerSpawn();
+                NvigationBake();
+            }
         }
         else
         {
-            StartGenerationServerRpc();
+            NvigationBake();
+            Generate();
+            SpawnRandomObject();
+            PlayerSpawn();
         }
-    }
-
-    private void StartGeneratedServerRpc()
-    {
         
     }
+
 
     //[ServerRpc(RequireOwnership = false)]
     private void StartGenerationServerRpc()
@@ -254,443 +268,15 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                     generatedRooms.Add(room2);
                     if(room2.dungeonPartType == DungeonPart.DungeonPartType.Hallway) { continue; }
                 }
-                
 
-                /*if (shouldPlaceHallway)//50% 확률로 복도를 설치해야 할 경우 복도를 방 위주로 설치 할건지 
-                {
-                    int randomIndex = UnityEngine.Random.Range(0, hallways.Count);
-                    GameObject room2 = Instantiate(hallways[randomIndex], transform.position, transform.rotation);//복도 생성
-                    room2.transform.SetParent(null);
-                    if (room2.TryGetComponent<DungeonPart>(out DungeonPart room2_dungeonPart))
-                    {
-                        //dungeonPart.GetNetworkObject().Spawn(true); // 멀티플레이 요소
-                        if (room2_dungeonPart.HasAvailableEntryPoint(out Transform room2Entrypoint))//생성한 복도에 랜덤한 입구 고르기
-                        {
-                            while (room1 == null && retryIndex < totalRetries) // 무작위 행동 while문에 대해 혹시 모르는 무한 루프에 빠질 가능성을 지우기 위해 최대 100번까지만 루프 돌게 함
-                            {
-                                int randomLinkRoomIndex = UnityEngine.Random.Range(0, generatedRooms.Count); //임의의 방을 선택
-                                DungeonPart roomToTest = generatedRooms[randomLinkRoomIndex];
-
-                                if (roomToTest.HasAvailableEntryPoint(out room1EntryPoint))//그 선택한 방에서 입구를 찾고 있으면 room1EntryPoint에 할당하고 
-                                {
-                                    room1 = roomToTest;//randomGeneratedRoom에 선택한 방을 할당 후 while문 break
-                                    break;
-                                }
-                                retryIndex++; //안전장치
-                            }
-                            // 생성한 방에서 연결할 방 고르기
-                            *//*foreach(DungeonPart dungeonPart in generatedRooms)
-                            {
-
-                            }
-                            if(room1.HasAvailableEntryPoint(out room1EntryPoint))*//*
-
-
-                            AlignRooms(room1.transform, room2.transform, room1EntryPoint, room2Entrypoint); //방 정렬 (첫번째 방, 지금 생성한 복도,
-                                                                                                            //첫번째 방 입구, 지금 생성한 복도 입구)
-
-                            //if (HandleIntersection(room2_dungeonPart)) //위치가 미리 생성한 방이랑 곂친다던가 하는 문제가 있을 시 되돌리는 부분인거 같은데
-                            bool innerTest = false;
-                            if (room2_dungeonPart.IsColliderOverlapping())
-                            {
-                                room2_dungeonPart.UnuseEntrypoint(room2Entrypoint);
-                                room1.UnuseEntrypoint(room1EntryPoint);
-                                //그래서 생성한 방 언제 지움?
-                                //일단 지워봄
-                                Debug.Log("복도 곂침");
-                                //Destroy(dungeonPart.gameObject);
-                                //RetryPlacement(generatedHallway, doorToAlign); //일단 재귀함수로 새로운 방, 새로운 입구 찾기
-                                //TODO 그냥모든 방, 입구를 하나씩 대조해 보면서 넣기
-                                bool finalCheck = false;
-                                foreach (DungeonPart dungeon in generatedRooms)
-                                {
-                                    bool check1 = false;
-
-                                    foreach (Transform room1Transform in dungeon.GetEntryPointList())
-                                    {
-                                        bool check2 = false;
-                                        foreach (Transform room2Transform in room2.GetComponent<DungeonPart>().GetEntryPointList())
-                                        {
-                                            AlignRooms(dungeon.transform, room2.transform, room1Transform, room2Transform);
-
-                                            if (!room2_dungeonPart.IsColliderOverlapping())
-                                            {
-                                                generatedRooms.Add(room2_dungeonPart);//생성한 복도에서 알맞은 입구를 골랐으면 생성한 복도를 generatedRooms(생성한 방 리스트)에 추가
-                                                Debug.LogError("화면 집중");
-                                                room1Transform.GetComponent<EntryPoint>().SetOccupied(true);
-                                                room2Transform.GetComponent<EntryPoint>().SetOccupied(true);
-                                                check1 = true;
-                                                check2 = true;
-                                                finalCheck = true;
-                                                innerTest = true;
-                                                Debug.Log("통과");
-                                                break;
-                                            }
-                                            Debug.Log("room2(Hallway)의 입구 바꾸기");
-                                        }
-                                        if (check2) break;
-                                        Debug.Log("room1의 입구 바꾸기");
-                                    }
-                                    if (check1) break;
-                                    Debug.Log("room1을 바꾸기");
-                                }
-                                if (!finalCheck)
-                                {
-                                    Debug.Log("room2(Hallway)를 바꾸기 !!! ");
-                                    Destroy(room2_dungeonPart.gameObject);
-                                    continue;
-                                }
-
-                            }
-                            if (!innerTest)
-                            {
-                                room1EntryPoint.GetComponent<EntryPoint>().SetOccupied(true);
-                                room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);
-                                generatedRooms.Add(room2_dungeonPart);
-                            }
-                            i -= 1;
-                            continue;
-                        }
-                    }
-                }
-                else
-                {
-                    int randomIndex = UnityEngine.Random.Range(0, rooms.Count);
-                    GameObject room2 = Instantiate(rooms[randomIndex], transform.position, transform.rotation);//복도 생성
-                    room2.transform.SetParent(null);
-                    if (room2.TryGetComponent<DungeonPart>(out DungeonPart room2_dungeonPart))
-                    {
-                        //dungeonPart.GetNetworkObject().Spawn(true); // 멀티플레이 요소
-                        if (room2_dungeonPart.HasAvailableEntryPoint(out Transform room2Entrypoint))//생성한 복도에 랜덤한 입구 고르기
-                        {
-                            while (room1 == null && retryIndex < totalRetries) // 무작위 행동 while문에 대해 혹시 모르는 무한 루프에 빠질 가능성을 지우기 위해 최대 100번까지만 루프 돌게 함
-                            {
-                                int randomLinkRoomIndex = UnityEngine.Random.Range(0, generatedRooms.Count); //임의의 방을 선택
-                                DungeonPart roomToTest = generatedRooms[randomLinkRoomIndex];
-
-                                if (roomToTest.HasAvailableEntryPoint(out room1EntryPoint))//그 선택한 방에서 입구를 찾고 있으면 room1EntryPoint에 할당하고 
-                                {
-                                    room1 = roomToTest;//randomGeneratedRoom에 선택한 방을 할당 후 while문 break
-                                    break;
-                                }
-                                retryIndex++; //안전장치
-                            }
-                            // 생성한 방에서 연결할 방 고르기
-                            *//*foreach(DungeonPart dungeonPart in generatedRooms)
-                            {
-
-                            }
-                            if(room1.HasAvailableEntryPoint(out room1EntryPoint))*//*
-
-
-                            AlignRooms(room1.transform, room2.transform, room1EntryPoint, room2Entrypoint); //방 정렬 (첫번째 방, 지금 생성한 복도,
-                                                                                                            //첫번째 방 입구, 지금 생성한 복도 입구)
-                            Debug.Log("test");
-                            bool innerTest = false;
-                            if (room2_dungeonPart.IsColliderOverlapping())
-                            //if (HandleIntersection(room2_dungeonPart)) //위치가 미리 생성한 방이랑 곂친다던가 하는 문제가 있을 시 되돌리는 부분인거 같은데
-                            {
-                                room2_dungeonPart.UnuseEntrypoint(room2Entrypoint);
-                                room1.UnuseEntrypoint(room1EntryPoint);
-                                //그래서 생성한 방 언제 지움?
-                                //일단 지워봄
-                                Debug.Log("복도 곂침");
-                                //Destroy(dungeonPart.gameObject);
-                                //RetryPlacement(generatedHallway, doorToAlign); //일단 재귀함수로 새로운 방, 새로운 입구 찾기
-                                //TODO 그냥모든 방, 입구를 하나씩 대조해 보면서 넣기
-                                bool finalCheck = false;
-                                foreach (DungeonPart dungeon in generatedRooms)
-                                {
-                                    bool check1 = false;
-
-                                    foreach (Transform room1Transform in dungeon.GetEntryPointList())
-                                    {
-                                        bool check2 = false;
-                                        foreach (Transform room2Transform in room2.GetComponent<DungeonPart>().GetEntryPointList())
-                                        {
-                                            AlignRooms(dungeon.transform, room2.transform, room1Transform, room2Transform);
-
-                                            if (!room2_dungeonPart.IsColliderOverlapping())
-                                            {
-                                                generatedRooms.Add(room2_dungeonPart);//생성한 복도에서 알맞은 입구를 골랐으면 생성한 복도를 generatedRooms(생성한 방 리스트)에 추가
-                                                Debug.LogError("화면 집중");
-                                                room1Transform.GetComponent<EntryPoint>().SetOccupied(true);
-                                                //room2Entrypoint
-                                                room2Transform.GetComponent<EntryPoint>().SetOccupied(true);
-                                                check1 = true;
-                                                check2 = true;
-                                                finalCheck = true;
-                                                innerTest = true;
-                                                Debug.Log("통과");
-                                                break;
-                                            }
-                                            Debug.Log("room2(Hallway)의 입구 바꾸기");
-                                        }
-                                        if (check2) break;
-                                        Debug.Log("room1의 입구 바꾸기");
-                                    }
-                                    if (check1) break;
-                                    Debug.Log("room1을 바꾸기");
-                                }
-                                if (!finalCheck)
-                                {
-                                    Debug.LogError("room2(room)를 바꾸기 !!! ");
-                                    Destroy(room2_dungeonPart.gameObject);
-                                    continue;
-                                }
-
-                            }
-                            if (!innerTest)
-                            {
-                                generatedRooms.Add(room2_dungeonPart);
-                                room1EntryPoint.GetComponent<EntryPoint>().SetOccupied(true);
-                                room2Entrypoint.GetComponent<EntryPoint>().SetOccupied(true);
-                            }
-                        }
-                    }
-                }*/
             }
         }
         Debug.Log("완료");
     }
-    /*private void TestGenerate() //일단 내가 원하는 방의 개수를 넘어서 방을 만들고 싶지 않음 -> 그럼 이렇게 되면 미리 만들어 놓은 방을 다 쓰되 그 이상은 없나?
-    {
-        for(int i = 0; i < noOfRooms - alternateEntrances.Count; i++)
-        {
-            if(generatedRooms.Count < 1) //아직 생성된 방이 없다면
-            {
-                GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation); //여기에 있는 entrance가 던전의 시작점이 될것임
-                generatedRoom.transform.SetParent(null);// 생성된 방이 어떤 parent에 속해 있다면 Position 값이 parent에게 영향 받을 수 있기에 혹시나 parent 설정되어있으면 null로 할당하기
-                
-                if (generatedRoom.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))
-                {
-                    //멀티플레이 요소임
-                    //dungeonPart.GetNetworkObject().Spawn(true); //모든 클라이언트에 대한 게임 객체를 생성하는 -> PhotonNetwork.Instantiate()형식
-                    generatedRooms.Add(dungeonPart); //방 만든거 List에 추가
-                }
-            }
-            else
-            {
-                bool shouldPlaceHallway = UnityEngine.Random.Range(0f, 1f) > 0.5f; //복도를 생성할 확률 50%
-                DungeonPart randomGeneratedRoom = null; //이미 던전 내부에 무작위로 생성된 방
-                Transform room1EntryPoint = null; // 이전에 생성된 방의 진입점이 될 변형점.
-                                                  // 기본적으로 방A와 방B가 있을 때 방 A와 방B가 연결 될 수 있기에 그 방A(이전 방)의 진입점(입구, 문)을 나타내는 포인트
-
-                int totalRetries = 100; //전체 리트라이 횟수. 안전장치라는데
-                int retryIndex = 0;
+   
 
 
-                while (randomGeneratedRoom == null && retryIndex < totalRetries) // 무작위 행동 while문에 대해 혹시 모르는 무한 루프에 빠질 가능성을 지우기 위해 최대 100번까지만 루프 돌게 함
-                {
-                    int randomLinkRoomIndex = UnityEngine.Random.Range(0, generatedRooms.Count); //임의의 생성된 방을 선택
-                    DungeonPart roomToTest = generatedRooms[randomLinkRoomIndex];
 
-                    if(roomToTest.HasAvailableEntryPoint(out room1EntryPoint))//그 선택한 방에서 입구를 찾고 있으면 room1EntryPoint에 할당하고 
-                    {
-                        randomGeneratedRoom = roomToTest;//randomGeneratedRoom에 선택한 방을 할당 후 while문 break
-                        break;
-                    }
-                    retryIndex++; //안전장치
-                }
-                GameObject doorToAlign = Instantiate(door, transform.position, transform.rotation);
-                //doorToAlign.GetComponent<NetworkObject>().Spawn(true); // 멀티플레이요소
-
-                if (shouldPlaceHallway)//50%확률로 복도를 설치해야 할 경우
-                {
-                    int randomIndex = UnityEngine.Random.Range(0, hallways.Count);
-                    GameObject generatedHallway = Instantiate(hallways[randomIndex], transform.position, transform.rotation);//복도 생성
-                    generatedHallway.transform.SetParent(null);
-                    if(generatedHallway.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))
-                    {
-                        //dungeonPart.GetNetworkObject().Spawn(true); // 멀티플레이 요소
-                        if(dungeonPart.HasAvailableEntryPoint(out Transform room2Entrypoint))//생성한 복도에 랜덤한 입구 고르기
-                        {
-                            generatedRooms.Add(dungeonPart);//생성한 복도에서 알맞은 입구를 골랐으면 생성한 복도를 generatedRooms(생성한 방 리스트)에 추가
-                            doorToAlign.transform.position = room1EntryPoint.transform.position;//맞는 위치에 맞추기
-                            doorToAlign.transform.rotation = room1EntryPoint.transform.rotation;
-                            AlignRooms(randomGeneratedRoom.transform, generatedHallway.transform, room1EntryPoint, room2Entrypoint); //방 정렬 (첫번째 방, 지금 생성한 복도,
-                                                                                                                                     //첫번째 방 입구, 지금 생성한 복도 입구)
-                            if (HandleIntersection(dungeonPart)) //위치가 미리 생성한 방이랑 곂친다던가 하는 문제가 있을 시 되돌리는 부분인거 같은데
-                            {
-                                dungeonPart.UnuseEntrypoint(room2Entrypoint);
-                                randomGeneratedRoom.UnuseEntrypoint(room1EntryPoint);
-                                //그래서 생성한 방 언제 지움?
-                                //일단 지워봄
-                                Debug.Log("복도 곂침");
-                                //Destroy(dungeonPart.gameObject);
-                                //RetryPlacement(generatedHallway, doorToAlign); //일단 재귀함수로 새로운 방, 새로운 입구 찾기
-                                continue;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    GameObject generatedRoom;
-                    if(specialRooms.Count > 0) // 특별한 방이 만들 생각이 있을 경우
-                    {
-                        bool shouldPlaceSpecialRoom = UnityEngine.Random.Range(0f, 1f) > 0.9f;//10프로 확률로 특별한 방이 생성됨 -> 난 그냥 하나씩 만들까 할듯
-                        if(shouldPlaceSpecialRoom)
-                        {
-                            int randomIndex = UnityEngine.Random.Range(0, specialRooms.Count); //특별한 방 만들기
-                            generatedRoom = Instantiate(specialRooms[randomIndex], transform.position, transform.rotation);
-                        }
-                        else
-                        {
-                            int randomIndex = UnityEngine.Random.Range(0, rooms.Count); //평범한 방 만들기
-                            generatedRoom = Instantiate(rooms[randomIndex], transform.position, transform.rotation);
-                        }
-                    }
-                    else // 아닐 경우 (특별한 방 만들 생각 없음)
-                    {
-                        int randomIndex = UnityEngine.Random.Range(0, rooms.Count);
-                        generatedRoom = Instantiate(rooms[randomIndex], transform.position, transform.rotation);
-                    }
-
-                    generatedRoom.transform.SetParent(null);
-                    if(generatedRoom.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))//생성한 방 위치 설정
-                    {
-                        //dungeonPart.GetNetworkObject().Spawn(true); //멀티플레이 요소
-                        if(dungeonPart.HasAvailableEntryPoint(out Transform room2Entrypoint))
-                        {
-                            generatedRooms.Add(dungeonPart);
-                            doorToAlign.transform.position = room1EntryPoint.transform.position;
-                            doorToAlign.transform.rotation = room1EntryPoint.transform.rotation;
-                            AlignRooms(randomGeneratedRoom.transform, generatedRoom.transform, room1EntryPoint, room2Entrypoint);
-
-                            if (HandleIntersection(dungeonPart))
-                            {
-                                dungeonPart.UnuseEntrypoint(room2Entrypoint);
-                                randomGeneratedRoom.UnuseEntrypoint(room1EntryPoint);
-                                //일단 방 곂치는 방 지워봄
-                                Debug.Log("방 곂침");
-                                //Destroy(dungeonPart.gameObject);
-                                //RetryPlacement(generatedRoom, doorToAlign);
-                                continue;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
-    
-    /*private void GenerateAlternateEntrances()
-    {
-        if (alternateEntrances.Count < 1) return;
-        for (int i = 0; i < alternateEntrances.Count; i++)
-        {
-            if (generatedRooms.Count < 1) //아직 생성된 방이 없다면
-            {
-                GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation); //여기에 있는 entrance가 던전의 시작점이 될것임
-                generatedRoom.transform.SetParent(null);
-                //멀티플레이 요소임
-                if (generatedRoom.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))
-                {
-                    //dungeonPart.GetNetworkObject().Spawn(true); //모든 클라이언트에 대한 게임 객체를 생성하는 
-                    generatedRooms.Add(dungeonPart); //방 만든거 List에 추가
-                }
-            }
-            else
-            {
-                bool shouldPlaceHallway = UnityEngine.Random.Range(0f, 1f) > 0.5f; //복도를 생성할 확률 50%
-                DungeonPart randomGeneratedRoom = null; //이미 던전 내부에 무작위로 생성된 방
-                Transform room1EntryPoint = null; // 이전에 생성된 방의 진입점이 될 변형점.
-                                                  // 기본적으로 방A와 방B가 있을 때 방 A와 방B가 연결 될 수 있기에 그 방A(이전 방)의 진입점(입구, 문)을 나타내는 포인트
-
-                int totalRetries = 100; //전체 리트라이 횟수. 안전장치라는데
-                int retryIndex = 0;
-
-
-                while (randomGeneratedRoom == null && retryIndex < totalRetries) // 무작위 행동 while문에 대해 혹시 모르는 무한 루프에 빠질 가능성을 지우기 위해 최대 100번까지만 루프 돌게 함
-                {
-                    int randomLinkRoomIndex = UnityEngine.Random.Range(0, generatedRooms.Count); //임의의 방을 선택
-                    DungeonPart roomToTest = generatedRooms[randomLinkRoomIndex];
-
-                    if (roomToTest.HasAvailableEntryPoint(out room1EntryPoint))//그 선택한 방에서 입구를 찾고 있으면 room1EntryPoint에 할당하고 
-                    {
-                        randomGeneratedRoom = roomToTest;//randomGeneratedRoom에 선택한 방을 할당 후 while문 break
-                        break;
-                    }
-                    retryIndex++; //안전장치
-                }
-                GameObject doorToAlign = Instantiate(door, transform.position, transform.rotation);
-                //doorToAlign.GetComponent<NetworkObject>().Spawn(true); // 멀티플레이요소
-
-                if (shouldPlaceHallway)//50%확률로 복도를 설치해야 할 경우
-                {
-                    int randomIndex = UnityEngine.Random.Range(0, hallways.Count);
-                    GameObject generatedHallway = Instantiate(hallways[randomIndex], transform.position, transform.rotation);//복도 생성
-                    generatedHallway.transform.SetParent(null);
-                    if (generatedHallway.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))
-                    {
-                        //dungeonPart.GetNetworkObject().Spawn(true); // 멀티플레이 요소
-                        if (dungeonPart.HasAvailableEntryPoint(out Transform room2Entrypoint))//생성한 복도에 랜덤한 입구 고르기
-                        {
-                            generatedRooms.Add(dungeonPart);//생성한 복도에서 알맞은 입구를 골랐으면 생성한 복도를 generatedRooms(생성한 방 리스트)에 추가
-                            doorToAlign.transform.position = room1EntryPoint.transform.position;//맞는 위치에 맞추기
-                            doorToAlign.transform.rotation = room1EntryPoint.transform.rotation;
-                            AlignRooms(randomGeneratedRoom.transform, generatedHallway.transform, room1EntryPoint, room2Entrypoint); //방 정렬 (첫번째 방, 지금 생성한 복도,
-                                                                                                                                     //첫번째 방 입구, 지금 생성한 복도 입구)
-                            if (HandleIntersection(dungeonPart)) //위치가 미리 생성한 방이랑 곂친다던가 하는 문제가 있을 시 되돌리는 부분인거 같은데
-                            {
-                                dungeonPart.UnuseEntrypoint(room2Entrypoint);
-                                randomGeneratedRoom.UnuseEntrypoint(room1EntryPoint);
-                                //그래서 생성한 방 언제 지움?
-                                RetryPlacement(generatedHallway, doorToAlign); //일단 재귀함수로 새로운 방, 새로운 입구 찾기
-                                continue;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    GameObject generatedRoom;
-                    if (specialRooms.Count > 0) // 특별한 방이 만들 생각이 있을 경우
-                    {
-                        bool shouldPlaceSpecialRoom = UnityEngine.Random.Range(0f, 1f) > 0.9f;//10프로 확률로 특별한 방이 생성됨 -> 난 그냥 하나씩 만들까 할듯
-                        if (shouldPlaceSpecialRoom)
-                        {
-                            int randomIndex = UnityEngine.Random.Range(0, specialRooms.Count); //특별한 방 만들기
-                            generatedRoom = Instantiate(specialRooms[randomIndex], transform.position, transform.rotation);
-                        }
-                        else
-                        {
-                            int randomIndex = UnityEngine.Random.Range(0, rooms.Count); //평범한 방 만들기
-                            generatedRoom = Instantiate(rooms[randomIndex], transform.position, transform.rotation);
-                        }
-                    }
-                    else // 아닐 경우 (특별한 방 만들 생각 없음)
-                    {
-                        int randomIndex = UnityEngine.Random.Range(0, rooms.Count);
-                        generatedRoom = Instantiate(rooms[randomIndex], transform.position, transform.rotation);
-                    }
-
-                    generatedRoom.transform.SetParent(null);
-                    if (generatedRoom.TryGetComponent<DungeonPart>(out DungeonPart dungeonPart))//생성한 방 위치 설정
-                    {
-                        //dungeonPart.GetNetworkObject().Spawn(true); //멀티플레이 요소
-                        if (dungeonPart.HasAvailableEntryPoint(out Transform room2Entrypoint))
-                        {
-                            generatedRooms.Add(dungeonPart);
-                            doorToAlign.transform.position = room1EntryPoint.transform.position;
-                            doorToAlign.transform.rotation = room1EntryPoint.transform.rotation;
-                            AlignRooms(randomGeneratedRoom.transform, generatedRoom.transform, room1EntryPoint, room2Entrypoint);
-
-                            if (HandleIntersection(dungeonPart))
-                            {
-                                dungeonPart.UnuseEntrypoint(room2Entrypoint);
-                                randomGeneratedRoom.UnuseEntrypoint(room1EntryPoint);
-                                RetryPlacement(generatedRoom, doorToAlign);
-                                continue;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }*/
 
     private void RetryPlacement(GameObject itemToPlace, GameObject doorToPlace)
     {
@@ -750,39 +336,11 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
         return didIntersect;
     }
-    //기존 코드
-    /*private bool HandleIntersection(DungeonPart dungeonPart)// 생성한 방(혹은 복도)가 서로 곂치는지 확인
-    {
-        bool didIntersect = false;
-        Collider[] hits = Physics.OverlapBox(dungeonPart.collider.bounds.center, dungeonPart.collider.bounds.size / 2, Quaternion.identity, roomsLayerMask);
-
-        foreach(Collider hit in hits)
-        {
-            *//*if (hit == dungeonPart.collider) continue;
-            if(hit != dungeonPart.collider)
-            {
-                didIntersect = true;
-                break;
-            }*//*
-            if (hit != dungeonPart.collider) // 자기 자신과 충돌이 아닌 경우만 검사
-            {
-                didIntersect = true;
-                break;
-            }
-        }
-        return didIntersect;
-    }*/
+  
 
     private void AlignRooms(Transform room2, Transform room1Entry, Transform room2Entry) // room1과 room2의 입구가 정확하게 일치하게 만드는것 room1은 사용 안함 room1Entry만 필요
     {
-        //영상에 나온 코드
-        /*float angle = Vector3.Angle(room1Entry.forward, room2Entry.forward);
 
-        room2.TransformPoint(room2Entry.position);
-        room2.eulerAngles = new Vector3(room2.eulerAngles.x, room2.eulerAngles.y + angle, room2.eulerAngles.z);
-        Vector3 offset = room1Entry.position - room2Entry.position;
-
-        room2.position += offset;*/
 
         //두 입구의 위치를 정확하게 일치시킴
         Vector3 offset = room1Entry.position - room2Entry.position;
@@ -792,8 +350,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         room2.RotateAround(room2Entry.position, Vector3.up , angle);
         room2.RotateAround(room2Entry.position, Vector3.up, 180f);
 
-        /*float angle = Vector3.SignedAngle(room2Entry.forward, -room1Entry.forward, Vector3.up);
-        room2.Rotate(0, angle, 0, Space.World);*/
+
 
 
         Physics.SyncTransforms();//유니티에서 Collider가 들어있는 오브젝트가 움직일 때 제대로 동기화가 안될 때가 있음
@@ -802,10 +359,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     public List<DungeonPart> GetGeneratedRooms() => generatedRooms;
     public bool IsGenerated() => isGenerated;
 
-    private void FillEmptyEntrances()
-    {
-        generatedRooms.ForEach(room => room.FillEmptyDoors());
-    }
+
 
 
     private bool AlignEntry(Transform room1EntryPoint, DungeonPart room2)
@@ -866,8 +420,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     IEnumerator ResetPlayerPosition()
     {
         yield return new WaitForSeconds(1f);
-        /*Debug.LogError($"player position {player_.transform.position}");
-        player_.transform.position = playerSpawnDungeonPart.spawnPoint.position;*/
+
         SetPlayer();
     }
 
@@ -881,6 +434,39 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         playerController.SetMainCamera(mainCamera);
         InventoryController.Instance.SetPlayerInventory();
     }
+
+    public enum NetworkEventCode : byte
+    {
+        RequestPlayerSpawn = 1,
+        SendPlayerSpawnPosition = 2,
+    }
+    public void RequestPlayerSpawn()
+    {
+        PhotonNetwork.RaiseEvent(
+            (byte)NetworkEventCode.RequestPlayerSpawn,
+            PhotonNetwork.LocalPlayer.ActorNumber, // 클라이언트 식별용
+            new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient },
+            SendOptions.SendReliable
+        );
+    }
+
+    public void StartClientAfterMapReady(int spawnRoomIndex)
+    {
+        surface.BuildNavMesh();
+
+        if (generatedRooms.Count > spawnRoomIndex)
+        {
+            playerSpawnDungeonPart = generatedRooms[spawnRoomIndex];
+        }
+        else
+        {
+            Debug.LogWarning("스폰 룸 인덱스 유효하지 않음, 임의 선택");
+            playerSpawnDungeonPart = generatedRooms[UnityEngine.Random.Range(0, generatedRooms.Count)];
+        }
+
+        PlayerSpawn(); // 기존 방식
+    }
+
 
     //TODO player Setting
 

@@ -23,18 +23,19 @@ public class DungeonPart : MonoBehaviour
     }
     [SerializeField] private LayerMask roomsLayermask;
     [SerializeField] public DungeonPartType dungeonPartType;
-    [SerializeField] GameObject fillerWall; //������ �� �����ǰ� ������ ���� �� �Ա��� �̰ɷ� ä�� -> ������ ����� ������ �Ҵ��ؾ� ��
+    [SerializeField] GameObject fillerWall; 
     [SerializeField] public RoomUse roomUse;
     [SerializeField] List<ItemRandomSpawner> spawnItemList;
     [SerializeField] List<MonsterRandomSpawner> spawnMonsterList;
     [SerializeField] public List<Collider> colliderList;
     [SerializeField] public List<Transform> playerSpawnPoints;
+    
     // chest object randomSpawn List
     //TODO EnemySpawn Point functiion
-    public List<Transform> entryPoints; // �濡 �ִ� ��
+    public List<Transform> entryPoints;
     //public new Collider collider; 
                      
-    public bool HasAvailableEntryPoint(out Transform entrypoint)//Entrypoint���� Ȯ���ϰ� �Ҵ� �ȵ�(�ٸ� ��, ������ ������ �ȵ�) entryPoint�� �����ϴ� 
+    public bool HasAvailableEntryPoint(out Transform entrypoint)
     {
         Transform resultingEntry = null;
         bool result = false;//ã�Ҵ��� �ƴ��� ���

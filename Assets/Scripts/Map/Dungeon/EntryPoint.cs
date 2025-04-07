@@ -14,12 +14,13 @@ public class EntryPoint : MonoBehaviour
         TrapRoom,
 
     }
-    [Header("연결되어야 하는 방 타입 (상관 없을경우 None)")]
+    [Header("연결 되어야 하는 방 타입 (상관 없을경우 None)")]
     public NeedRoomType needRoomType;
     [Header("입구")]
     [SerializeField] GameObject entrance;
     [Header("연결 된 방이 없을 경우 대체 할 벽")]
     [SerializeField] GameObject wallObject;
+    [SerializeField] public SerializableArray<NeedRoomType, float> needRoomArray;
 
     //occupied  사용중인
     private bool isOccupied = false;

@@ -116,7 +116,7 @@ public class PlayerInventoryDB : MonoBehaviour
                 item.quantity = System.Convert.ToInt32(dict["quantity"]);
                 item.durability = float.Parse(dict["durability"].ToString());
 
-                InventoryController.Instance.LoadInventoryItem(item);
+                //InventoryController.Instance.LoadInventoryItem(item);
             }
 
         });

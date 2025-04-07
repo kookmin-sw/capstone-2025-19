@@ -354,7 +354,7 @@ public class InventoryController : Singleton<InventoryController>
         }*/
     }
 
-    public void LoadInventoryItem(PlayerInventoryDB.InventoryItem inventoryItem)
+    public void LoadInventoryItem(VillageManager.DBItem inventoryItem)
     {
         Debug.Log($"아이템 로드중... {inventoryItem.itemName}");
         Item item = new Item(Resources.Load<ItemData>($"ItemData/{inventoryItem.itemName}"), inventoryItem.quantity, inventoryItem.durability);
@@ -364,14 +364,14 @@ public class InventoryController : Singleton<InventoryController>
         //TODO insert InventoryPanel
     }
 
-    public void LoadWareHouseItem(WareHouseDB.WareHouseItem wareHouseItem)
+    public void LoadWareHouseItem(VillageManager.DBItem wareHouseItem)
     {
         Debug.Log($"아이템 로드중... {wareHouseItem.itemName}");
         //TODO create itemIcon
         //TODO insert InventoryPanel
     }
 
-    public void LoadEquippedItem(WeaponDbSync.WearableItemDB equippedItem)
+    public void LoadEquippedItem(VillageManager.DBItem equippedItem)
     {
         Debug.Log($"착용 아이템 로드중... {equippedItem.itemName}");
         Item item = new Item(Resources.Load<ItemData>($"ItemData/{equippedItem.itemName}"), 1, equippedItem.durability);

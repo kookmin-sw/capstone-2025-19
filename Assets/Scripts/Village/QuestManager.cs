@@ -144,108 +144,17 @@ public class QuestManager : Singleton<QuestManager>
         }
     }
 
-    // Firebase에서 저장된 퀘스트를 불러와 playerQuestList에 추가
-    void LoadPlayerQuests()
+    
+    
+    //for VillageManager
+    public void AddQuestToUI(Quest loadedQuest)
     {
-        var auth = FirebaseManager.Instance.Auth;
-        var db = FirebaseManager.Instance.Db;
-        var user = auth.CurrentUser;
-        CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
-        questCollection.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("퀘스트 불러오기 실패: " + task.Exception);
-            }
-            else
-            {
-                QuerySnapshot snapshot = task.Result;
-                foreach (DocumentSnapshot doc in snapshot.Documents)
-                {
-                    Dictionary<string, object> questData = doc.ToDictionary();
-
-                    string questTitle = questData["title"].ToString();
-                    string questTypeStr = questData["type"].ToString();
-                    Quest.QuestType questType = (Quest.QuestType)System.Enum.Parse(typeof(Quest.QuestType), questTypeStr);
-                    string target = questData["target"].ToString();
-                    int score = int.Parse(questData["score"].ToString());
-                    string result = questData["result"].ToString();
-                    int reward = int.Parse(questData["reward"].ToString());
-                    int progress = int.Parse(questData["progress"].ToString());
-                    bool isCompleted = bool.Parse(questData["isCompleted"].ToString());
-
-                    Quest loadedQuest = new Quest(questTitle, questType, target, score, result, reward);
-                    loadedQuest.progress = progress;
-                    loadedQuest.isCompleted = isCompleted;
-
-                    // 불러온 퀘스트를 UI에 추가
-                    GameObject questListGO = Instantiate(questListObject);
-                    questListGO.GetComponent<QuestList>().createQuest(loadedQuest);
-                    questListGO.transform.parent = playerQuestListPanel.transform;
-                    playerQuestList.Add(questListGO.GetComponent<QuestList>());
-                }
-                Debug.Log("Firestore에서 퀘스트 불러오기 완료!");
-            }
-        });
+        GameObject questListGO = Instantiate(questListObject);
+        questListGO.GetComponent<QuestList>().createQuest(loadedQuest);
+        questListGO.transform.parent = playerQuestListPanel.transform;
+        playerQuestList.Add(questListGO.GetComponent<QuestList>());
     }
 
-    // 현재 playerQuestList의 퀘스트 정보를 Firebase에 저장
-    void SavePlayerQuestsToFirebase()
-    {
-        var auth = FirebaseManager.Instance.Auth;
-        var db = FirebaseManager.Instance.Db;
-        var user = auth.CurrentUser;
-        CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
-
-        // 기존 퀘스트 문서 삭제
-        questCollection.GetSnapshotAsync().ContinueWithOnMainThread(deleteTask =>
-        {
-            if (deleteTask.IsFaulted)
-            {
-                Debug.LogError("기존 퀘스트 삭제 실패: " + deleteTask.Exception);
-            }
-            else
-            {
-                QuerySnapshot snapshot = deleteTask.Result;
-                foreach (DocumentSnapshot doc in snapshot.Documents)
-                {
-                    doc.Reference.DeleteAsync();
-                }
-
-                // 현재 남아있는 퀘스트 정보를 저장
-                foreach (QuestList questList in playerQuestList)
-                {
-                    Quest quest = questList.Quest;
-                    Dictionary<string, object> questData = new Dictionary<string, object>()
-                    {
-                        { "id", quest.id },
-                        { "title", quest.title },
-                        { "type", quest.type.ToString() },
-                        { "target", quest.target },
-                        { "score", quest.score },
-                        { "result", quest.result },
-                        { "reward", quest.reward },
-                        { "progress", quest.progress },
-                        { "isCompleted", quest.isCompleted }
-                    };
-
-                    // quest.id를 문서 ID로 사용
-                    DocumentReference questDoc = questCollection.Document(quest.id);
-                    questDoc.SetAsync(questData).ContinueWithOnMainThread(writeTask =>
-                    {
-                        if (writeTask.IsFaulted)
-                        {
-                            Debug.LogError("퀘스트 저장 실패: " + writeTask.Exception);
-                        }
-                        else
-                        {
-                            Debug.Log("퀘스트 저장 완료: " + quest.title);
-                        }
-                    });
-                }
-            }
-        });
-    }
 
 }
 
@@ -283,3 +192,106 @@ public class Quest
     }
 
 }
+
+//// Firebase에서 저장된 퀘스트를 불러와 playerQuestList에 추가s
+//void LoadPlayerQuests()
+//{
+//    var auth = FirebaseManager.Instance.Auth;
+//    var db = FirebaseManager.Instance.Db;
+//    var user = auth.CurrentUser;
+//    CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
+//    questCollection.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+//    {
+//        if (task.IsFaulted)
+//        {
+//            Debug.LogError("퀘스트 불러오기 실패: " + task.Exception);
+//        }
+//        else
+//        {
+//            QuerySnapshot snapshot = task.Result;
+//            foreach (DocumentSnapshot doc in snapshot.Documents)
+//            {
+//                Dictionary<string, object> questData = doc.ToDictionary();
+
+//                string questTitle = questData["title"].ToString();
+//                string questTypeStr = questData["type"].ToString();
+//                Quest.QuestType questType = (Quest.QuestType)System.Enum.Parse(typeof(Quest.QuestType), questTypeStr);
+//                string target = questData["target"].ToString();
+//                int score = int.Parse(questData["score"].ToString());
+//                string result = questData["result"].ToString();
+//                int reward = int.Parse(questData["reward"].ToString());
+//                int progress = int.Parse(questData["progress"].ToString());
+//                bool isCompleted = bool.Parse(questData["isCompleted"].ToString());
+
+//                Quest loadedQuest = new Quest(questTitle, questType, target, score, result, reward);
+//                loadedQuest.progress = progress;
+//                loadedQuest.isCompleted = isCompleted;
+
+//                // 불러온 퀘스트를 UI에 추가
+//                GameObject questListGO = Instantiate(questListObject);
+//                questListGO.GetComponent<QuestList>().createQuest(loadedQuest);
+//                questListGO.transform.parent = playerQuestListPanel.transform;
+//                playerQuestList.Add(questListGO.GetComponent<QuestList>());
+//            }
+//            Debug.Log("Firestore에서 퀘스트 불러오기 완료!");
+//        }
+//    });
+//}
+
+//// 현재 playerQuestList의 퀘스트 정보를 Firebase에 저장
+//void SavePlayerQuestsToFirebase()
+//{
+//    var auth = FirebaseManager.Instance.Auth;
+//    var db = FirebaseManager.Instance.Db;
+//    var user = auth.CurrentUser;
+//    CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
+
+//    // 기존 퀘스트 문서 삭제
+//    questCollection.GetSnapshotAsync().ContinueWithOnMainThread(deleteTask =>
+//    {
+//        if (deleteTask.IsFaulted)
+//        {
+//            Debug.LogError("기존 퀘스트 삭제 실패: " + deleteTask.Exception);
+//        }
+//        else
+//        {
+//            QuerySnapshot snapshot = deleteTask.Result;
+//            foreach (DocumentSnapshot doc in snapshot.Documents)
+//            {
+//                doc.Reference.DeleteAsync();
+//            }
+
+//            // 현재 남아있는 퀘스트 정보를 저장
+//            foreach (QuestList questList in playerQuestList)
+//            {
+//                Quest quest = questList.Quest;
+//                Dictionary<string, object> questData = new Dictionary<string, object>()
+//                {
+//                    { "id", quest.id },
+//                    { "title", quest.title },
+//                    { "type", quest.type.ToString() },
+//                    { "target", quest.target },
+//                    { "score", quest.score },
+//                    { "result", quest.result },
+//                    { "reward", quest.reward },
+//                    { "progress", quest.progress },
+//                    { "isCompleted", quest.isCompleted }
+//                };
+
+//                // quest.id를 문서 ID로 사용
+//                DocumentReference questDoc = questCollection.Document(quest.id);
+//                questDoc.SetAsync(questData).ContinueWithOnMainThread(writeTask =>
+//                {
+//                    if (writeTask.IsFaulted)
+//                    {
+//                        Debug.LogError("퀘스트 저장 실패: " + writeTask.Exception);
+//                    }
+//                    else
+//                    {
+//                        Debug.Log("퀘스트 저장 완료: " + quest.title);
+//                    }
+//                });
+//            }
+//        }
+//    });
+//}

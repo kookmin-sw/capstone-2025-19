@@ -1,20 +1,39 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using Firebase.Firestore;
 using PlayerControl;
 using UnityEngine;
+using Firebase.Auth;
+using Firebase.Extensions;
+using System;
+using static WareHouseDB;
 
 public class VillageManager : MonoBehaviour
 {
+    [Header("Player Spawn")]
     [SerializeField] Transform playerSpawnPosition;
     [SerializeField] GameObject mainCamera;
     [SerializeField] GameObject LoginCanvas;
-
     [SerializeField] CinemachineVirtualCamera loginVirtualCamera;
     [HideInInspector]
     public GameObject playerFollowCamera;
 
-    
+    [System.Serializable]
+    public class DBItem
+    {
+        public string itemDocId;
+        public string itemType;
+        public string itemName;
+        public int quantity;
+        public float durability;
+    }
+
+
+    [Header("Inventory")]
+    public List<DBItem> inventory = new List<DBItem>();
+    public List<DBItem> wareHouseList = new List<DBItem>();
+
 
     void Start()
     {
@@ -31,7 +50,7 @@ public class VillageManager : MonoBehaviour
     public void CloseLoginCanvas()
     {
         LoginCanvas.SetActive(false);
-        Debug.Log("LoginCanvas ����� �Ϸ�");
+        Debug.Log("LoginCanvas 지우기 완료");
     }
 
     public void SpawnPlayer()
@@ -40,24 +59,376 @@ public class VillageManager : MonoBehaviour
         
         player.transform.position = playerSpawnPosition.position;
         InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
-        //TODO Player MainCamera ����
+        //TODO Player MainCamera 생성
         //GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));
         CinemachineVirtualCamera virtualCamera = playerFollowCamera.GetComponent<CinemachineVirtualCamera>();
         virtualCamera.Follow = player.transform.Find("PlayerCameraRoot");
 
         player.GetComponent<PlayerController>().SetMainCamera(mainCamera);
-        //ī�޶� ĳ���Ϳ��Է� ȸ��
+        //카메라 캐릭터에게로 회전
         OnLoginComplete(); 
         CloseLoginCanvas();
     }
 
     public void OnLoginComplete()
     {
-        // 1) �÷��̾� ī�޶� �켱������ ����
         playerFollowCamera.GetComponent<CinemachineVirtualCamera>().Priority = 11;
-
-        // 2) �α��� ī�޶�� �켱������ ���߰ų�
         loginVirtualCamera.Priority = 1;
     }
+
+    /// <summary>
+    /// Firebase Sync Util
+    /// </summary>
+    // Firebase 
+    public void SynchronizeDBtoCash()
+    {
+        //Firebase variable
+        var auth = FirebaseManager.Instance.Auth;
+        var db = FirebaseManager.Instance.Db;
+        var user = auth.CurrentUser;
+        if (user == null)
+        {
+            Debug.LogError("User is null");
+            return;
+        }
+
+        // Synchronize PlayerStatus
+
+        // Synchronize PlayerQuest
+        QuestDBtoCash(auth, db, user);
+
+        // Synchronize money 
+        MoneyDBtoCash(auth, db, user);
+
+        // Synchronize PlayerInventory 
+        InventoryDBtoCash(auth, db, user);
+
+        // Synchronize Weapon DB
+
+        // Synchronize WareHouse DB
+    }
+
+    // PlayerStatus Sync
+
+    // PlayerQuest Sync
+    public void QuestCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
+
+        // 기존 퀘스트 문서 삭제
+        questCollection.GetSnapshotAsync().ContinueWithOnMainThread(deleteTask =>
+        {
+            if (deleteTask.IsFaulted)
+            {
+                Debug.LogError("QuestCashtoDB 실패: " + deleteTask.Exception);
+            }
+            else
+            {
+                QuerySnapshot snapshot = deleteTask.Result;
+                foreach (DocumentSnapshot doc in snapshot.Documents)
+                {
+                    doc.Reference.DeleteAsync();
+                }
+
+                // 현재 남아있는 퀘스트 정보를 저장
+                foreach (QuestList questList in QuestManager.Instance.playerQuestList)
+                {
+                    Quest quest = questList.Quest;
+                    Dictionary<string, object> questData = new Dictionary<string, object>()
+                    {
+                        { "id", quest.id },
+                        { "title", quest.title },
+                        { "type", quest.type.ToString() },
+                        { "target", quest.target },
+                        { "score", quest.score },
+                        { "result", quest.result },
+                        { "reward", quest.reward },
+                        { "progress", quest.progress },
+                        { "isCompleted", quest.isCompleted }
+                    };
+
+                    // quest.id를 문서 ID로 사용
+                    DocumentReference questDoc = questCollection.Document(quest.id);
+                    questDoc.SetAsync(questData).ContinueWithOnMainThread(writeTask =>
+                    {
+                        if (writeTask.IsFaulted)
+                        {
+                            Debug.LogError("퀘스트 저장 실패: " + writeTask.Exception);
+                        }
+                        else
+                        {
+                            Debug.Log("퀘스트 저장 완료: " + quest.title);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void QuestDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
+        questCollection.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("퀘스트 불러오기 실패: " + task.Exception);
+            }
+            else
+            {
+                QuerySnapshot snapshot = task.Result;
+                foreach (DocumentSnapshot doc in snapshot.Documents)
+                {
+                    Dictionary<string, object> questData = doc.ToDictionary();
+
+                    string questTitle = questData["title"].ToString();
+                    string questTypeStr = questData["type"].ToString();
+                    Quest.QuestType questType = (Quest.QuestType)System.Enum.Parse(typeof(Quest.QuestType), questTypeStr);
+                    string target = questData["target"].ToString();
+                    int score = int.Parse(questData["score"].ToString());
+                    string result = questData["result"].ToString();
+                    int reward = int.Parse(questData["reward"].ToString());
+                    int progress = int.Parse(questData["progress"].ToString());
+                    bool isCompleted = bool.Parse(questData["isCompleted"].ToString());
+
+                    Quest loadedQuest = new Quest(questTitle, questType, target, score, result, reward);
+                    loadedQuest.progress = progress;
+                    loadedQuest.isCompleted = isCompleted;
+
+                    // 불러온 퀘스트를 UI에 추가
+                    QuestManager.Instance.AddQuestToUI(loadedQuest);
+                }
+                Debug.Log("Firestore에서 퀘스트 불러오기 완료!");
+            }
+        });
+    }
+
+    // Money Sync
+    public void MoneyDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
+        moneyRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load money: " + task.Exception);
+                return;
+            }
+            var snapshot = task.Result;
+            if (snapshot.Exists && snapshot.ContainsField("money"))
+            {
+                int money = Convert.ToInt32(snapshot.GetValue<long>("money"));
+                InventoryController.Instance.money = money;
+                Debug.Log("Money loaded: " + money);
+            }
+            else
+            {
+                Debug.Log("No money field in user document. Setting money to 0.");
+                InventoryController.Instance.money = 0;
+            }
+        });
+    }
+
+    public void MoneyCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
+        Dictionary<string, object> moneyData = new Dictionary<string, object>()
+        {
+            {"money", InventoryController.Instance.money}
+        };
+
+        moneyRef.SetAsync(moneyData, SetOptions.MergeAll).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+                Debug.LogError("Failed to sync money: " + task.Exception);
+            else
+                Debug.Log("Money synchronized to DB: " + InventoryController.Instance.money);
+        });
+    }
+
+    //Inventory sync
+    public void InventoryDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        CollectionReference inventoryRef = db.Collection("Users")
+                                             .Document(user.UserId)
+                                             .Collection("Inventory");
+
+        inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load inventory: " + task.Exception);
+                return;
+            }
+            var snapshot = task.Result;
+            inventory.Clear();
+
+            foreach (var doc in snapshot.Documents)
+            {
+                Dictionary<string, object> dict = doc.ToDictionary();
+
+                DBItem item = new DBItem();
+                item.itemDocId = doc.Id;
+                item.itemType = dict["itemType"].ToString();
+                item.itemName = dict["itemName"].ToString();
+                item.quantity = System.Convert.ToInt32(dict["quantity"]);
+                item.durability = float.Parse(dict["durability"].ToString());
+
+                InventoryController.Instance.LoadInventoryItem(item);
+            }
+
+        });
+    }
+
+    public void InventoryCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        //InventoryController.Instance.inventory -> VillageManager.inventory
+        foreach (Item item in InventoryController.Instance.inventory)
+        {
+            AddItemToInventory(item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+        }
+
+        CollectionReference inventoryRef = db.Collection("Users")
+            .Document(user.UserId)
+            .Collection("Inventory");
+
+        inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(loadTask =>
+        {
+            if (loadTask.IsFaulted)
+            {
+                Debug.LogError("Failed to load DB inventory: " + loadTask.Exception);
+                return;
+            }
+
+            QuerySnapshot snapshot = loadTask.Result;
+            HashSet<string> processedDocIds = new HashSet<string>();
+
+
+            foreach (DocumentSnapshot doc in snapshot.Documents)
+            {
+                string docId = doc.Id;
+                DBItem localItem = inventory.Find(i => i.itemDocId == docId);
+
+                if (localItem == null)
+                {
+                    inventoryRef.Document(docId).DeleteAsync();
+                }
+                else
+                {
+                    processedDocIds.Add(docId);
+                    if (localItem.quantity <= 0)
+                    {
+                        inventoryRef.Document(docId).DeleteAsync();
+                    }
+                    else
+                    {
+                        Dictionary<string, object> updateData = new Dictionary<string, object>()
+                        {
+                        {"itemType", localItem.itemType},
+                        {"itemName", localItem.itemName},
+                        {"quantity", localItem.quantity},
+                        {"durability", localItem.durability}
+                        };
+
+                        inventoryRef.Document(docId)
+                                    .SetAsync(updateData, SetOptions.MergeAll)
+                                    .ContinueWithOnMainThread(t =>
+                                    {
+                                        if (t.IsFaulted)
+                                            Debug.LogError("Update failed: " + t.Exception);
+                                        else
+                                            Debug.Log($"[Sync] ������ ����: {docId} => qty={localItem.quantity}, dur={localItem.durability}");
+                                    });
+                    }
+                }
+            }
+
+
+            foreach (DBItem localItem in inventory)
+            {
+                if (!processedDocIds.Contains(localItem.itemDocId))
+                {
+                    DocumentReference newDocRef = inventoryRef.Document(localItem.itemDocId);
+                    Dictionary<string, object> newData = new Dictionary<string, object>()
+                {
+                    {"itemType", localItem.itemType},
+                    {"itemName", localItem.itemName},
+                    {"quantity", localItem.quantity},
+                    {"durability", localItem.durability}
+                };
+
+                    newDocRef.SetAsync(newData).ContinueWithOnMainThread(t =>
+                    {
+                        if (t.IsFaulted)
+                            Debug.LogError("New item add failed: " + t.Exception);
+                        else
+                            Debug.Log("Sync 완료");
+
+                    });
+                }
+            }
+
+            Debug.Log("[Sync! (No Coroutine)");
+        });
+    }
+
+    //Inventory func zip
+    public void AddItemToInventory(string itemName, string itemType, int addQuantity = 1, float addDurability = 1f)
+    {
+        Debug.Log($"itemType {itemType}");
+        if (itemType.Equals("Equipment"))
+        {
+
+            for (int i = 0; i < addQuantity; i++)
+            {
+                string uniqueId = System.Guid.NewGuid().ToString();
+
+                DBItem newEquip = new DBItem()
+                {
+                    itemDocId = uniqueId,
+                    itemName = itemName,
+                    quantity = 1,
+                    durability = addDurability
+                };
+                inventory.Add(newEquip);
+            }
+        }
+        else
+        {
+
+            DBItem existing = inventory.Find(i => i.itemName == itemName);
+            if (existing != null)
+            {
+
+                existing.quantity += addQuantity;
+            }
+            else
+            {
+
+                string uniqueId = System.Guid.NewGuid().ToString();
+
+
+                DBItem newItem = new DBItem()
+                {
+                    itemDocId = uniqueId,
+                    itemName = itemName,
+                    itemType = itemType,
+                    quantity = addQuantity,
+                    durability = addDurability
+                };
+                Debug.Log($"AddItem : {newItem.itemName}, {newItem.durability}");
+                inventory.Add(newItem);
+            }
+        }
+    }
+
+    // WeaponDB Sync
+
+    // WareHouseDB Sync
+    public void WareHouseCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+
+    }
+
 }

@@ -126,6 +126,7 @@ public class AccountManager : MonoBehaviour
                     Debug.Log($"Sign in success! UID: {user.UserId}");
                     FirebaseManager.Instance.isLoginComplete = true;
                     VillageManager.GetComponent<VillageManager>().SpawnPlayer();
+                    VillageManager.GetComponent<VillageManager>().SynchronizeDBtoCash();
                 }
             });     
     }

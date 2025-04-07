@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float waypointDwellingTime = 2f;
     [SerializeField] [Range(0.2f, 10)] float waypointTolerance = 2f;
 
+    EnemyState enemyState;
     Animator animator;
     Vector3 spawnPosition;
     NavMeshAgent agent;
@@ -43,6 +44,7 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();
         enemyDetection = this.GetComponent<EnemyDetection>();
+        enemyState = this.GetComponent<EnemyState>();
     }
 
     private void Start()
@@ -57,7 +59,7 @@ public class EnemyController : MonoBehaviour
             //Find closest player
             target = enemyDetection.GetClosestPlayer();
         }
-        if (animator.GetBool("IsInteracting")) return;
+        //if (animator.GetBool("IsInteracting")) return;
 
         float distanceToPlayer = CalculDistance();
 
@@ -151,7 +153,8 @@ public class EnemyController : MonoBehaviour
         inCoroutine = true;
         float waitTime = Random.Range(attackWaitTime, attackWaitTime * 2);
         yield return new WaitForSeconds(waitTime);
-        animator.SetBool("IsInteracting", true);
+        //animator.SetBool("IsInteracting", true);
+        enemyState.state = EnemyState.State.Invincible;
         animator.SetTrigger("ExitBattleIdle");
        
         inCoroutine = false;

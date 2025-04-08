@@ -17,12 +17,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float attackDistance;
     [SerializeField] float chaseDistance = 10f;
     [SerializeField] int maxPatterns = 1;
+    [SerializeField] float attackWaitTime;
 
     [Header("Patrol Settings")]
     [SerializeField] PatrolPath patrolPath;
     [SerializeField] float waypointDwellingTime = 2f;
     [SerializeField] [Range(0.2f, 10)] float waypointTolerance = 2f;
 
+    [Header("Die Effect")]
+    [SerializeField] float fadeTime = 3f;
+
+    EnemyState enemyState;
     Animator animator;
     Vector3 spawnPosition;
     NavMeshAgent agent;
@@ -31,12 +36,18 @@ public class EnemyController : MonoBehaviour
     int waypointIndex;
     private float timeSinceArrivedWaypoint = 0;
     private int attackPatternNo = 0;
+    private bool inCoroutine = false;
+
+    //Player Detection test
+    EnemyDetection enemyDetection;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();
+        enemyDetection = GetComponent<EnemyDetection>();
+        enemyState = GetComponent<EnemyState>();
     }
 
     private void Start()
@@ -46,7 +57,13 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        if (animator.GetBool("IsInteracting")) return;
+        if (enemyState.state == EnemyState.State.Die) return;
+        if(target == null)
+        {
+            //Find closest player
+            target = enemyDetection.GetClosestPlayer();
+        }
+        //if (animator.GetBool("IsInteracting")) return;
 
         float distanceToPlayer = CalculDistance();
 
@@ -60,6 +77,8 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            //test
+            target = null;
             if (patrolPath != null)
             {
                 Patrol();
@@ -85,7 +104,7 @@ public class EnemyController : MonoBehaviour
 
     private float CalculDistance()
     {
-        if (agent.CalculatePath(target.position, path))
+        if (target != null && agent.CalculatePath(target.position, path))
         {
             distance = 0f;
             for (int i = 0; i < path.corners.Length - 1; i++)
@@ -116,6 +135,8 @@ public class EnemyController : MonoBehaviour
 
     private void Attack()
     {
+        //Think
+        //Is if(animator.GetBool("Attacking")) return; need?
         transform.LookAt(target);
 
         agent.isStopped = true;
@@ -126,6 +147,20 @@ public class EnemyController : MonoBehaviour
         animator.SetTrigger("Attack");
         animator.SetInteger("AttackPatternNo", attackPatternNo);
         animator.SetBool("Attacking", true);
+
+        if (inCoroutine) return;
+        StartCoroutine("InBattleIdle");
+    }
+
+    IEnumerator InBattleIdle()
+    {
+        inCoroutine = true;
+        float waitTime = Random.Range(attackWaitTime, attackWaitTime * 2);
+        yield return new WaitForSeconds(waitTime);
+        //animator.SetBool("IsInteracting", true);
+        //enemyState.state = EnemyState.State.Invincible;
+        animator.SetTrigger("ExitBattleIdle");
+        inCoroutine = false;
     }
 
     private void Idle()
@@ -181,5 +216,41 @@ public class EnemyController : MonoBehaviour
         float distanceToWaypoint = Vector3.Distance(transform.position, GetCurrrentWaypoint());
         return distanceToWaypoint < waypointTolerance;
     }
+    #endregion
+
+    #region Dying
+    public void DeathTrigger()
+    {
+        enemyState.state = EnemyState.State.Die;
+        StopAllCoroutines();
+        StartCoroutine(DecayAndVanish(fadeTime));
+        agent.enabled = false;
+    }
+    IEnumerator DecayAndVanish(float fadeTime)
+    {
+        SkinnedMeshRenderer rend = GetComponentInChildren<SkinnedMeshRenderer>();
+        if (rend == null) yield break;
+
+        Material mat = rend.material;
+        Color originalColor = mat.color;
+
+        // URP setting
+        mat.SetFloat("_Surface", 1); // 1 = Transparent
+        mat.SetFloat("_Blend", 0); // Alpha blend
+        mat.SetFloat("_ZWrite", 0);
+        mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+
+        float t = 0f;
+        while (t < fadeTime)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, t / fadeTime);
+            mat.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(gameObject);
+    }
+
     #endregion
 }

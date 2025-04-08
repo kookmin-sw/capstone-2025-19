@@ -14,7 +14,7 @@ public class PlayerHealth : Health
         animationHandler = GetComponent<AnimationHandler>();
     }
 
-    public void TakeDamage(float damage, DamageCollider attackerWeapon, ParticleSystem hitEffect, bool isStun)
+    public void TakeDamage(float damage, DamageCollider attackerWeapon, Vector3 contactPos, ParticleSystem hitEffect, bool isStun)
     {
         DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
 
@@ -25,6 +25,7 @@ public class PlayerHealth : Health
         // #2: when my tenacity is larger than attacker's
         if (attackerWeapon != null && myWeaponCollider != null)
         {
+            print(myWeaponCollider.tenacity +" "+ attackerWeapon.tenacity);
             if (animationHandler.GetBool(AnimationHandler.AnimParam.Attacking) &&
             myWeaponCollider.tenacity > attackerWeapon.tenacity) return;
         }
@@ -42,7 +43,7 @@ public class PlayerHealth : Health
 
         if (hitEffect != null)
         {
-            StartCoroutine(WaitForParticleEnd(hitEffect, myWeaponCollider.transform.position));
+            StartCoroutine(WaitForParticleEnd(hitEffect, contactPos));
         }
         
         if (!isStun) animationHandler.SetTrigger(AnimationHandler.AnimParam.Hit);
@@ -70,7 +71,6 @@ public class PlayerHealth : Health
     IEnumerator WaitForParticleEnd(ParticleSystem particle, Vector3 position)
     {
         ParticleSystem ps = Instantiate(particle, position, Quaternion.identity);
-        print(ps.name);
         ps.Play(); 
 
         while (ps.IsAlive(true))

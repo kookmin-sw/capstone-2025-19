@@ -19,7 +19,7 @@ public class GolemRock : MonoBehaviour
         Vector3 targetPos = target.position;
 
         float height = 2f;
-        float speed = 15f;
+        float speed = 20f;
         
         float distance = Vector3.Distance(startPos, targetPos);
         float duration = distance / speed; 
@@ -45,7 +45,7 @@ public class GolemRock : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            other.GetComponent<PlayerHealth>().TakeDamage(damage, null, null, true);
+            other.GetComponent<PlayerHealth>().TakeDamage(damage, null, Vector3.zero, null, true);
             Destroy(gameObject);
         }
     }

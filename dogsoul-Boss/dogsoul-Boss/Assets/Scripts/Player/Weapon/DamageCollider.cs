@@ -45,14 +45,16 @@ public class DamageCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        Vector3 contactPos = other.ClosestPoint(transform.position);
         if (tag == "PlayerWeapon" && other.tag == "Enemy")
         {
-            other.GetComponent<EnemyHealth>().TakeDamage(damage, this, hitEffect);
+            other.GetComponent<EnemyHealth>().TakeDamage(damage, this, contactPos, hitEffect);
         }
 
         else if (tag =="EnemyWeapon" && other.tag == "Player")
         {
-            other.GetComponent<PlayerHealth>().TakeDamage(damage, this, hitEffect, false);
+            
+            other.GetComponent<PlayerHealth>().TakeDamage(damage, this, contactPos, hitEffect, false);
         }
     }
 }

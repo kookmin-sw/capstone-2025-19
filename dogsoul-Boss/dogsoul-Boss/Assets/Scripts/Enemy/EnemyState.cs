@@ -8,7 +8,8 @@ public class EnemyState : MonoBehaviour
     public enum State
     {
         Idle,
-        Invincible
+        Invincible,
+        Die
     }
 
     public State state;

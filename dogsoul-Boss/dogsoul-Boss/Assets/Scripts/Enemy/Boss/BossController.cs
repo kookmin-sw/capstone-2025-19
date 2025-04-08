@@ -168,7 +168,7 @@ public class BossController : MonoBehaviour
         Vector3 startPos = transform.position;
         Vector3 targetPos = target.position;
 
-        float jumpHeight = 6f;
+        float jumpHeight = 5f;
         float duration = 1.1f;
         float time = 0f;
 
@@ -202,7 +202,7 @@ public class BossController : MonoBehaviour
         {
             if (hit.CompareTag("Player"))
             {
-                hit.GetComponent<PlayerHealth>().TakeDamage(jumpDamage, null, null, true);
+                hit.GetComponent<PlayerHealth>().TakeDamage(jumpDamage, null, Vector3.zero, null, true);
                 
             }
         }

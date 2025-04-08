@@ -60,6 +60,11 @@ namespace PlayerControl
 
             if (isFindTarget)
             {
+                if (currentTarget == null)
+                {
+                    ResetTarget();
+                    return;
+                }
                 if(IsTargetRange())
                 {
                     LookAtTarget();

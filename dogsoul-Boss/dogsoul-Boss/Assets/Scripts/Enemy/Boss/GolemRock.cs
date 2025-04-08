@@ -5,10 +5,12 @@ using UnityEngine;
 public class GolemRock : MonoBehaviour
 {
     Transform target;
+    public float damage = 30f;
     void Start()
     {
         target = GameObject.FindWithTag("Player").transform;
         if (target != null) StartCoroutine(Rock());
+        
     }
 
     IEnumerator Rock()
@@ -16,15 +18,19 @@ public class GolemRock : MonoBehaviour
         Vector3 startPos = transform.position;
         Vector3 targetPos = target.position;
 
-        float jumpHeight = 2f;
-        float duration = 1.1f;
+        float height = 2f;
+        float speed = 15f;
+        
+        float distance = Vector3.Distance(startPos, targetPos);
+        float duration = distance / speed; 
         float time = 0f;
+
 
         while (time < duration)
         {
             float t = time / duration;
             Vector3 currentPos = Vector3.Lerp(startPos, targetPos, t);
-            currentPos.y += Mathf.Sin(Mathf.PI * t) * jumpHeight;
+            currentPos.y += Mathf.Sin(Mathf.PI * t) * height;
 
             transform.position = currentPos;
 
@@ -39,6 +45,7 @@ public class GolemRock : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            other.GetComponent<PlayerHealth>().TakeDamage(damage, null, null, true);
             Destroy(gameObject);
         }
     }

@@ -11,6 +11,7 @@ public class DamageCollider : MonoBehaviour
 
     public float damage;
     public float tenacity;
+    public ParticleSystem hitEffect;
     public bool dontOpenCollider = false;
     public bool isRanged;
 
@@ -31,7 +32,6 @@ public class DamageCollider : MonoBehaviour
         }
         else
         {
-            print("Attack Canceled");
             dontOpenCollider = false;
         }
     }
@@ -41,5 +41,18 @@ public class DamageCollider : MonoBehaviour
         damageCollider.enabled = false;
         dontOpenCollider = false;
         if (trailRenderer != null) trailRenderer.SetActive(false);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (tag == "PlayerWeapon" && other.tag == "Enemy")
+        {
+            other.GetComponent<EnemyHealth>().TakeDamage(damage, this, hitEffect);
+        }
+
+        else if (tag =="EnemyWeapon" && other.tag == "Player")
+        {
+            other.GetComponent<PlayerHealth>().TakeDamage(damage, this, hitEffect, false);
+        }
     }
 }

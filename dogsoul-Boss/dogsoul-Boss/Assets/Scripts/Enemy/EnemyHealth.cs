@@ -13,54 +13,67 @@ public class EnemyHealth : Health
         enemyState = GetComponent<EnemyState>();
     }
 
-    void OnTriggerEnter(Collider collision)
+    public void TakeDamage(float damage, DamageCollider attackerWeapon, ParticleSystem hitEffect)
     {
-        if (collision.tag == "PlayerWeapon")
+        DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
+        
+        #region Escape
+        // when Enemy is invincible
+        if (enemyState.state == EnemyState.State.Invincible) return;
+
+        if (attackerWeapon != null && myWeaponCollider !=null)
         {
-            #region Escape
-            // when Enemy is invincible
-            if (enemyState.state == EnemyState.State.Invincible)
+            if (animator.GetBool("Attacking") &&(myWeaponCollider.tenacity > attackerWeapon.tenacity) ) return;
+        }
+        #endregion
+
+        #region Hit
+        currentHealth -= damage;
+
+        if (myWeaponCollider != null)
+        {
+            myWeaponCollider.dontOpenCollider = true;
+            if (myWeaponCollider.damageCollider.enabled) myWeaponCollider.UnableDamageCollider();
+        }
+
+        if (hitEffect != null)
+        {
+            StartCoroutine(WaitForParticleEnd(hitEffect, myWeaponCollider.transform.position));
+        }
+    
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == "Hit")
             {
-                //print("Invincible");
-                return;
+                animator.SetTrigger("Hit");
+                enemyState.state = EnemyState.State.Invincible;
+                break;
             }
+        }
+        #endregion
 
-            DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
-            DamageCollider opponentWeaponCollider = collision.GetComponent<DamageCollider>();
-
-            if (animator.GetBool("Attacking"))
-            {
-                // when my weapon is more heavier
-                if (myWeaponCollider.tenacity > opponentWeaponCollider.tenacity)
-                {
-                    //print("Tenacity wins");
-                    return;
-                }
-
-                else
-                {
-                    //myWeaponCollider.dontOpenCollider = true;
-                    if (myWeaponCollider.damageCollider.enabled)
-                    {
-                        myWeaponCollider.UnableDamageCollider();
-                    }
-                }
-            }
-            #endregion
-
-            #region Hit
-            currentHealth -= opponentWeaponCollider.damage;
-            animator.SetTrigger("Hit");
-            enemyState.state = EnemyState.State.Invincible;
-            #endregion
-
-            // die
-            if (currentHealth <= 0)
-            {
-                currentHealth = 0;
-                animator.SetTrigger("Die");
-            }
-
+        // die
+        if (currentHealth <= 0)
+        {
+            animator.ResetTrigger("Hit");
+            currentHealth = 0;
+            animator.SetTrigger("Die");
         }
     }
+
+
+    IEnumerator WaitForParticleEnd(ParticleSystem particle, Vector3 position)
+    {
+        ParticleSystem ps = Instantiate(particle, position, Quaternion.identity);
+        print(ps.name);
+        ps.Play(); 
+
+        while (ps.IsAlive(true))
+        {
+            yield return null;
+        }
+
+        Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
+    }
+
 }

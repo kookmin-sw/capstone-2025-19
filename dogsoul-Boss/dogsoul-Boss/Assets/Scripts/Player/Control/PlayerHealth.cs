@@ -14,27 +14,39 @@ public class PlayerHealth : Health
         animationHandler = GetComponent<AnimationHandler>();
     }
 
-    public void TakeDamage(float damage, GameObject attacker)
+    public void TakeDamage(float damage, DamageCollider attackerWeapon, ParticleSystem hitEffect, bool isStun)
     {
         DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
-        DamageCollider opponentWeaponCollider = attacker.GetComponent<DamageCollider>();
 
         #region CancelCases
         // #1: when entity is invincible
         if (PlayerState.Instance.state == PlayerState.State.Invincible) return;
 
         // #2: when my tenacity is larger than attacker's
-        if (animationHandler.GetBool(AnimationHandler.AnimParam.Attacking) &&
-            myWeaponCollider.tenacity > opponentWeaponCollider.tenacity) return;
+        if (attackerWeapon != null && myWeaponCollider != null)
+        {
+            if (animationHandler.GetBool(AnimationHandler.AnimParam.Attacking) &&
+            myWeaponCollider.tenacity > attackerWeapon.tenacity) return;
+        }
+        
         #endregion
         
         #region Hit
-        currentHealth -= opponentWeaponCollider.damage;
+        currentHealth -= damage;
 
-        myWeaponCollider.dontOpenCollider = true;
-        if (myWeaponCollider.damageCollider.enabled) myWeaponCollider.UnableDamageCollider();
+        if (myWeaponCollider != null)
+        {
+            myWeaponCollider.dontOpenCollider = true;
+            if (myWeaponCollider.damageCollider.enabled) myWeaponCollider.UnableDamageCollider();
+        }
 
-        animationHandler.SetTrigger(AnimationHandler.AnimParam.Hit);
+        if (hitEffect != null)
+        {
+            StartCoroutine(WaitForParticleEnd(hitEffect, myWeaponCollider.transform.position));
+        }
+        
+        if (!isStun) animationHandler.SetTrigger(AnimationHandler.AnimParam.Hit);
+        else animationHandler.SetTrigger(AnimationHandler.AnimParam.Stun);
         PlayerState.Instance.state = PlayerState.State.Invincible;
         animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
         animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
@@ -54,6 +66,18 @@ public class PlayerHealth : Health
             currentHealth = 0;
             animationHandler.SetTrigger(AnimationHandler.AnimParam.Die);
         }
+    }
+    IEnumerator WaitForParticleEnd(ParticleSystem particle, Vector3 position)
+    {
+        ParticleSystem ps = Instantiate(particle, position, Quaternion.identity);
+        print(ps.name);
+        ps.Play(); 
 
+        while (ps.IsAlive(true))
+        {
+            yield return null;
+        }
+
+        Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
     }
 }

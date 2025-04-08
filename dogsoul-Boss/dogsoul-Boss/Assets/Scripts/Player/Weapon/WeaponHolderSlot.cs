@@ -49,6 +49,7 @@ public class WeaponHolderSlot : MonoBehaviour
             DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();    
             weaponCollider.damage = weaponStats.damage;
             weaponCollider.tenacity = weaponStats.tenacity;
+            weaponCollider.hitEffect = weaponStats.hitEffect;
             weaponCollider.tag = transform.root.tag == "Player" ? "PlayerWeapon" : "EnemyWeapon";
         }
         

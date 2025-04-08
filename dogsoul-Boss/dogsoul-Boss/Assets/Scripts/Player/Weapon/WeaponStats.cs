@@ -11,6 +11,7 @@ public class WeaponStats : ScriptableObject
     public float damage;
     public bool isRanged;
     public GameObject projectile;
+    public ParticleSystem hitEffect;
     public bool isLeft;
     public float tenacity;
 }

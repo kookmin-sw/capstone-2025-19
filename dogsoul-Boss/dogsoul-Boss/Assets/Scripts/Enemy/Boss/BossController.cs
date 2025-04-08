@@ -17,25 +17,32 @@ public class BossController : MonoBehaviour
     [SerializeField] float rangedThresholdDistance;
     [SerializeField] int attackPatterns = 2;
     [SerializeField] int rangedPatterns = 2;
-    [SerializeField] float attackCool = 0;
+    [SerializeField] float rangedCool = 3f;
 
     [Header("Combats")]
     [SerializeField] GameObject rockPrefab;
     [SerializeField] Transform rockInitPos;
+    [SerializeField] float jumpDamage = 30f;
 
 
     Animator animator;
     Vector3 spawnPosition;
+    EnemyState enemyState;
     NavMeshAgent agent;
     NavMeshPath path;
+    DamageCollider damageCollider;
+
     float distance = Mathf.Infinity;
     private int attackPatternNo = 0;
     private int rangedPatternNo = 0;
+    private float rangedDelta = 0;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        damageCollider = GetComponentInChildren<DamageCollider>();
+        enemyState = GetComponent<EnemyState>();
         path = new NavMeshPath();
 
         agent.speed = basicSpeed;
@@ -62,9 +69,19 @@ public class BossController : MonoBehaviour
         }
         else if (distanceToPlayer > rangedThresholdDistance)
         {
-            RangedAttack();
+            if (rangedDelta <= 1)
+            {
+                RangedAttack();
+            }
+            else
+            {
+                Chase();
+            }
         }
-        
+        if (rangedDelta > 0)
+        {
+            rangedDelta -= Time.deltaTime;
+        }
     }
 
     private float CalculDistance()
@@ -82,7 +99,6 @@ public class BossController : MonoBehaviour
 
     private void Chase()
     {
-        print("Chase");
         agent.isStopped = false;
         agent.SetDestination(target.position);
 
@@ -92,7 +108,6 @@ public class BossController : MonoBehaviour
 
     private void Attack()
     {
-        print("Attack");
         transform.LookAt(target);
 
         agent.isStopped = true;
@@ -102,13 +117,24 @@ public class BossController : MonoBehaviour
         attackPatternNo = Random.Range(0, attackPatterns);
         animator.SetTrigger("Attack");
         animator.SetInteger("AttackPatternNo", attackPatternNo);
+        animator.SetBool("IsInteracting", true);
         animator.SetBool("Attacking", true);
     }
+
+    #region Attack
+    public void EnableAttack()
+    {
+        damageCollider.EnableDamageCollider();
+    }
+    public void UnableAttack()
+    {
+        damageCollider.UnableDamageCollider();
+    }
+    #endregion
 
     #region Ranged Attack
     private void RangedAttack()
     {
-        print("Ranged");
         transform.LookAt(target);
 
         agent.isStopped = true;
@@ -134,6 +160,7 @@ public class BossController : MonoBehaviour
     public void ThrowRock()
     {
         Instantiate(rockPrefab, rockInitPos);
+        rangedDelta = rangedCool + 1f;
     }
 
     IEnumerator JumpCorutine()
@@ -175,13 +202,14 @@ public class BossController : MonoBehaviour
         {
             if (hit.CompareTag("Player"))
             {
-                print("player hits");
+                hit.GetComponent<PlayerHealth>().TakeDamage(jumpDamage, null, null, true);
                 
             }
         }
 
         // 착지 이펙트, 사운드
         // 예: Instantiate(landingEffect, transform.position, Quaternion.identity);
+        rangedDelta = rangedCool;
     }
     #endregion
 

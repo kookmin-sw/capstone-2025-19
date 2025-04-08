@@ -71,22 +71,14 @@ public class WeaponSlotManager : MonoBehaviour
 
     public void OpenRightDamageCollider()
     {
-        rightHandDamageCollider.EnableDamageCollider();
-    }
-
-    public void ShootRight()
-    {
-        rightShooter.Shoot();
+        if (rightHandDamageCollider != null) rightHandDamageCollider.EnableDamageCollider();
+        else if (rightShooter != null) rightShooter.Shoot();
     }
 
     public void OpenLeftDamageCollider()
     {
-        leftHandDamageCollider.EnableDamageCollider();
-    }
-
-    public void ShootLeft()
-    {
-        leftShooter.Shoot();
+        if (leftHandDamageCollider != null) leftHandDamageCollider.EnableDamageCollider();
+        else if (leftShooter != null) leftShooter.Shoot();
     }
 
     public void CloseRightDamageCollider()

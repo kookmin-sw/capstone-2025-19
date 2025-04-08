@@ -19,6 +19,7 @@ public class AnimationHandler : MonoBehaviour
         DashAttack,
         Attacking,
         Hit,
+        Stun,
         Die,
         Rolling,
         UseItem,
@@ -44,6 +45,7 @@ public class AnimationHandler : MonoBehaviour
         animParamIDs[AnimParam.DashAttack] = Animator.StringToHash("DashAttack");
         animParamIDs[AnimParam.Attacking] = Animator.StringToHash("Attacking");
         animParamIDs[AnimParam.Hit] = Animator.StringToHash("Hit");
+        animParamIDs[AnimParam.Stun] = Animator.StringToHash("Stun");
         animParamIDs[AnimParam.Die] = Animator.StringToHash("Die");
         animParamIDs[AnimParam.Rolling] = Animator.StringToHash("Rolling");
         animParamIDs[AnimParam.UseItem] = Animator.StringToHash("UseItem");

@@ -46,7 +46,6 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        print("monster");
         if (animator.GetBool("IsInteracting")) return;
 
         float distanceToPlayer = CalculDistance();

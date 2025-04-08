@@ -37,11 +37,17 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
 
     private DungeonPart playerSpawnDungeonPart;
+    NetworkEventReceiver networkEventReceiver;
 
     [HideInInspector] public NavMeshSurface surface;
 
 
     // Start is called before the first frame update
+    protected override void Awake()
+    {
+        base.Awake();
+        networkEventReceiver = GetComponent<NetworkEventReceiver>();
+    }
     void Start()
     {
         //Add room list;
@@ -72,7 +78,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             {
                 //Waiting host createRoom
                 //SpawnPlayer()
-                RequestPlayerSpawn();
+                networkEventReceiver.RequestPlayerSpawn();
                 NvigationBake();
             }
         }
@@ -435,19 +441,16 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         InventoryController.Instance.SetPlayerInventory();
     }
 
-    public enum NetworkEventCode : byte
+    
+    
+    public void SpawnPlayer_Multiplay(Vector3 spawnPos)
     {
-        RequestPlayerSpawn = 1,
-        SendPlayerSpawnPosition = 2,
+        PhotonNetwork.Instantiate($"Prefabs/Player/DemoPlayer", spawnPos, Quaternion.identity);
     }
-    public void RequestPlayerSpawn()
+
+    public Vector3 GetPlayerSpawnPosition(int index)
     {
-        PhotonNetwork.RaiseEvent(
-            (byte)NetworkEventCode.RequestPlayerSpawn,
-            PhotonNetwork.LocalPlayer.ActorNumber, // 클라이언트 식별용
-            new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient },
-            SendOptions.SendReliable
-        );
+        return playerSpawnDungeonPart.playerSpawnPoints[index+1].position;
     }
 
     public void StartClientAfterMapReady(int spawnRoomIndex)

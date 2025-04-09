@@ -12,7 +12,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public TextMeshProUGUI connectionInfoText; // 네트워크 정보를 표시할 텍스트
     public Button joinButton; // 룸 접속 버튼
-    public string sceneName = "Sandbox";
+    public string sceneName;
 
     // 게임 실행과 동시에 마스터 서버 접속 시도
     private void Start()

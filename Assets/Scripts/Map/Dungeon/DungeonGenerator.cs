@@ -66,7 +66,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     //서버 관련
     public void StartGeneration()
     {
-        if(SceneController.Instance.GetCurrentSceneName() == "Multiplay")
+        if(SceneController.Instance.GetCurrentSceneName() == "MultiplayRoomTestScene")
         {
             if (PhotonNetwork.IsMasterClient)
             {

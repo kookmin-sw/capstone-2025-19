@@ -34,6 +34,7 @@ public class EnemyHealth : Health
         #endregion
 
         #region Hit
+        print("Hit");
         currentHealth -= damage;
         UpdateHpBar();
 

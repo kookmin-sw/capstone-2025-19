@@ -17,12 +17,14 @@ public class BossController : MonoBehaviour
     [SerializeField] float rangedThresholdDistance;
     [SerializeField] int attackPatterns = 2;
     [SerializeField] int rangedPatterns = 2;
-    [SerializeField] float rangedCool = 3f;
 
     [Header("Combats")]
     [SerializeField] GameObject rockPrefab;
     [SerializeField] Transform rockInitPos;
     [SerializeField] float jumpDamage = 30f;
+    [SerializeField] float rangedCool = 3f;
+    [SerializeField] float attackCoolMin = 1f;
+    [SerializeField] float attackCoolMax = 2f; // random max
 
 
     Animator animator;
@@ -35,7 +37,8 @@ public class BossController : MonoBehaviour
     float distance = Mathf.Infinity;
     private int attackPatternNo = 0;
     private int rangedPatternNo = 0;
-    private float rangedDelta = 0;
+    private float attackCoolDelta = 0;
+    private float rangedCoolDelta = 0;
 
     private void Awake()
     {
@@ -61,7 +64,14 @@ public class BossController : MonoBehaviour
 
         if (distanceToPlayer < attackDistance)
         {
-            Attack();
+            if (attackCoolDelta <= 1) 
+            {
+                Attack();
+            }
+            else
+            {
+                Chase();
+            }
         } 
         else if (distanceToPlayer > attackDistance && distanceToPlayer < rangedThresholdDistance)
         {
@@ -69,7 +79,7 @@ public class BossController : MonoBehaviour
         }
         else if (distanceToPlayer > rangedThresholdDistance)
         {
-            if (rangedDelta <= 1)
+            if (rangedCoolDelta <= 1)
             {
                 RangedAttack();
             }
@@ -78,9 +88,14 @@ public class BossController : MonoBehaviour
                 Chase();
             }
         }
-        if (rangedDelta > 0)
+        if (rangedCoolDelta > 0)
         {
-            rangedDelta -= Time.deltaTime;
+            rangedCoolDelta -= Time.deltaTime;
+        }
+
+        if (attackCoolDelta > 0)
+        {
+            attackCoolDelta -= Time.deltaTime;
         }
     }
 
@@ -130,6 +145,10 @@ public class BossController : MonoBehaviour
     {
         damageCollider.UnableDamageCollider();
     }
+    public void AttackCooltime()
+    {
+        attackCoolDelta = Random.Range(attackCoolMin, attackCoolMax);
+    }
     #endregion
 
     #region Ranged Attack
@@ -160,7 +179,10 @@ public class BossController : MonoBehaviour
     public void ThrowRock()
     {
         Instantiate(rockPrefab, rockInitPos);
-        rangedDelta = rangedCool + 1f;
+    }
+    public void RangedCooltime()
+    {
+        rangedCoolDelta = rangedCool;
     }
 
     IEnumerator JumpCorutine()
@@ -209,7 +231,6 @@ public class BossController : MonoBehaviour
 
         // 착지 이펙트, 사운드
         // 예: Instantiate(landingEffect, transform.position, Quaternion.identity);
-        rangedDelta = rangedCool;
     }
     #endregion
 

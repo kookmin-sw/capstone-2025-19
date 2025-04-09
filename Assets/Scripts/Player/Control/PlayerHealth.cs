@@ -25,11 +25,9 @@ public class PlayerHealth : Health
         // #2: when my tenacity is larger than attacker's
         if (attackerWeapon != null && myWeaponCollider != null)
         {
-            print(myWeaponCollider.tenacity +" "+ attackerWeapon.tenacity);
             if (animationHandler.GetBool(AnimationHandler.AnimParam.Attacking) &&
             myWeaponCollider.tenacity > attackerWeapon.tenacity) return;
         }
-        
         #endregion
         
         #region Hit

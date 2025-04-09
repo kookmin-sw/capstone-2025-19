@@ -77,7 +77,7 @@ public class WeaponDbSync : MonoBehaviour
             {
                 Dictionary<string, object> dict = doc.ToDictionary();
 
-                WearableItemDB item = new WearableItemDB();
+                VillageManager.DBItem item = new VillageManager.DBItem();
                 item.itemDocId = doc.Id;
                 item.itemType = dict["itemType"].ToString();
                 item.itemName = dict["itemName"].ToString();

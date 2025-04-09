@@ -8,6 +8,7 @@ using Firebase.Auth;
 using Firebase.Extensions;
 using System;
 using static WareHouseDB;
+using static PlayerInventoryDB;
 
 public class VillageManager : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class VillageManager : MonoBehaviour
     [Header("Inventory")]
     public List<DBItem> inventory = new List<DBItem>();
     public List<DBItem> wareHouseList = new List<DBItem>();
+    public List<DBItem> equippedItemList = new List<DBItem>();
 
 
     void Start()
@@ -46,7 +48,7 @@ public class VillageManager : MonoBehaviour
         
     }
 
-
+    #region Login_PlayerSpawn
     public void CloseLoginCanvas()
     {
         LoginCanvas.SetActive(false);
@@ -76,6 +78,7 @@ public class VillageManager : MonoBehaviour
         playerFollowCamera.GetComponent<CinemachineVirtualCamera>().Priority = 11;
         loginVirtualCamera.Priority = 1;
     }
+    #endregion
 
     /// <summary>
     /// Firebase Sync Util
@@ -95,23 +98,92 @@ public class VillageManager : MonoBehaviour
 
         // Synchronize PlayerStatus
 
+        
         // Synchronize PlayerQuest
         QuestDBtoCash(auth, db, user);
-
+        
         // Synchronize money 
         MoneyDBtoCash(auth, db, user);
-
+        
         // Synchronize PlayerInventory 
         InventoryDBtoCash(auth, db, user);
+        
+        // Synchronize Weapon DB
+        EquippedItemDBtoCash(auth, db, user);
+        
+        // Synchronize WareHouse DB
+        WareHouseDBtoCash(auth, db, user);
+    }
+
+    private void OnApplicationQuit()
+    {
+        //Firebase variable
+        var auth = FirebaseManager.Instance.Auth;
+        var db = FirebaseManager.Instance.Db;
+        var user = auth.CurrentUser;
+        if (user == null)
+        {
+            Debug.LogError("User is null");
+            return;
+        }
+
+        // Synchronize PlayerQuest
+        QuestCashtoDB(auth, db, user);
+
+        // Synchronize money 
+        MoneyCashtoDB(auth, db, user);
+
+        // Synchronize PlayerInventory 
+        InventoryCashtoDB(auth, db, user);
 
         // Synchronize Weapon DB
+        EquippedItemCashtoDB(auth, db, user);
 
         // Synchronize WareHouse DB
+        WareHouseCashtoDB(auth, db, user);
     }
 
     // PlayerStatus Sync
+    public void PlayerStatusDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        CollectionReference StatusRef = db.Collection("Users")
+                                             .Document(user.UserId)
+                                             .Collection("Status");
 
-    // PlayerQuest Sync
+        StatusRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load inventory: " + task.Exception);
+                return;
+            }
+            var snapshot = task.Result;
+            
+
+            foreach (var doc in snapshot.Documents)
+            {
+                Dictionary<string, object> dict = doc.ToDictionary();
+
+                //DBItem item = new DBItem();
+                //item.itemDocId = doc.Id;
+                //item.itemType = dict["itemType"].ToString();
+                //item.itemName = dict["itemName"].ToString();
+                //item.quantity = System.Convert.ToInt32(dict["quantity"]);
+                //item.durability = float.Parse(dict["durability"].ToString());
+
+                //InventoryController.Instance.LoadInventoryItem(item);
+            }
+
+        });
+    }
+
+    public void PlayerStatusCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+
+    }
+
+    //PlayerQuest Sync
+    #region PlayerQuest
     public void QuestCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
     {
         CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
@@ -168,6 +240,7 @@ public class VillageManager : MonoBehaviour
 
     public void QuestDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
     {
+        QuestManager.Instance.playerQuestList.Clear();
         CollectionReference questCollection = db.Collection("Users").Document(user.UserId).Collection("Quests");
         questCollection.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
@@ -203,8 +276,10 @@ public class VillageManager : MonoBehaviour
             }
         });
     }
+    #endregion
 
     // Money Sync
+    #region Money
     public void MoneyDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
     {
         DocumentReference moneyRef = db.Collection("Users").Document(user.UserId);
@@ -246,8 +321,10 @@ public class VillageManager : MonoBehaviour
                 Debug.Log("Money synchronized to DB: " + InventoryController.Instance.money);
         });
     }
+    #endregion
 
     //Inventory sync
+    #region Inventory
     public void InventoryDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
     {
         CollectionReference inventoryRef = db.Collection("Users")
@@ -286,7 +363,7 @@ public class VillageManager : MonoBehaviour
         //InventoryController.Instance.inventory -> VillageManager.inventory
         foreach (Item item in InventoryController.Instance.inventory)
         {
-            AddItemToInventory(item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+            AddItemToVillageManagerCashList(inventory, item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
         }
 
         CollectionReference inventoryRef = db.Collection("Users")
@@ -372,9 +449,11 @@ public class VillageManager : MonoBehaviour
             Debug.Log("[Sync! (No Coroutine)");
         });
     }
+    #endregion
 
-    //Inventory func zip
-    public void AddItemToInventory(string itemName, string itemType, int addQuantity = 1, float addDurability = 1f)
+    //Inventory, warehouse func
+    #region Inventory_warehouse_func
+    public void AddItemToVillageManagerCashList(List<DBItem> list, string itemName, string itemType, int addQuantity = 1, float addDurability = 1f)
     {
         Debug.Log($"itemType {itemType}");
         if (itemType.Equals("Equipment"))
@@ -391,13 +470,13 @@ public class VillageManager : MonoBehaviour
                     quantity = 1,
                     durability = addDurability
                 };
-                inventory.Add(newEquip);
+                list.Add(newEquip);
             }
         }
         else
         {
 
-            DBItem existing = inventory.Find(i => i.itemName == itemName);
+            DBItem existing = list.Find(i => i.itemName == itemName);
             if (existing != null)
             {
 
@@ -418,17 +497,275 @@ public class VillageManager : MonoBehaviour
                     durability = addDurability
                 };
                 Debug.Log($"AddItem : {newItem.itemName}, {newItem.durability}");
-                inventory.Add(newItem);
+                list.Add(newItem);
             }
         }
     }
+    #endregion
 
-    // WeaponDB Sync
-
-    // WareHouseDB Sync
-    public void WareHouseCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    // EquippedItemDB
+    #region EquippedItem
+    public void EquippedItemDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
     {
+        CollectionReference equippedRef = db.Collection("Users")
+                                             .Document(user.UserId)
+                                             .Collection("Equipped");
+
+        equippedRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load inventory: " + task.Exception);
+                return;
+            }
+            var snapshot = task.Result;
+
+
+            foreach (var doc in snapshot.Documents)
+            {
+                Dictionary<string, object> dict = doc.ToDictionary();
+
+                DBItem item = new DBItem();
+                item.itemDocId = doc.Id;
+                item.itemType = dict["itemType"].ToString();
+                item.itemName = dict["itemName"].ToString();
+                item.quantity = System.Convert.ToInt32(dict["quantity"]);
+                item.durability = float.Parse(dict["durability"].ToString());
+
+                InventoryController.Instance.LoadEquippedItem(item);
+            }
+
+        });
+    }
+
+    public void EquippedItemCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        if(InventoryController.Instance.weaponPanel.GetWeaponItemIcon() != null)
+        {
+            Item item = InventoryController.Instance.weaponPanel.GetWeaponItemIcon().item;
+            AddItemToVillageManagerCashList(equippedItemList, item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+        }
+   
+
+        //현재는 장착 아이템은 하나
+        //DBItem equippedItem = equippedItemList[0];
+
+        CollectionReference equippedRef = db.Collection("Users")
+                                             .Document(user.UserId)
+                                             .Collection("Equipped");
+
+        equippedRef.GetSnapshotAsync().ContinueWithOnMainThread(loadTask =>
+        {
+            if (loadTask.IsFaulted)
+            {
+                Debug.LogError("Failed to load DB inventory: " + loadTask.Exception);
+                return;
+            }
+
+            QuerySnapshot snapshot = loadTask.Result;
+            HashSet<string> processedDocIds = new HashSet<string>();
+
+
+            foreach (DocumentSnapshot doc in snapshot.Documents)
+            {
+                string docId = doc.Id;
+                DBItem localItem = equippedItemList.Find(i => i.itemDocId == docId);
+
+                if (localItem == null)
+                {
+                    equippedRef.Document(docId).DeleteAsync();
+                }
+                else
+                {
+                    processedDocIds.Add(docId);
+                    if (localItem.quantity <= 0)
+                    {
+                        equippedRef.Document(docId).DeleteAsync();
+                    }
+                    else
+                    {
+                        Dictionary<string, object> updateData = new Dictionary<string, object>()
+                        {
+                        {"itemType", localItem.itemType},
+                        {"itemName", localItem.itemName},
+                        {"quantity", localItem.quantity},
+                        {"durability", localItem.durability}
+                        };
+
+                        equippedRef.Document(docId)
+                                    .SetAsync(updateData, SetOptions.MergeAll)
+                                    .ContinueWithOnMainThread(t =>
+                                    {
+                                        if (t.IsFaulted)
+                                            Debug.LogError("Update failed: " + t.Exception);
+                                        else
+                                            Debug.Log($"[Sync] ������ ����: {docId} => qty={localItem.quantity}, dur={localItem.durability}");
+                                    });
+                    }
+                }
+            }
+
+
+            foreach (DBItem localItem in equippedItemList)
+            {
+                if (!processedDocIds.Contains(localItem.itemDocId))
+                {
+                    DocumentReference newDocRef = equippedRef.Document(localItem.itemDocId);
+                    Dictionary<string, object> newData = new Dictionary<string, object>()
+                {
+                    {"itemType", localItem.itemType},
+                    {"itemName", localItem.itemName},
+                    {"quantity", localItem.quantity},
+                    {"durability", localItem.durability}
+                };
+
+                    newDocRef.SetAsync(newData).ContinueWithOnMainThread(t =>
+                    {
+                        if (t.IsFaulted)
+                            Debug.LogError("New item add failed: " + t.Exception);
+                        else
+                            Debug.Log("Sync 완료");
+
+                    });
+                }
+            }
+
+            Debug.Log("[Sync! (No Coroutine)");
+        });
 
     }
+    #endregion
+
+    // WareHouseDB Sync
+    #region WarehouseDB
+    public void WareHouseCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        //InventoryController.Instance.warehouse -> VillageManager.warehouseList
+        foreach (Item item in InventoryController.Instance.wareHouse)
+        {
+            AddItemToVillageManagerCashList(wareHouseList, item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+        }
+
+        CollectionReference inventoryRef = db.Collection("Users")
+            .Document(user.UserId)
+            .Collection("WareHouse");
+
+
+        inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(loadTask =>
+        {
+            if (loadTask.IsFaulted)
+            {
+                Debug.LogError("Failed to load DB WareHouse: " + loadTask.Exception);
+                return;
+            }
+
+            QuerySnapshot snapshot = loadTask.Result;
+            HashSet<string> processedDocIds = new HashSet<string>();
+
+
+            foreach (DocumentSnapshot doc in snapshot.Documents)
+            {
+                string docId = doc.Id;
+                DBItem localItem = wareHouseList.Find(i => i.itemDocId == docId);
+
+                if (localItem == null)
+                {
+
+                    inventoryRef.Document(docId).DeleteAsync();
+                }
+                else
+                {
+                    processedDocIds.Add(docId);
+                    if (localItem.quantity <= 0)
+                    {
+                        inventoryRef.Document(docId).DeleteAsync();
+                    }
+                    else
+                    {
+                        Dictionary<string, object> updateData = new Dictionary<string, object>()
+                    {
+                        {"itemType", localItem.itemType},
+                        {"itemName", localItem.itemName},
+                        {"quantity", localItem.quantity},
+                        {"durability", localItem.durability}
+                    };
+
+                        inventoryRef.Document(docId)
+                                    .SetAsync(updateData, SetOptions.MergeAll)
+                                    .ContinueWithOnMainThread(t =>
+                                    {
+                                        if (t.IsFaulted)
+                                            Debug.LogError("Update failed: " + t.Exception);
+                                        else
+                                            Debug.Log($"[Sync] ������ ����: {docId} => qty={localItem.quantity}, dur={localItem.durability}");
+                                    });
+                    }
+                }
+            }
+
+
+            foreach (DBItem localItem in wareHouseList)
+            {
+                if (!processedDocIds.Contains(localItem.itemDocId))
+                {
+                    DocumentReference newDocRef = inventoryRef.Document(localItem.itemDocId);
+                    Dictionary<string, object> newData = new Dictionary<string, object>()
+                {
+                    {"itemType", localItem.itemType},
+                    {"itemName", localItem.itemName},
+                    {"quantity", localItem.quantity},
+                    {"durability", localItem.durability}
+                };
+
+                    newDocRef.SetAsync(newData).ContinueWithOnMainThread(t =>
+                    {
+                        if (t.IsFaulted)
+                            Debug.LogError("New item add failed: " + t.Exception);
+                        else
+                            Debug.Log("Sync 완료");
+
+                    });
+                }
+            }
+
+            Debug.Log("[Sync! (No Coroutine)");
+        });
+    }
+
+
+    public void WareHouseDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        CollectionReference inventoryRef = db.Collection("Users")
+                                             .Document(user.UserId)
+                                             .Collection("WareHouse");
+
+        inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load WareHouse: " + task.Exception);
+                return;
+            }
+            var snapshot = task.Result;
+            wareHouseList.Clear();
+
+            foreach (var doc in snapshot.Documents)
+            {
+                Dictionary<string, object> dict = doc.ToDictionary();
+
+                VillageManager.DBItem item = new VillageManager.DBItem();
+                item.itemDocId = doc.Id;
+                item.itemType = dict["itemType"].ToString();
+                item.itemName = dict["itemName"].ToString();
+                item.quantity = System.Convert.ToInt32(dict["quantity"]);
+                item.durability = float.Parse(dict["durability"].ToString());
+
+                InventoryController.Instance.LoadWareHouseItem(item);
+            }
+
+        });
+        Debug.Log("Village 창고 동기화 완료");
+    }
+    #endregion
 
 }

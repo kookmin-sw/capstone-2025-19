@@ -32,6 +32,7 @@ namespace PlayerCombat
 
         public void LoadWeaponOnSlot(WeaponStats weaponItem, bool isLeft)
         {
+            if (weaponItem == null) return;
             if (isLeft)
             {
                 leftHandSlot.LoadWeaponModel(weaponItem);

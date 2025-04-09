@@ -53,8 +53,8 @@ public class QuestManager : Singleton<QuestManager>
         rewardButton.SetActive(false);
 
         //1. playerQuestList 동기화
-        playerQuestList.Clear();
-        LoadPlayerQuests();
+        //playerQuestList.Clear();
+        //LoadPlayerQuests();
 
         //2. dailyQuestList 생성
         //ex 블루포션 3개 획득
@@ -123,7 +123,7 @@ public class QuestManager : Singleton<QuestManager>
     private void OnApplicationQuit()
     {
         //playerQuestList DB에 동기화
-        SavePlayerQuestsToFirebase();
+        //SavePlayerQuestsToFirebase();
     }
 
     //아이템 획득

@@ -32,8 +32,11 @@ public class VillageManager : MonoBehaviour
 
 
     [Header("Inventory")]
+    [HideInInspector]
     public List<DBItem> inventory = new List<DBItem>();
+    [HideInInspector]
     public List<DBItem> wareHouseList = new List<DBItem>();
+    [HideInInspector]
     public List<DBItem> equippedItemList = new List<DBItem>();
 
 
@@ -57,9 +60,9 @@ public class VillageManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer_Village"));
+        Quaternion spawnRotation = Quaternion.Euler(0f, 200f, 0f);
+        GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer_Village"), playerSpawnPosition.position, spawnRotation);
         
-        player.transform.position = playerSpawnPosition.position;
         InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
         //TODO Player MainCamera 생성
         //GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));

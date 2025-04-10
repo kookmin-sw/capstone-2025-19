@@ -3,6 +3,7 @@ using Photon.Realtime;
 using PlayerControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace PlayerControl
 {
@@ -82,6 +83,15 @@ namespace PlayerControl
         [Header("Item")]
         public float _useItemSpeed = 1.5f;
 
+        [Header("Stamina")]
+        public float _maxStamina = 100f; // not connected with PlayerStatusController
+        public float _sprintStaminaUsage = 10f;
+        public float _dodgeStaminaUsage = 20f;
+        public float _recoverStaminaPerSec = 20f;
+        public float _timeToChargeStamina = 2f;
+        public float _chargeStaminaDelta = 0f;
+        public bool _recoverStamina = false;
+
         [Header("Short Dash")]
         public float _dashDuration = 0.2f;
         public float _dashMaxAmount = 5f;
@@ -91,6 +101,9 @@ namespace PlayerControl
 
         [Header("Ghost Effect")]
         public float _ghostDuration = 0.15f;
+
+        [Header("Die")]
+        public float fadeTime = 3f;
 
 
         private bool _characterRollFreeze = false;
@@ -153,6 +166,7 @@ namespace PlayerControl
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+            PlayerStatusController.Instance.curSp = _maxStamina;
         }
 
         void CreateAfterImages()
@@ -163,13 +177,23 @@ namespace PlayerControl
 
         private void Update()
         {
+            if (PlayerState.Instance.state == PlayerState.State.Die) return;
             Move();
             GroundedCheck();
+            UseItem();
+            PickUp();
             JumpAndGravity();
             Rolling();
             Attack();
-            UseItem();
-            PickUp();
+
+            if (_recoverStamina && PlayerStatusController.Instance.curSp < _maxStamina)
+            {
+                PlayerStatusController.Instance.curSp += Time.deltaTime * _recoverStaminaPerSec;
+            }
+
+            if (_chargeStaminaDelta < _timeToChargeStamina) _chargeStaminaDelta += Time.deltaTime;
+            else _recoverStamina = true;
+            
         }
 
         private void LateUpdate()
@@ -232,7 +256,16 @@ namespace PlayerControl
             float Sprint = SprintSpeed;
             if (!Grounded) Sprint = MoveSpeed;
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? Sprint : MoveSpeed;
+            float targetSpeed;
+            if (_input.sprint && PlayerStatusController.Instance.curSp > 0)
+            {
+                targetSpeed = Sprint;
+                UseStamina(_sprintStaminaUsage * Time.deltaTime);
+            }
+            else
+            {
+                targetSpeed = MoveSpeed;
+            }
 
             // 감속처리
             if (_lockOn.isFindTarget) targetSpeed = Mathf.Clamp(targetSpeed, 0, _lockOnSpeed);
@@ -311,10 +344,12 @@ namespace PlayerControl
             if (_input.rolling)
             {
                 _input.rolling = false;
+                if (PlayerStatusController.Instance.curSp <= 0) return;
                 if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
                 transform.rotation = Quaternion.Euler(0.0f, _targetRotation, 0.0f);
                 _dashDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
                 animationHandler.SetTrigger(AnimationHandler.AnimParam.Rolling);
+                UseStamina(_dodgeStaminaUsage);
                 StartCoroutine(SmallDash());
                 /*
                 animationHandler.RootMotion(true);
@@ -330,6 +365,7 @@ namespace PlayerControl
             {
                 _input.attack = false;
                 if (!Grounded) return;
+                if (PlayerStatusController.Instance.curSp <= 0) return;
                 if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
                     || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
                 {
@@ -339,8 +375,17 @@ namespace PlayerControl
                     animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Attacking, true);
+                    UseStamina(_p.staminaUsage);
                 }
             }
+        }
+
+        public void UseStamina(float usage)
+        {
+            PlayerStatusController.Instance.curSp -= usage;
+            _chargeStaminaDelta = 0;
+            _recoverStamina = false;
+            if (PlayerStatusController.Instance.curSp <= 0) PlayerStatusController.Instance.curSp = 0;
         }
 
         private void UseItem()
@@ -464,6 +509,42 @@ namespace PlayerControl
             }
         }
 
+        #region Dying
+        public void DeathTrigger()
+        {
+            PlayerState.Instance.state = PlayerState.State.Die;
+            StopAllCoroutines();
+            StartCoroutine(DecayAndVanish(fadeTime));
+        }
+        IEnumerator DecayAndVanish(float fadeTime)
+        {
+            /*
+            SkinnedMeshRenderer rend = GetComponentInChildren<SkinnedMeshRenderer>();
+            if (rend == null) yield break;
+
+            Material mat = rend.material;
+            Color originalColor = mat.color;
+
+            // URP setting
+            mat.SetFloat("_Surface", 1); // 1 = Transparent
+            mat.SetFloat("_Blend", 0); // Alpha blend
+            mat.SetFloat("_ZWrite", 0);
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;*/
+
+            float t = 0f;
+            while (t < fadeTime)
+            {
+                /*
+                float alpha = Mathf.Lerp(1f, 0f, t / fadeTime);
+                mat.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);*/
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            // Add Death Event Here
+    
+        }
+        #endregion
         public void ForceJumpStop()
         {
             animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, false);

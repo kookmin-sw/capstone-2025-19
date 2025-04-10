@@ -13,5 +13,6 @@ public class WeaponStats : ScriptableObject
     public GameObject projectile;
     public ParticleSystem hitEffect;
     public bool isLeft;
+    public float staminaUsage;
     public float tenacity;
 }

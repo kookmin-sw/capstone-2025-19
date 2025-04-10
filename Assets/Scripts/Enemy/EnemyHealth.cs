@@ -25,7 +25,7 @@ public class EnemyHealth : Health
         
         #region Escape
         // when Enemy is invincible
-        if (enemyState.state == EnemyState.State.Invincible) return;
+        if (enemyState.state == EnemyState.State.Invincible || enemyState.state == EnemyState.State.Die) return;
 
         if (attackerWeapon != null && myWeaponCollider !=null)
         {
@@ -34,7 +34,6 @@ public class EnemyHealth : Health
         #endregion
 
         #region Hit
-        print("Hit");
         currentHealth -= damage;
         UpdateHpBar();
 

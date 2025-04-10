@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using PlayerControl;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : Health
 {
     // Start is called before the first frame update
     AnimationHandler animationHandler;
+    public Slider hpBar;
 
     void Awake()
     {
         animationHandler = GetComponent<AnimationHandler>();
     }
-
     public void TakeDamage(float damage, DamageCollider attackerWeapon, Vector3 contactPos, ParticleSystem hitEffect, bool isStun)
     {
         DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
 
         #region CancelCases
         // #1: when entity is invincible
-        if (PlayerState.Instance.state == PlayerState.State.Invincible) return;
+        if (PlayerState.Instance.state == PlayerState.State.Invincible || PlayerState.Instance.state == PlayerState.State.Die) return;
 
         // #2: when my tenacity is larger than attacker's
         if (attackerWeapon != null && myWeaponCollider != null)
@@ -32,6 +33,7 @@ public class PlayerHealth : Health
         
         #region Hit
         currentHealth -= damage;
+        PlayerStatusController.Instance.curHp = currentHealth;
 
         if (myWeaponCollider != null)
         {
@@ -62,8 +64,11 @@ public class PlayerHealth : Health
         // die
         if (currentHealth <= 0)
         {
+            animationHandler.ResetTrigger(AnimationHandler.AnimParam.Hit);
+            animationHandler.ResetTrigger(AnimationHandler.AnimParam.Stun);
             currentHealth = 0;
             animationHandler.SetTrigger(AnimationHandler.AnimParam.Die);
+            player.DeathTrigger();
         }
     }
     IEnumerator WaitForParticleEnd(ParticleSystem particle, Vector3 position)

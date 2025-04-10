@@ -27,28 +27,28 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public bool canRolling;
     public bool canAttack;
 
-    //ÇöÀç ÇÃ·¹ÀÌ¾î Ã¼·Â (maxÃ¼·ÂÀº realValue["Hp"]°ª
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Ã¼ï¿½ï¿½ (maxÃ¼ï¿½ï¿½ï¿½ï¿½ realValue["Hp"]ï¿½ï¿½
     [HideInInspector]
     public float curHp;
     [HideInInspector]
     public float curSp;
 
     int playerLevel;
-    int needExpPoint; //´ÙÀ½±îÁö ÇÊ¿äÇÑ °æÇèÄ¡
+    int needExpPoint; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡
 
-    //ÇÃ·¹ÀÌ¾î ½ºÅÈ Á¾·ù (Dic ÀúÀåµÈ)
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Dic ï¿½ï¿½ï¿½ï¿½ï¿½)
     //Hp
     //Sp
-    //Ap - °ø°Ý·Â
-    //Wp - ÀûÀç·®
+    //Ap - ï¿½ï¿½ï¿½Ý·ï¿½
+    //Wp - ï¿½ï¿½ï¿½ç·®
 
-    //ÇöÀç ÀåÂøÁßÀÎ ¾ÆÀÌÅÛÀÇ È¿°ú -> ÀúÀå½Ã Hp °°ÀÌ Ã¹±ÛÀÚ¸¸ ´ë¹®ÀÚ
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ -> ï¿½ï¿½ï¿½ï¿½ï¿½ Hp ï¿½ï¿½ï¿½ï¿½ Ã¹ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ë¹®ï¿½ï¿½
     Dictionary<string, float> itemStatus = new Dictionary<string, float>();
-    //ÇöÀç ÇÃ·¹ÀÌ¾î¿¡°Ô Àû¿ëµÇ´Â ¹öÇÁ È¤Àº ÀúÁÖ È¿°ú
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ È¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
     Dictionary<string, float> itemBuffStatus = new Dictionary<string, float>();
-    //¾ÆÀÌÅÛ È¿°ú ¹Ý¿µ ¾ÈµÈ ÇÃ·¹ÀÌ¾îÀÇ ½ºÅÈ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½Ý¿ï¿½ ï¿½Èµï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     Dictionary<string, float> playerStatusValue = new Dictionary<string, float>();
-    //ÀüÃ¼¸¦ ´Ù °è»êÇÑ ½ºÅÈ È¿°ú
+    //ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
     Dictionary<string, float> realValue = new Dictionary<string, float>();
 
     protected override void Awake()
@@ -57,17 +57,17 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
     void Start()
     {
-        InitPlayerStatus(); //Dic¿¡ ±âº» °ªµé »ý¼º -> VillageManger¿¡¼­ DB¿¡ µ¿±âÈ­µÈ °ªÀ¸·Î ÈÄ¿¡ ¾÷µ¥ÀÌÆ®
-        //³ªÁß¿¡´Â DB¿¡¼­ µ¿±âÈ­ÇØ¿À´Â °É·Î ¹Ù²ã¾ß ÇÔ.
+        InitPlayerStatus(); //Dicï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ -> VillageMangerï¿½ï¿½ï¿½ï¿½ DBï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+        //ï¿½ï¿½ï¿½ß¿ï¿½ï¿½ï¿½ DBï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½Ø¿ï¿½ï¿½ï¿½ ï¿½É·ï¿½ ï¿½Ù²ï¿½ï¿½ ï¿½ï¿½.
         InitReal();
 
-        //½ºÅÈÀÌ DB¿¡¼­ µ¿±âÈ­ µÈ ÈÄ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ DBï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½ ï¿½ï¿½
         ShowFirstStatus();
     }
 
     private void InitPlayerStatus()
     {
-        //key¸¸ »ý¼º
+        //keyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         playerStatusValue["Exp"] = 0;
         playerStatusValue["Hp"] = 0;
         playerStatusValue["Sp"] = 0;
@@ -77,13 +77,13 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     public void InitReal()
     {
-        //¿ø·¡´Â ¾Æ¹«°Íµµ ¾ø¾î¾ß ÇÏÁö¸¸ ¾ÆÁ÷ DB¸¦ ÇÏÁö ¸øÇÑ °ü°è·Î ÀÓ½Ã
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¹ï¿½ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ DBï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½
         playerLevel = 1;
         needExpPoint = 10;
-        //¿ø·¡´Â playerStatusValue Dic¿¡´Ù°¡ ÀúÀåÇÏ°í realValue¿¡ ÃÖÁ¾ °è»êÇØ¾ß ÇÏÁö¸¸ ³ªÁß¿¡
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ playerStatusValue Dicï¿½ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ realValueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½
         realValue["Exp"] = 0;
-        realValue["Hp"] = 1000;
-        realValue["Sp"] = 10;
+        realValue["Hp"] = 100;
+        realValue["Sp"] = 100;
         realValue["Ap"] = 10;
         realValue["Wp"] = 20;
         curHp = realValue["Hp"];
@@ -93,29 +93,29 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     // Update is called once per frame
     void Update()
     {
-        //Ã¼·Â, ½ºÅ×¹Ì³ª ¹Ù ¾÷µ¥ÀÌÆ®
+        //Ã¼ï¿½ï¿½, ï¿½ï¿½ï¿½×¹Ì³ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
         UpdateHpBar();
         UpdateSpBar();
         UpdateBehaviorBool();
 
-        //½ºÅ×¹Ì³ª È¸º¹
-        RecoverStamina(recoverSpValue);
+        //ï¿½ï¿½ï¿½×¹Ì³ï¿½ È¸ï¿½ï¿½
+        //RecoverStamina(recoverSpValue);
     }
 
     
 
-    //½ºÅ×¹Ì³ª »óÅÂ¿¡ µû¶ó¼­ Çàµ¿ÀÌ °¡´ÉÇÑÁö 
+    //ï¿½ï¿½ï¿½×¹Ì³ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½àµ¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
     void UpdateBehaviorBool()
     {
-        //´Þ¸®±â °¡´É
+        //ï¿½Þ¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if(curSp < sprintStamina) canSprint = false;
         else canSprint = true;
 
-        //±¸¸£±â °¡´É
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (curSp < rollingStamina) canRolling = false;
         else canRolling = true;
 
-        //°ø°Ý °¡´É
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (curSp < attackStamina) canAttack = false;
         else canAttack = true;
     }
@@ -131,14 +131,14 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     private void ShowFirstStatus()
     {
-        //Ã³À½ °ÔÀÓ ½ÇÇàÇÏ°í °è»êµÈ RealStatus¸¦ text¿¡ Àü´Þ
+        //Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ RealStatusï¿½ï¿½ textï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         LevelText.text = playerLevel.ToString();
         ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
         ApText.text = realValue["Ap"].ToString();
     }
 
-    //°è»ê ½ÃÁ¡
-    //¾ÆÀÌÅÛÀÌ ÀåÂøµÇ´Â ½ÃÁ¡ + ¹°¾àÀÌ³ª ÀúÁÖ½Ã
+    //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½Ö½ï¿½
     private void StatusCalculate()
     {
         realValue["Hp"] = playerStatusValue["Hp"];
@@ -150,20 +150,20 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     void StatusUpdate(string stat)
     {
-        //¾÷µ¥ÀÌÆ®µÈ realValueÀÇ °ªÀ» text¿Í µ¿±âÈ­
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ realValueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ textï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
     }
 
-    //ÇÃ·¹ÀÌ¾î µ¥¹ÌÁö
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public void getDamage(int damage)
     {
         curHp -= damage;
-        //Debug.Log($"³²Àº Ã¼·Â : {curHp}");
+        //Debug.Log($"ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ : {curHp}");
     }
     
     //public void UseStamina(float value)
     //{
     //    curSp -= value;
-    //    Debug.Log($"³²Àº ½ºÅ×¹Ì³ª : {curSp}");
+    //    Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×¹Ì³ï¿½ : {curSp}");
     //}
 
     public void rolling()
@@ -194,8 +194,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     {
         if(curHp <= 0)
         {
-            //ÇÃ·¹ÀÌ¾î Á×À½.
-            Debug.Log("ÇÃ·¹ÀÌ¾î »ç¸Á");
+            //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½.
+            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½");
         }
     }
 

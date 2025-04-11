@@ -12,6 +12,7 @@ public class EntryPoint : MonoBehaviour
         Hallway,
         BossRoom,
         TrapRoom,
+        SmallRoom,
 
     }
     [Header("연결 되어야 하는 방 타입 (상관 없을경우 None)")]

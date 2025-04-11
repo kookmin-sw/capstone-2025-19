@@ -1125,21 +1125,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1174061625827304786, guid: cdfa834838b03d545b27acccd062fde7,
-        type: 3}
-      propertyPath: staminaBar
-      value: 
-      objectReference: {fileID: 461966204}
-    - target: {fileID: 1174061625827304786, guid: cdfa834838b03d545b27acccd062fde7,
-        type: 3}
-      propertyPath: _dashMaxAmount
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1174061625827304786, guid: cdfa834838b03d545b27acccd062fde7,
-        type: 3}
-      propertyPath: _cameraSmoothing
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 2487203241442046855, guid: cdfa834838b03d545b27acccd062fde7,
         type: 3}
       propertyPath: mainCamera
@@ -1150,21 +1135,11 @@ PrefabInstance:
       propertyPath: lockOnImage
       value: 
       objectReference: {fileID: 234393536}
-    - target: {fileID: 2487203241442046855, guid: cdfa834838b03d545b27acccd062fde7,
-        type: 3}
-      propertyPath: lockOnRadius
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 3565856600230199299, guid: cdfa834838b03d545b27acccd062fde7,
         type: 3}
       propertyPath: hpBar
       value: 
       objectReference: {fileID: 1228596801}
-    - target: {fileID: 3565856600230199299, guid: cdfa834838b03d545b27acccd062fde7,
-        type: 3}
-      propertyPath: healthLevel
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 5466849760804705330, guid: cdfa834838b03d545b27acccd062fde7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1215,12 +1190,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8381957843327983993, guid: cdfa834838b03d545b27acccd062fde7,
-        type: 3}
-      propertyPath: weapon
-      value: 
-      objectReference: {fileID: 11400000, guid: 38f78d3f40de4ff439317990e8a87c4e,
-        type: 2}
     - target: {fileID: 8963591485644917934, guid: cdfa834838b03d545b27acccd062fde7,
         type: 3}
       propertyPath: m_Name
@@ -2868,10 +2837,11 @@ MonoBehaviour:
   LevelText: {fileID: 1656932719}
   ExpText: {fileID: 2121613129}
   ApText: {fileID: 1416596424}
-  recoverSpValue: 3
+  recoverSpValue: 20
   sprintStamina: 5
   rollingStamina: 5
   attackStamina: 5
+  timeToChargeStamina: 2
   canSprint: 0
   canRolling: 0
   canAttack: 0

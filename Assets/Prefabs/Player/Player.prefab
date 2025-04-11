@@ -233,12 +233,20 @@ MonoBehaviour:
   CameraAngleOverride: 0
   LockCameraPosition: 0
   _cameraDirectionY: -0.3
-  _cameraSmoothing: 50
+  _cameraSmoothing: 200
   _lockOnSpeed: 3.5
   _useItemSpeed: 3
+  _maxStamina: 0
+  _sprintStaminaUsage: 10
+  _dodgeStaminaUsage: 20
+  _recoverStaminaPerSec: 20
+  _timeToChargeStamina: 2
+  _chargeStaminaDelta: 0
+  _recoverStamina: 0
   _dashDuration: 0.3
-  _dashMaxAmount: 12
+  _dashMaxAmount: 15
   _ghostDuration: 0.15
+  fadeTime: 3
   playerGhostEffect: {fileID: 0}
 --- !u!114 &1723318767063404700
 MonoBehaviour:
@@ -333,7 +341,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   lockOnImage: {fileID: 0}
-  lockOnRadius: 10
+  lockOnRadius: 20
   minViewAngle: -70
   maxViewAngle: 70
   lookAtSmoothing: 10
@@ -364,8 +372,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615c1170a9d2eaa4381fd12653cb7c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 0d0d08da022901041983262ead3215dd, type: 2}
+  weapon: {fileID: 11400000, guid: 38f78d3f40de4ff439317990e8a87c4e, type: 2}
   isRanged: 0
+  staminaUsage: 0
 --- !u!114 &3917229923716642097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,9 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 266e7688b77f8fa4595c02684a5f822a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthLevel: 9999
-  maxHealth: 0
-  currentHealth: 0
+  hpBar: {fileID: 0}
 --- !u!114 &862117367802960366
 MonoBehaviour:
   m_ObjectHideFlags: 0

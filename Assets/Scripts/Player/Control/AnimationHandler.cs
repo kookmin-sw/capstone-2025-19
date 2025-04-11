@@ -29,35 +29,35 @@ public class AnimationHandler : MonoBehaviour
         CanDoCombo
     }
 
-    private readonly Dictionary<AnimParam, int> animParamIDs = new();
+    private readonly Dictionary<AnimParam, string> animParamIDs = new();
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
 
-        animParamIDs[AnimParam.Speed] = Animator.StringToHash("Speed");
-        animParamIDs[AnimParam.Grounded] = Animator.StringToHash("Grounded");
-        animParamIDs[AnimParam.Jump] = Animator.StringToHash("Jump");
-        animParamIDs[AnimParam.FreeFall] = Animator.StringToHash("FreeFall");
-        animParamIDs[AnimParam.MotionSpeed] = Animator.StringToHash("MotionSpeed");
-        animParamIDs[AnimParam.Attack] = Animator.StringToHash("Attack");
-        animParamIDs[AnimParam.RangedAttack] = Animator.StringToHash("RangedAttack");
-        animParamIDs[AnimParam.DashAttack] = Animator.StringToHash("DashAttack");
-        animParamIDs[AnimParam.Attacking] = Animator.StringToHash("Attacking");
-        animParamIDs[AnimParam.Hit] = Animator.StringToHash("Hit");
-        animParamIDs[AnimParam.Stun] = Animator.StringToHash("Stun");
-        animParamIDs[AnimParam.Die] = Animator.StringToHash("Die");
-        animParamIDs[AnimParam.Rolling] = Animator.StringToHash("Rolling");
-        animParamIDs[AnimParam.UseItem] = Animator.StringToHash("UseItem");
-        animParamIDs[AnimParam.PickUp] = Animator.StringToHash("PickUp");
-        animParamIDs[AnimParam.Interacting] = Animator.StringToHash("Interacting");
-        animParamIDs[AnimParam.Blocking] = Animator.StringToHash("Blocking");
-        animParamIDs[AnimParam.CanDoCombo] = Animator.StringToHash("CanDoCombo");
+        animParamIDs[AnimParam.Speed] = "Speed";
+        animParamIDs[AnimParam.Grounded] = "Grounded";
+        animParamIDs[AnimParam.Jump] = "Jump";
+        animParamIDs[AnimParam.FreeFall] = "FreeFall";
+        animParamIDs[AnimParam.MotionSpeed] = "MotionSpeed";
+        animParamIDs[AnimParam.Attack] = "Attack";
+        animParamIDs[AnimParam.RangedAttack] = "RangedAttack";
+        animParamIDs[AnimParam.DashAttack] = "DashAttack";
+        animParamIDs[AnimParam.Attacking] = "Attacking";
+        animParamIDs[AnimParam.Hit] = "Hit";
+        animParamIDs[AnimParam.Stun] = "Stun";
+        animParamIDs[AnimParam.Die] = "Die";
+        animParamIDs[AnimParam.Rolling] = "Rolling";
+        animParamIDs[AnimParam.UseItem] = "UseItem";
+        animParamIDs[AnimParam.PickUp] = "PickUp";
+        animParamIDs[AnimParam.Interacting] = "Interacting";
+        animParamIDs[AnimParam.Blocking] = "Blocking";
+        animParamIDs[AnimParam.CanDoCombo] = "CanDoCombo";
     }
 
     public void SetBool(AnimParam param, bool value)
     {
-        if (animParamIDs.TryGetValue(param, out int id))
+        if (animParamIDs.TryGetValue(param, out string id))
         {
             animator.SetBool(id, value);
         }
@@ -69,7 +69,7 @@ public class AnimationHandler : MonoBehaviour
 
     public bool GetBool(AnimParam param)
     {
-        if (animParamIDs.TryGetValue(param, out int id))
+        if (animParamIDs.TryGetValue(param, out string id))
         {
             return animator.GetBool(id);
         }
@@ -82,7 +82,7 @@ public class AnimationHandler : MonoBehaviour
 
     public void SetTrigger(AnimParam param)
     {
-        if (animParamIDs.TryGetValue(param, out int id))
+        if (animParamIDs.TryGetValue(param, out string id))
         {
             animator.SetTrigger(id);
         }
@@ -94,7 +94,7 @@ public class AnimationHandler : MonoBehaviour
 
     public void ResetTrigger(AnimParam param)
     {
-        if (animParamIDs.TryGetValue(param, out int id))
+        if (animParamIDs.TryGetValue(param, out string id))
         {
             animator.ResetTrigger(id);
         }
@@ -106,7 +106,7 @@ public class AnimationHandler : MonoBehaviour
 
     public void SetFloat(AnimParam param, float value)
     {
-        if (animParamIDs.TryGetValue(param, out int id))
+        if (animParamIDs.TryGetValue(param, out string id))
         {
             animator.SetFloat(id, value);
         }
@@ -118,7 +118,7 @@ public class AnimationHandler : MonoBehaviour
 
     public void SetInteger(AnimParam param, int value)
     {
-        if (animParamIDs.TryGetValue(param, out int id))
+        if (animParamIDs.TryGetValue(param, out string id))
         {
             animator.SetInteger(id, value);
         }

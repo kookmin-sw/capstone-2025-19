@@ -84,14 +84,9 @@ namespace PlayerControl
         public float _useItemSpeed = 1.5f;
 
         [Header("Stamina")]
-        public float _maxStamina = 100f; // not connected with PlayerStatusController
         public float _sprintStaminaUsage = 10f;
         public float _dodgeStaminaUsage = 20f;
-        public float _recoverStaminaPerSec = 20f;
-        public float _timeToChargeStamina = 2f;
-        public float _chargeStaminaDelta = 0f;
-        public bool _recoverStamina = false;
-
+    
         [Header("Short Dash")]
         public float _dashDuration = 0.2f;
         public float _dashMaxAmount = 5f;
@@ -166,7 +161,6 @@ namespace PlayerControl
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
-            PlayerStatusController.Instance.curSp = _maxStamina;
         }
 
         void CreateAfterImages()
@@ -185,15 +179,6 @@ namespace PlayerControl
             JumpAndGravity();
             Rolling();
             Attack();
-
-            if (_recoverStamina && PlayerStatusController.Instance.curSp < _maxStamina)
-            {
-                PlayerStatusController.Instance.curSp += Time.deltaTime * _recoverStaminaPerSec;
-            }
-
-            if (_chargeStaminaDelta < _timeToChargeStamina) _chargeStaminaDelta += Time.deltaTime;
-            else _recoverStamina = true;
-            
         }
 
         private void LateUpdate()
@@ -260,7 +245,7 @@ namespace PlayerControl
             if (_input.sprint && PlayerStatusController.Instance.curSp > 0)
             {
                 targetSpeed = Sprint;
-                UseStamina(_sprintStaminaUsage * Time.deltaTime);
+                PlayerStatusController.Instance.UseStamina(_sprintStaminaUsage * Time.deltaTime);
             }
             else
             {
@@ -349,7 +334,7 @@ namespace PlayerControl
                 transform.rotation = Quaternion.Euler(0.0f, _targetRotation, 0.0f);
                 _dashDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
                 animationHandler.SetTrigger(AnimationHandler.AnimParam.Rolling);
-                UseStamina(_dodgeStaminaUsage);
+                PlayerStatusController.Instance.UseStamina(_dodgeStaminaUsage);
                 StartCoroutine(SmallDash());
                 /*
                 animationHandler.RootMotion(true);
@@ -375,17 +360,9 @@ namespace PlayerControl
                     animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Attacking, true);
-                    UseStamina(_p.staminaUsage);
+                    PlayerStatusController.Instance.UseStamina(_p.staminaUsage);
                 }
             }
-        }
-
-        public void UseStamina(float usage)
-        {
-            PlayerStatusController.Instance.curSp -= usage;
-            _chargeStaminaDelta = 0;
-            _recoverStamina = false;
-            if (PlayerStatusController.Instance.curSp <= 0) PlayerStatusController.Instance.curSp = 0;
         }
 
         private void UseItem()

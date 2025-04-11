@@ -17,39 +17,32 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
 
     [Header("Stamina")]
-    [SerializeField] float recoverSpValue = 3f;
+    [SerializeField] float recoverSpValue = 20f;
     [SerializeField] float sprintStamina = 5f;
     [SerializeField] float rollingStamina = 5f;
     [SerializeField] float attackStamina = 5f;
+    [SerializeField] float timeToChargeStamina = 2f;
+
+    private bool recoverStamina = false;
+    private float chargeStaminaDelta = 0;
 
     [Header("player move bool")]
     public bool canSprint;
     public bool canRolling;
     public bool canAttack;
 
-    //���� �÷��̾� ü�� (maxü���� realValue["Hp"]��
     [HideInInspector]
     public float curHp;
     [HideInInspector]
     public float curSp;
 
     int playerLevel;
-    int needExpPoint; //�������� �ʿ��� ����ġ
+    int needExpPoint;
 
-    //�÷��̾� ���� ���� (Dic �����)
-    //Hp
-    //Sp
-    //Ap - ���ݷ�
-    //Wp - ���緮
-
-    //���� �������� �������� ȿ�� -> ����� Hp ���� ù���ڸ� �빮��
     Dictionary<string, float> itemStatus = new Dictionary<string, float>();
-    //���� �÷��̾�� ����Ǵ� ���� Ȥ�� ���� ȿ��
     Dictionary<string, float> itemBuffStatus = new Dictionary<string, float>();
-    //������ ȿ�� �ݿ� �ȵ� �÷��̾��� ����
     Dictionary<string, float> playerStatusValue = new Dictionary<string, float>();
-    //��ü�� �� ����� ���� ȿ��
-    Dictionary<string, float> realValue = new Dictionary<string, float>();
+    public Dictionary<string, float> realValue = new Dictionary<string, float>();
 
     protected override void Awake()
     {
@@ -57,11 +50,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
     void Start()
     {
-        InitPlayerStatus(); //Dic�� �⺻ ���� ���� -> VillageManger���� DB�� ����ȭ�� ������ �Ŀ� ������Ʈ
-        //���߿��� DB���� ����ȭ�ؿ��� �ɷ� �ٲ�� ��.
+        InitPlayerStatus();
         InitReal();
-
-        //������ DB���� ����ȭ �� ��
         ShowFirstStatus();
     }
 
@@ -77,10 +67,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     public void InitReal()
     {
-        //������ �ƹ��͵� ����� ������ ���� DB�� ���� ���� ����� �ӽ�
         playerLevel = 1;
         needExpPoint = 10;
-        //������ playerStatusValue Dic���ٰ� �����ϰ� realValue�� ���� ����ؾ� ������ ���߿�
         realValue["Exp"] = 0;
         realValue["Hp"] = 100;
         realValue["Sp"] = 100;
@@ -90,16 +78,22 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         curSp = realValue["Sp"];
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //ü��, ���׹̳� �� ������Ʈ
         UpdateHpBar();
         UpdateSpBar();
         UpdateBehaviorBool();
 
         //���׹̳� ȸ��
         //RecoverStamina(recoverSpValue);
+
+        if (recoverStamina && curSp < realValue["Sp"])
+        {
+            curSp += Time.deltaTime * recoverSpValue;
+        }
+
+        if (chargeStaminaDelta < timeToChargeStamina) chargeStaminaDelta += Time.deltaTime;
+        else recoverStamina = true;
     }
 
     
@@ -179,6 +173,14 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public void attack()
     {
         curSp -= attackStamina;
+    }
+
+    public void UseStamina(float usage)
+    {
+        curSp -= usage;
+        chargeStaminaDelta = 0;
+        recoverStamina = false;
+        if (curSp <= 0) curSp = 0;
     }
 
     private void RecoverStamina(float recoverSpValue)

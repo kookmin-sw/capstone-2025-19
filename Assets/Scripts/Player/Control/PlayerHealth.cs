@@ -5,7 +5,7 @@ using PlayerControl;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : Health
+public class PlayerHealth : MonoBehaviour
 {
     // Start is called before the first frame update
     AnimationHandler animationHandler;
@@ -32,8 +32,7 @@ public class PlayerHealth : Health
         #endregion
         
         #region Hit
-        currentHealth -= damage;
-        PlayerStatusController.Instance.curHp = currentHealth;
+        PlayerStatusController.Instance.curHp -= damage;
 
         if (myWeaponCollider != null)
         {
@@ -62,11 +61,11 @@ public class PlayerHealth : Health
         }
 
         // die
-        if (currentHealth <= 0)
+        if (PlayerStatusController.Instance.curHp <= 0)
         {
             animationHandler.ResetTrigger(AnimationHandler.AnimParam.Hit);
             animationHandler.ResetTrigger(AnimationHandler.AnimParam.Stun);
-            currentHealth = 0;
+            PlayerStatusController.Instance.curHp = 0;
             animationHandler.SetTrigger(AnimationHandler.AnimParam.Die);
             player.DeathTrigger();
         }

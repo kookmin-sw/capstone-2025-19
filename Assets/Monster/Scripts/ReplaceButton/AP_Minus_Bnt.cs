@@ -8,7 +8,7 @@ public class AP_Minus_Bnt : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerStatusController.Instance.ApMinusButton();
+            PlayerStatusController.Instance.ApMinus();
             Debug.Log("ApMinusButton");
         }
     }

@@ -16,6 +16,7 @@ public class VillageManager : MonoBehaviour
     [SerializeField] Transform playerSpawnPosition;
     [SerializeField] GameObject mainCamera;
     [SerializeField] GameObject LoginCanvas;
+    [SerializeField] GameObject Hp_Sp_Canvas;
     [SerializeField] CinemachineVirtualCamera loginVirtualCamera;
     [HideInInspector]
     public GameObject playerFollowCamera;
@@ -42,7 +43,7 @@ public class VillageManager : MonoBehaviour
 
     void Start()
     {
-        
+        Hp_Sp_Canvas.SetActive(false);
     }
 
     // Update is called once per frame
@@ -56,6 +57,7 @@ public class VillageManager : MonoBehaviour
     {
         LoginCanvas.SetActive(false);
         Debug.Log("LoginCanvas 지우기 완료");
+        Hp_Sp_Canvas.SetActive(true);
     }
 
     public void SpawnPlayer()

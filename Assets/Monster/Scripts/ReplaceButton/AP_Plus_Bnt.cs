@@ -9,7 +9,7 @@ public class AP_Plus_Bnt : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerStatusController.Instance.ApPlusButton();
+            PlayerStatusController.Instance.ApPlus();
             Debug.Log("ApPlusButton");
         }
     }

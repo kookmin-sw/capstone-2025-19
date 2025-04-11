@@ -20,7 +20,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     [SerializeField] TextMeshProUGUI LevelUpPoint;
 
     [Header("LevelUp")]
-    [SerializeField] GameObject PlusButton;
+    [SerializeField] GameObject ApPlusButton;
+    [SerializeField] GameObject ApMinusButton;
     [SerializeField] TextMeshProUGUI AP_Result;
 
     [Header("Stamina")]
@@ -66,7 +67,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
     void Start()
     {
-        PlusButton.SetActive(false);
+        Plus_Minus_Button_SetActive_False();
         LevelUpButton.gameObject.SetActive(false);
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
@@ -212,16 +213,6 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         }
     }
 
-
-    private void Die()
-    {
-        if(curHp <= 0)
-        {
-            //플레이어 죽음.
-            Debug.Log("플레이어 사망");
-        }
-    }
-
     //player 경험치가 다 차면 레벨업 가능
     public void getExp(int exp)
     {
@@ -241,7 +232,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public void LevelUpStep1()
     {
         //UI 작동
-        PlusButton.SetActive(true);
+        Plus_Minus_Button_SetActive_True();
         LevelUpButton.gameObject.SetActive(false);
         PointDecomposeCompleteBnt.gameObject.SetActive(true);
         LevelUpPoint.gameObject.SetActive(true);
@@ -256,8 +247,22 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         AP_Result.text = playerStatusValue["Ap"].ToString();
     }
 
+    public void Plus_Minus_Button_SetActive_True()
+    {
+        ApPlusButton.SetActive(true);
+        ApMinusButton.SetActive(true);
+    }
+
+    public void Plus_Minus_Button_SetActive_False()
+    {
+        ApPlusButton.SetActive(false);
+        ApMinusButton.SetActive(false);
+    }
+
+    #region Stat_plus_minus
+
     //Ap+버튼을 눌렀을 경우 실행
-    public void ApPlusButton()
+    public void ApPlus()
     {
         AP_Result.text = (float.Parse(AP_Result.text) + 1).ToString();
         levelPoint--;
@@ -265,13 +270,14 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         isLevelPoint0();
     }
 
-    public void ApMinusButton()
+    public void ApMinus()
     {
         AP_Result.text = (float.Parse(AP_Result.text) - 1).ToString();
         levelPoint++;
         LevelUpPoint.text = "LevelPoint : " + levelPoint;
         isLevelPoint0();
     }
+    #endregion
 
     private void isLevelPoint0()
     {
@@ -297,7 +303,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         StatusUpdate();
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
-        PlusButton.SetActive(false);
+        Plus_Minus_Button_SetActive_False();
     }
 
 }

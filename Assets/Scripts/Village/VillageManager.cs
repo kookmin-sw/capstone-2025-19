@@ -72,17 +72,24 @@ public class VillageManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
+        Debug.Log("1");
         Quaternion spawnRotation = Quaternion.Euler(0f, 200f, 0f);
-        GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer_Village"), playerSpawnPosition.position, spawnRotation);
-        
+        Debug.Log("2");
+        GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/Player_Village"), playerSpawnPosition.position, spawnRotation);
+        Debug.Log("3");
         InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
+        Debug.Log("4");
         //TODO Player MainCamera 생성
         //GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));
+        Debug.Log("5");
         CinemachineVirtualCamera virtualCamera = playerFollowCamera.GetComponent<CinemachineVirtualCamera>();
+        Debug.Log("6");
         virtualCamera.Follow = player.transform.Find("PlayerCameraRoot");
-
+        Debug.Log("7");
         player.GetComponent<PlayerController>().SetMainCamera(mainCamera);
+        Debug.Log("8");
+        //player.GetComponent<PlayerController>().SetCinemachineTarget(player.transform.Find("PlayerCameraRoot").gameObject);
         //카메라 캐릭터에게로 회전
         OnLoginComplete(); 
         CloseLoginCanvas();
@@ -190,7 +197,7 @@ public class VillageManager : MonoBehaviour
                 stat.hp = float.Parse(dict["hp"].ToString());
                 stat.wp = float.Parse(dict["wp"].ToString());
 
-                PlayerStatusController.Instance.LoadPlayerStatus(stat);
+                //PlayerStatusController.Instance.LoadPlayerStatus(stat);
             }
 
         });

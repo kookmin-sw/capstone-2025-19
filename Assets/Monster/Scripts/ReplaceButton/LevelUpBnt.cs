@@ -9,7 +9,7 @@ public class LevelUpBnt : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerStatusController.Instance.LevelUpStep1();
+            //PlayerStatusController.Instance.LevelUpStep1();
             Debug.Log("LevelUpStep1");
         }
     }

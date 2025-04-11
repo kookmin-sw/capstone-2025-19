@@ -2,25 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerCombat
+public class PlayerInventory_ : MonoBehaviour
 {
-    public class PlayerInventory_ : MonoBehaviour
+    WeaponSlotManager weaponSlotManager;
+    public WeaponStats weapon;
+    public bool isRanged;
+    public float staminaUsage;
+
+    void Awake()
     {
-        WeaponSlotManager weaponSlotManager;
-
-        public WeaponStats rightWeapon;
-        public WeaponStats leftWeapon;
-
-        void Awake()
-        {
-            weaponSlotManager = GetComponent<WeaponSlotManager>();
-        }
-
-        void Start()
-        {
-            weaponSlotManager.LoadWeaponOnSlot(rightWeapon, false);
-            weaponSlotManager.LoadWeaponOnSlot(leftWeapon, true);
-        }
+        weaponSlotManager = GetComponent<WeaponSlotManager>();
     }
 
+    void Start()
+    {
+        weaponSlotManager.LoadWeaponOnSlot(weapon, weapon.isLeft);
+        isRanged = weapon.isRanged;
+        staminaUsage = weapon.staminaUsage;
+    }
 }

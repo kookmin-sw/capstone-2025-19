@@ -17,17 +17,18 @@ namespace PlayerControl
 		public bool lockOnNext;
 		public bool attack;
 		public bool inventory;
+		public bool useItem;
+		public bool pickup;
 
-
-        [Header("Movement Settings")]
+		[Header("Movement Settings")]
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 		[Range(0.1f, 10)] public float mouseSensitivity = 1f;
-
-		public void OnMove(InputValue value)
+		
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}
@@ -53,7 +54,7 @@ namespace PlayerControl
 		public void OnRolling(InputValue value)
 		{
 			RollingInput(value.isPressed);
-        }
+		}
 
 		public void OnLockOn(InputValue value)
 		{
@@ -73,7 +74,7 @@ namespace PlayerControl
 		public void OnAttack(InputValue value)
 		{
 			AttackInput(value.isPressed);
-        }
+		}
 
         public void OnInventory(InputValue value)
         {
@@ -90,6 +91,16 @@ namespace PlayerControl
                 Cursor.lockState = CursorLockMode.None;
 			}
         }
+
+		public void OnUseItem(InputValue value)
+		{
+			UseItemInput(value.isPressed);
+		}
+
+		public void OnPickUp(InputValue value)
+		{
+			PickUpInput(value.isPressed);
+		}
 
 		
 		public void MoveInput(Vector2 newMoveDirection)
@@ -135,6 +146,16 @@ namespace PlayerControl
 		public void AttackInput(bool newAttackState)
 		{
 			attack = newAttackState;
+		}
+
+		public void UseItemInput(bool newUseItemState)
+		{
+			useItem = newUseItemState;
+		}
+
+		public void PickUpInput(bool newPickUpState)
+		{
+			pickup = newPickUpState;
 		}
 
         private void OnApplicationFocus(bool hasFocus)

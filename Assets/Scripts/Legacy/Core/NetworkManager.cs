@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 // 유니티용 포톤 컴포넌트들
 // 포톤 서비스 관련 라이브러리
 
@@ -63,18 +64,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         // 중복 접속 시도를 막기 위해, 접속 버튼 잠시 비활성화
         joinButton.interactable = false;
+        Debug.Log("Connecting");
 
         // 마스터 서버에 접속중이라면
         if (PhotonNetwork.IsConnected)
         {
             // 룸 접속 실행
             connectionInfoText.text = "Enter the dungeon...";
+            Debug.Log("Enter the dungeon...");
             PhotonNetwork.JoinRandomRoom();
         }
         else
         {
             // 마스터 서버에 접속중이 아니라면, 마스터 서버에 접속 시도
             connectionInfoText.text = "Offline : Failed to connect to master\nretrying...";
+            Debug.Log("Offline : Failed to connect to master\nretrying...");
             // 마스터 서버로의 재접속 시도
             PhotonNetwork.ConnectUsingSettings();
         }

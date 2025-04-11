@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 2116929531418544498}
   - component: {fileID: -5935851458966435299}
   m_Layer: 0
-  m_Name: PlayerCreateRoom_M
+  m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,7 +172,6 @@ MonoBehaviour:
   dungeonPartType: 0
   fillerWall: {fileID: 0}
   roomUse: 1
-  spawnPoint: {fileID: 1135402163267064842}
   spawnItemList:
   - {fileID: 7130495331960529614}
   - {fileID: 6171201224084818192}
@@ -180,6 +179,7 @@ MonoBehaviour:
   spawnMonsterList: []
   colliderList:
   - {fileID: 1336987648867833137}
+  playerSpawnPoints: []
   entryPoints:
   - {fileID: 3346701552818922550}
   - {fileID: 9003955306281503444}
@@ -353,6 +353,10 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
   testCube: {fileID: 1699219043090941109}
 --- !u!1 &2420916887417026436
 GameObject:
@@ -401,6 +405,10 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
   testCube: {fileID: 2913693330860044647}
 --- !u!1 &2913693330860044647
 GameObject:
@@ -659,6 +667,10 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
   testCube: {fileID: 3155480537845853236}
 --- !u!1 &4127643432542291446
 GameObject:
@@ -917,6 +929,10 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
   testCube: {fileID: 5700286157216641012}
 --- !u!1 &7788306826978089652
 GameObject:

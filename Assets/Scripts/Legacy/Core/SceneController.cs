@@ -10,10 +10,14 @@ public class SceneController : Singleton<SceneController>
     List<GameObject> removeGameObjectList = new List<GameObject>();
 
     // Start is called before the first frame update
-    void Start()
+
+    protected override void Awake()
     {
+        base.Awake();
         currentScene = SceneManager.GetActiveScene();
+        Debug.Log($"test {currentScene.name}");
     }
+
 
     // Update is called once per frame
     void Update()
@@ -22,6 +26,7 @@ public class SceneController : Singleton<SceneController>
     }
     public string GetCurrentSceneName()
     {
+        currentScene = SceneManager.GetActiveScene();
         return currentScene.name;
     }
 

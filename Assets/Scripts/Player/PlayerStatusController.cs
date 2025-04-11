@@ -70,37 +70,28 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         Plus_Minus_Button_SetActive_False();
         LevelUpButton.gameObject.SetActive(false);
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
-        LevelUpPoint.gameObject.SetActive(false);
-
-        InitPlayerStatus(); //Dic에 기본 값들 생성 -> VillageManger에서 DB에 동기화된 값으로 후에 업데이트
-        //나중에는 DB에서 동기화해오는 걸로 바꿔야 함.
-        InitReal();
-
-        //스탯이 DB에서 동기화 된 후
-        UpdateStatusText();
+        LevelUpPoint.gameObject.SetActive(false);  
     }
 
-    private void InitPlayerStatus()
+    public void LoadPlayerStatus(VillageManager.Status status)
     {
-        //key만 생성
-        playerStatusValue["Exp"] = 0;
-        playerStatusValue["Hp"] = 0;
-        playerStatusValue["Sp"] = 0;
-        playerStatusValue["Ap"] = 0;
-        playerStatusValue["Wp"] = 0;
+        playerLevel = status.level;
+        playerStatusValue["Exp"] = status.exp;
+        playerStatusValue["Hp"] = status.hp;
+        playerStatusValue["Sp"] = status.sp;
+        playerStatusValue["Ap"] = status.ap;
+        playerStatusValue["Wp"] = status.wp;
+
+        //Calculate stat include weapon and item effect
+        InitReal();
+
+        //show stat to statusCanvas
+        UpdateStatusText();
     }
 
     public void InitReal()
     {
-        //원래는 아무것도 없어야 하지만 아직 DB를 하지 못한 관계로 임시
-        playerLevel = 1;
-        needExpPoint = 10;
-        //원래는 playerStatusValue Dic에다가 저장하고 realValue에 최종 계산해야 하지만 나중에
-        playerStatusValue["Exp"] = 0;
-        playerStatusValue["Hp"] = 1000;
-        playerStatusValue["Sp"] = 10;
-        playerStatusValue["Ap"] = 10;
-        playerStatusValue["Wp"] = 20;
+        needExpPoint = playerLevel * (playerLevel + 2);
 
         StatusCalculate();
 
@@ -162,10 +153,9 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     {
         realValue["Exp"] = playerStatusValue["Exp"];
         realValue["Hp"] = playerStatusValue["Hp"];
-        realValue["Sp"] = playerStatusValue["Sp"] * 100.0f + playerLevel * 0.0f;
+        realValue["Sp"] = playerStatusValue["Sp"];
         realValue["Ap"] = playerStatusValue["Ap"];
-        //realValue["Cp"] = playerStatusValue["Cp"] * 10.0f + playerLevel * 1.0f;
-        needExpPoint = 10 * playerLevel;
+        realValue["Wp"] = playerStatusValue["Wp"];
     }
 
     void StatusUpdate()

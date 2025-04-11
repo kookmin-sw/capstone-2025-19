@@ -31,6 +31,16 @@ public class VillageManager : MonoBehaviour
         public float durability;
     }
 
+    public class Status
+    {
+        public int level;
+        public int exp;
+        public float ap;
+        public float sp;
+        public float hp;
+        public float wp;
+    }
+
 
     [Header("Inventory")]
     [HideInInspector]
@@ -132,6 +142,9 @@ public class VillageManager : MonoBehaviour
             return;
         }
 
+        // Synchronize PlayerStatus
+
+
         // Synchronize PlayerQuest
         QuestCashtoDB(auth, db, user);
 
@@ -169,14 +182,15 @@ public class VillageManager : MonoBehaviour
             {
                 Dictionary<string, object> dict = doc.ToDictionary();
 
-                //DBItem item = new DBItem();
-                //item.itemDocId = doc.Id;
-                //item.itemType = dict["itemType"].ToString();
-                //item.itemName = dict["itemName"].ToString();
-                //item.quantity = System.Convert.ToInt32(dict["quantity"]);
-                //item.durability = float.Parse(dict["durability"].ToString());
+                Status stat = new Status();
+                stat.level = System.Convert.ToInt32(dict["level"]);
+                stat.exp = System.Convert.ToInt32(dict["exp"]);
+                stat.ap = float.Parse(dict["ap"].ToString());
+                stat.sp = float.Parse(dict["sp"].ToString());
+                stat.hp = float.Parse(dict["hp"].ToString());
+                stat.wp = float.Parse(dict["wp"].ToString());
 
-                //InventoryController.Instance.LoadInventoryItem(item);
+                PlayerStatusController.Instance.LoadPlayerStatus(stat);
             }
 
         });

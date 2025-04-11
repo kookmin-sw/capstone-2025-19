@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using static UnityEditor.Progress;
+
 
 public class ItemIcon : MonoBehaviour
 {

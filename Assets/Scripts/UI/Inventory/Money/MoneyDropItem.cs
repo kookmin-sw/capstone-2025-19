@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using static UnityEditor.Progress;
+
 
 public class MoneyDropItem : MonoBehaviour
 {

@@ -42,8 +42,10 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
 
     private IEnumerator WaitUntilSpawnReady(int actorNumber)
     {
+        Debug.Log("WaitUntilSpawnReady");
         while (!DungeonGenerator.Instance.IsGenerated())
         {
+            Debug.Log("Waiting");
             yield return new WaitForSeconds(1f);
         }
 
@@ -53,6 +55,7 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
 
     private void SendPlayerPosition(int actorNumber, Vector3 position)
     {
+        Debug.Log($"SendPlayerPosition {position}");
         object[] objects = new object[] { actorNumber, position };
         PhotonNetwork.RaiseEvent(
             (byte)NetworkEventReceiver.NetworkEventCode.SendPlayerSpawnPosition,
@@ -64,6 +67,7 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
 
     public void RequestPlayerSpawn()
     {
+        Debug.Log("RequestPlayerspawn");
         PhotonNetwork.RaiseEvent(
             (byte)NetworkEventReceiver.NetworkEventCode.RequestPlayerSpawn,
             PhotonNetwork.LocalPlayer.ActorNumber, // 클라이언트 식별용
@@ -74,10 +78,12 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
 
     private void ReceivePosition(EventData photonEvent)
     {
+        
         object[] data = (object[])photonEvent.CustomData;
         int actorNumber = (int)data[0];
         Vector3 position = (Vector3)data[1];
-        if(actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        Debug.Log($"Receive position {position}");
+        if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
             DungeonGenerator.Instance.SpawnPlayer_Multiplay(position);
         }

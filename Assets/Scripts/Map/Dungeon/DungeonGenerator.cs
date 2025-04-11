@@ -40,7 +40,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     NetworkEventReceiver networkEventReceiver;
 
     [HideInInspector] public NavMeshSurface surface;
-
+    public GameObject mainCmera;
 
     // Start is called before the first frame update
     protected override void Awake()
@@ -80,10 +80,10 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
             else
             {
-                /*//Waiting host createRoom
+                //Waiting host createRoom
                 //SpawnPlayer()
                 networkEventReceiver.RequestPlayerSpawn();
-                NvigationBake();*/
+                NvigationBake();
             }
         }
         else
@@ -301,6 +301,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 }
             }
         }
+        Debug.Log("Generated room is finish");
+        isGenerated = true;
     }
 
     private void NvigationBake()
@@ -388,6 +390,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
         }
         Debug.Log("¿Ï·á");
+        isGenerated = true;
     }
    
 
@@ -595,7 +598,15 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     
     public void SpawnPlayer_Multiplay(Vector3 spawnPos)
     {
-        PhotonNetwork.Instantiate($"Prefabs/Player/DemoPlayer", spawnPos, Quaternion.identity);
+        GameObject player = PhotonNetwork.Instantiate($"Prefabs/Player/DemoPlayer_Multiplay", spawnPos, Quaternion.identity);
+        GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
+        GameObject followCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/PlayerFollowCamera"));
+        CinemachineVirtualCamera virtualCamera = followCamera.GetComponent<CinemachineVirtualCamera>();
+        virtualCamera.Follow = player.transform.Find("PlayerCameraRoot");
+        PlayerControl.PlayerController playerController = player.GetComponent<PlayerControl.PlayerController>();
+        playerController.SetMainCamera(mainCamera);
+        mainCmera = mainCamera;
+        InventoryController.Instance.SetPlayerInventory();
     }
 
     public Vector3 GetPlayerSpawnPosition(int index)

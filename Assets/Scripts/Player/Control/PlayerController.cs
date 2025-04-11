@@ -1,4 +1,5 @@
-﻿using PlayerControl;
+﻿using Photon.Pun;
+using PlayerControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -102,8 +103,10 @@ namespace PlayerControl
         private Animator _animator;
         private CharacterController _controller;
         private InputHandler _input;
-        private GameObject _mainCamera;
+        private GameObject mainCamera;
         private LockOn _lockOn;
+
+        private PhotonView photonView;
 
         private const float _threshold = 0.01f;
         private bool _hasAnimator;
@@ -111,15 +114,17 @@ namespace PlayerControl
         private void Awake()
         {
             // get a reference to our main camera
-            if (_mainCamera == null)
+            if (mainCamera == null)
             {
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+                mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+            photonView = GetComponent<PhotonView>();
         }
 
         public void SetMainCamera(GameObject mainCamera)
         {
-            _mainCamera = mainCamera;
+            this.mainCamera = mainCamera;
+            Debug.Log($"main camera is {this.mainCamera}");
         }
 
         private void Start()
@@ -136,16 +141,37 @@ namespace PlayerControl
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            Debug.Log("PlayerController is Start");
+            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            {
+
+                if (!photonView.IsMine) {
+                    Destroy(GetComponent<CharacterController>());
+                    Destroy(GetComponent<InputHandler>());
+                    Destroy(GetComponent<LockOn>());
+                    Destroy(GetComponent<PlayerInput>());
+                    Destroy(GetComponent<PlayerAttacker>());
+                    
+                    
+                    
+                    Destroy(this); }
+            }
         }
 
         private void Update()
         {
-            _hasAnimator = TryGetComponent(out _animator);
+            if (photonView.IsMine) 
+            {
+                _hasAnimator = TryGetComponent(out _animator);
 
-            JumpAndGravity();
-            GroundedCheck();
-            Move();
-            Rolling();
+                JumpAndGravity();
+                GroundedCheck();
+                Move();
+                Rolling();
+            }
+            
+
         }
 
         private void LateUpdate()
@@ -202,7 +228,7 @@ namespace PlayerControl
 
                 CinemachineCameraTarget.transform.forward = Vector3.Lerp(CinemachineCameraTarget.transform.forward, direction, Time.deltaTime * _cameraSmoothing);
 
-                Vector3 camAngle = _mainCamera.transform.eulerAngles;
+                Vector3 camAngle = mainCamera.transform.eulerAngles;
                 _cinemachineTargetYaw = camAngle.y;
                 _cinemachineTargetPitch = camAngle.x;
             }
@@ -268,7 +294,8 @@ namespace PlayerControl
             // if there is a move input rotate player when the player is moving
             if (_input.move != Vector2.zero)
             {
-                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
+                if(this.mainCamera == null) { this.mainCamera = DungeonGenerator.Instance.mainCmera; }
+                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + mainCamera.transform.eulerAngles.y;
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 

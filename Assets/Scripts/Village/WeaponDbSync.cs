@@ -7,7 +7,7 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using static PlayerInventoryDB;
 using System;
-using static UnityEditor.Progress;
+
 
 public class WeaponDbSync : MonoBehaviour
 {

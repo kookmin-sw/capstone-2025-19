@@ -955,7 +955,7 @@ GameObject:
   - component: {fileID: -7231357505394031768}
   - component: {fileID: -7106046384410037935}
   m_Layer: 0
-  m_Name: 2
+  m_Name: MainHall_M
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1030,7 +1030,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -7106046384410037935}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

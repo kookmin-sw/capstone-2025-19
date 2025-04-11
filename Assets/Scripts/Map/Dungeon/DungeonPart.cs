@@ -38,38 +38,34 @@ public class DungeonPart : MonoBehaviour
     public bool HasAvailableEntryPoint(out Transform entrypoint)
     {
         Transform resultingEntry = null;
-        bool result = false;//ã�Ҵ��� �ƴ��� ���
+        bool result = false;
 
-        int totalRetries = 100; //������ġ
+        int totalRetries = 100; 
         int retryIndex = 0;
 
-        if(entryPoints.Count == 1) //�濡 �Ա��� �ϳ��� ���. -> �� ���� ��. �׳� �Ա� 2�� �̻� ����� ���� �������� �Ա� ����� �������� ���� ���� (�������� ���� ��쿡�� �Ա��� �ϳ�?)
+        if(entryPoints.Count == 1) 
         {
-            Transform entry = entryPoints[0]; // �Ա� �ϳ��ϱ� �׳� ���ϰ� ����
-            if(entry.TryGetComponent<EntryPoint>(out EntryPoint res)) // �Ա� ������Ʈ�� EntryPoint �ް� (������Ʈ �ִ����� ���ÿ� Ȯ��)
+            Transform entry = entryPoints[0]; 
+            if(entry.TryGetComponent<EntryPoint>(out EntryPoint res)) 
             {
-                if (res.IsOccupied())//�Ҵ� �Ǿ����� Ȯ��
+                if (res.IsOccupied())
                 {
-                    //�̹� �Ҵ� �� entry�� ����� false
                     result = false;
-                    resultingEntry = null; //���� entry�� ������ null �Ҵ�
+                    resultingEntry = null; 
                 }
                 else
                 {
-                    //�Ҵ� �ȵ� entry�� ��� true
                     result = true;
-                    resultingEntry = entry; // �Ҵ� �ȵ� entry �Ҵ�
-                    res.SetOccupied();  //�� entry �Ҵ� �Ǿ��ٰ� ����
+                    resultingEntry = entry; 
+                    res.SetOccupied();  
                 }
                 entrypoint = resultingEntry;
                 return result;
             }
         }
-        //�濡 �Ա��� �ϳ��� �ƴ� ��� � �Ա��� ���� ���� ��
-        while (resultingEntry == null && retryIndex < totalRetries)// ���������� �� entry ���������� ���� (���ѷ��� ��������� 100�� �ݺ�����)
-        {
-            //�ٵ� �̷��� �Ҵ�� entry�� Ȯ���ϴٰ� ���� �� ���� �ʳ�? <- �̰� �� ���� ���� ������ ���÷�����
-            int randomEntryIndex = UnityEngine.Random.Range(0, entryPoints.Count);//�������� �Ա� �ϳ� ������
+        while (resultingEntry == null && retryIndex < totalRetries) { 
+            
+            int randomEntryIndex = UnityEngine.Random.Range(0, entryPoints.Count);
             Transform entry = entryPoints[randomEntryIndex];
             if(entry.TryGetComponent<EntryPoint>(out EntryPoint entryPoint))
             {

@@ -292,7 +292,7 @@ PrefabInstance:
     - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
         type: 3}
       propertyPath: rooms.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
         type: 3}
@@ -320,7 +320,7 @@ PrefabInstance:
         type: 3}
       propertyPath: rooms.Array.data[2]
       value: 
-      objectReference: {fileID: 1839266451309113298, guid: 4c89be2523d760c42b5931db12add005,
+      objectReference: {fileID: 2597701822076250434, guid: 0cd53f0f8ca8f6048b6dd97e7bc6eed5,
         type: 3}
     - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
         type: 3}
@@ -334,6 +334,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1382099109642499120, guid: 89500807684b8904c8b73986d9b1dcd1,
         type: 3}
+    - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      propertyPath: roomsLayerMask.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7,
         type: 3}
       propertyPath: hallways.Array.data[0]

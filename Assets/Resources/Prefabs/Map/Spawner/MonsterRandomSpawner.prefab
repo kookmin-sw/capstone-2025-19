@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1418205410403992235}
   - component: {fileID: 7778299208387575959}
   - component: {fileID: 8997835508279180492}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MonsterRandomSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,3 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4f915f27b9aed745ba0bb5fdeedaebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  monsterSpawnArray:
+    keys: []
+    values: []
+    foldout: 0

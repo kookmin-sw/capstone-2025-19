@@ -173,7 +173,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         float HpBarValue = curHp / realValue["Hp"];
         if (HpBarValue != float.NaN) HpBar.value = HpBarValue;
 
-        Debug.Log($"현재 Hp : {HpBar.value}, curHp : {curHp}, realValue[Hp] : {realValue["Hp"]}");
+        //Debug.Log($"현재 Hp : {HpBar.value}, curHp : {curHp}, realValue[Hp] : {realValue["Hp"]}");
     }
     void UpdateSpBar()
     {

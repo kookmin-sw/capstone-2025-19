@@ -148,6 +148,7 @@ public class MonsterMovement : MonoBehaviour
     private float CalculDistance()
     {
         // 경로 계산
+        if(agent == null) { agent = GetComponent<NavMeshAgent>(); }
         if (agent.CalculatePath(target.position, path))
         {
             // 코너 간 거리를 더해서 총 경로 길이 계산

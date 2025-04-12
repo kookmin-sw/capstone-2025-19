@@ -79,6 +79,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 //StartCoroutine(GenerateMultiplay());
                 NvigationBake();
                 PlayerSpawn();
+                SpawnRandomObject();
             }
             else
             {
@@ -623,7 +624,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         GameObject player;
         if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
         {
-            player = PhotonNetwork.Instantiate("Prefabs/Player/DemoPlayer_Multiplay", playerSpawnPosition.position, Quaternion.identity);
+            player = PhotonNetwork.Instantiate("Prefabs/Player/Player_Multiplay", playerSpawnPosition.position, Quaternion.identity);
         }
         else { player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer"), playerSpawnPosition.position, Quaternion.identity); }
         InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());

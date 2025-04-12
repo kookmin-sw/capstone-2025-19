@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -178,7 +179,9 @@ public class BossController : MonoBehaviour
 
     public void ThrowRock()
     {
-        Instantiate(rockPrefab, rockInitPos);
+        if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene") { PhotonNetwork.Instantiate($"Prefabs/Enemys/Multiplay/Rock", rockInitPos.position, Quaternion.identity); }
+        else { Instantiate(rockPrefab, rockInitPos); }
+        
     }
     public void RangedCooltime()
     {

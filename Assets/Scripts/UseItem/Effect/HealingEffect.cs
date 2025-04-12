@@ -11,6 +11,7 @@ public class HealingEffect : ItemEffect
     {
         Debug.Log($"Healing {healAmount} HP.");
         //TODO PlayerStatusController ฐüทร 
+        PlayerStatusController.Instance.curHp += healAmount;
     }
 
     public string EffectInfo()

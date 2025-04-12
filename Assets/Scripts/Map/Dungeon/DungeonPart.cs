@@ -186,6 +186,11 @@ public class DungeonPart : MonoBehaviour
     public void SpawnMonster()
     {
         //TODO Monster Spawner
+        //if (roomUse == RoomUse.PlayerSpawn) { return; }
+        foreach(MonsterRandomSpawner spawner in spawnMonsterList)
+        {
+            spawner.SetSpawn();
+        }
     }
 
     public void SpawnObject()

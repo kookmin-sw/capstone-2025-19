@@ -242,10 +242,22 @@ public class InventoryController : Singleton<InventoryController>
     }
     public GameObject GetCreateDropItem(Item item)
     {
-        GameObject dropItem = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/DropItem"));
-        DropItem dropItem_ = dropItem.GetComponent<DropItem>();
-        //TODO SetItem;
-        dropItem_.SetItem(item);
+        GameObject dropItem;
+        if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+        {
+            dropItem = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/DropItem", Vector3.zero, Quaternion.identity) ;
+            DropItem dropItem_ = dropItem.GetComponent<DropItem>();
+            //TODO SetItem;
+            dropItem_.SetItem(item);
+        }
+        else
+        {
+            dropItem = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/DropItem"));
+            DropItem dropItem_ = dropItem.GetComponent<DropItem>();
+            //TODO SetItem;
+            dropItem_.SetItem(item);
+        }
+        
         return dropItem;
     }
     public void CreateDropItem(ItemIcon itemIcon)

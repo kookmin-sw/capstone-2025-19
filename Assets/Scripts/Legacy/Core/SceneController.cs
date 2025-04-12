@@ -15,7 +15,6 @@ public class SceneController : Singleton<SceneController>
     {
         base.Awake();
         currentScene = SceneManager.GetActiveScene();
-        Debug.Log($"test {currentScene.name}");
     }
 
 

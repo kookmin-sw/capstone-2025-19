@@ -22,17 +22,22 @@ public class DropItem : MonoBehaviour
     }
     private void OnEnable()
     {
+        if(SceneController.Instance == null) { return; }
         Init();
     }
 
     private void Init()
     {
         photonView = GetComponent<PhotonView>();
+        if(this.itemData != null)
+        {
+            Item item = new Item(this.itemData, this.quantity, this.durability);
+            SetItem(item);
+        }
     }
 
     public void SetItem(Item item)
     {
-        
         if(SceneController.Instance.GetCurrentSceneName() == "Dungeon_Multiplay")
         {
             string itemData = ChangeData(item);

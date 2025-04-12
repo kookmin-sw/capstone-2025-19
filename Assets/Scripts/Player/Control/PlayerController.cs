@@ -174,6 +174,7 @@ namespace PlayerControl
             {
 
                 if (!photonView.IsMine) {
+                    Destroy(GetComponentInChildren<PlayerTrigger>());
                     Destroy(GetComponent<CharacterController>());
                     Destroy(GetComponent<InputHandler>());
                     Destroy(GetComponent<LockOn>());
@@ -199,27 +200,44 @@ namespace PlayerControl
 
         private void Update()
         {
-
-            if (photonView.IsMine) 
+            if(SceneController.Instance.GetCurrentSceneName() == "MultiplayTestScene")
             {
-                _hasAnimator = TryGetComponent(out _animator);
+                if (photonView.IsMine)
+                {
+                    if (PlayerState.Instance.state == PlayerState.State.Die) return;
+                    Move();
+                    GroundedCheck();
+                    UseItem();
+                    PickUp();
+                    JumpAndGravity();
+                    Rolling();
+                    Attack();
+                }
+            }
+            else
+            {
+                if (PlayerState.Instance.state == PlayerState.State.Die) return;
+                Move();
+                GroundedCheck();
+                UseItem();
+                PickUp();
+                JumpAndGravity();
+                Rolling();
+                Attack();
+            }
+            /*if (photonView.IsMine) 
+            {
+                //_hasAnimator = TryGetComponent(out _animator);
 
                 JumpAndGravity();
                 GroundedCheck();
                 Move();
                 Rolling();
-            }
+            }*/
             
 
 
-            if (PlayerState.Instance.state == PlayerState.State.Die) return;
-            Move();
-            GroundedCheck();
-            UseItem();
-            PickUp();
-            JumpAndGravity();
-            Rolling();
-            Attack();
+            
 
         }
 

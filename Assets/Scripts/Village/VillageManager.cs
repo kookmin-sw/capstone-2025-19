@@ -72,16 +72,23 @@ public class VillageManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
+        Debug.Log("1");
         Quaternion spawnRotation = Quaternion.Euler(0f, 200f, 0f);
+        Debug.Log("2");
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/Player_Village"), playerSpawnPosition.position, spawnRotation);
-        InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
+        Debug.Log("13");
+        InventoryController.Instance.SetPlayer(player.GetComponentInChildren<PlayerTrigger>());
+        Debug.Log("14");
         //TODO Player MainCamera 생성
         //GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));
+        Debug.Log("15");
         CinemachineVirtualCamera virtualCamera = playerFollowCamera.GetComponent<CinemachineVirtualCamera>();
+        Debug.Log("16");
         virtualCamera.Follow = player.transform.Find("PlayerCameraRoot");
+        Debug.Log("17");
         player.GetComponent<PlayerController>().SetMainCamera(mainCamera);
-
+        Debug.Log("18");
         //player.GetComponent<PlayerController>().SetCinemachineTarget(player.transform.Find("PlayerCameraRoot").gameObject);
         //카메라 캐릭터에게로 회전
         OnLoginComplete(); 
@@ -421,7 +428,7 @@ public class VillageManager : MonoBehaviour
         //InventoryController.Instance.inventory -> VillageManager.inventory
         foreach (Item item in InventoryController.Instance.inventory)
         {
-            AddItemToVillageManagerCashList(inventory, item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+            AddItemToVillageManagerCashList(inventory, item.itemData.name, item.itemData.itemType.ToString(), item.quantity, item.durability);
         }
 
         CollectionReference inventoryRef = db.Collection("Users")
@@ -601,7 +608,7 @@ public class VillageManager : MonoBehaviour
         if(InventoryController.Instance.weaponPanel.GetWeaponItemIcon() != null)
         {
             Item item = InventoryController.Instance.weaponPanel.GetWeaponItemIcon().item;
-            AddItemToVillageManagerCashList(equippedItemList, item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+            AddItemToVillageManagerCashList(equippedItemList, item.itemData.name, item.itemData.itemType.ToString(), item.quantity, item.durability);
         }
    
 
@@ -688,7 +695,6 @@ public class VillageManager : MonoBehaviour
                 }
             }
 
-            Debug.Log("[Sync! (No Coroutine)");
         });
 
     }
@@ -701,7 +707,7 @@ public class VillageManager : MonoBehaviour
         //InventoryController.Instance.warehouse -> VillageManager.warehouseList
         foreach (Item item in InventoryController.Instance.wareHouse)
         {
-            AddItemToVillageManagerCashList(wareHouseList, item.itemData.name, item.itemData.itemType_.ToString(), item.quantity, item.durability);
+            AddItemToVillageManagerCashList(wareHouseList, item.itemData.name, item.itemData.itemType.ToString(), item.quantity, item.durability);
         }
 
         CollectionReference inventoryRef = db.Collection("Users")

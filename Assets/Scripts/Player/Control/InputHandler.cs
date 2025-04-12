@@ -28,6 +28,8 @@ namespace PlayerControl
 		public bool cursorInputForLook = true;
 		[Range(0.1f, 10)] public float mouseSensitivity = 1f;
 
+		private PlayerTrigger playerTrigger;
+
         public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());

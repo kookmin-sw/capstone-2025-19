@@ -106,7 +106,6 @@ public class InventoryController : Singleton<InventoryController>
 
     private void SetMoney()
     {
-
         moneyPanel.SetMoney(money);
     }
 
@@ -229,12 +228,10 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void CreateItemIcon(DropItem dropItem)
     {
-        Debug.Log("CreateItemIcon to dropItem");
         GameObject itemIconGo = Instantiate(itemIconPrefab);
         dropItem.itemIcon = itemIconGo;
         ItemIcon itemIcon = itemIconGo.GetComponent<ItemIcon>();
         itemIcon.dropItem = dropItem.gameObject;
-        Debug.Log($"createItemIcon {itemIcon.dropItem}");
         Item item = new Item(dropItem.itemData, dropItem.quantity, dropItem.durability);
         itemIcon.SetItem(item);
         itemIconGo.name = $"{item.itemData.name}_ItemIcon";
@@ -258,7 +255,7 @@ public class InventoryController : Singleton<InventoryController>
         {
             if(SceneController.Instance.GetCurrentSceneName() != "Dungeon_Multiplay")
             {
-                GameObject dropItemPrefab = Resources.Load<GameObject>($"Prefabs/Objects/DropItem/{itemIcon.item.itemData.name}_DropItem");
+                GameObject dropItemPrefab = Resources.Load<GameObject>($"Prefabs/Objects/DropItem/DropItem");
                 dropItemGo = Instantiate(dropItemPrefab);
                 dropItemGo.name = $"{itemIcon.item.itemData.name}_DropItem";
                 dropItemGo.transform.position = player.dropItemPosition.position;
@@ -300,10 +297,12 @@ public class InventoryController : Singleton<InventoryController>
     public void RemoveItemIcon(DropItem dropItem)
     {
         if (dropItem.itemIcon == null) { return; }
+        Debug.Log("RemoveItemIcon");
         dropItem.itemIcon.GetComponent<ItemIcon>().RemoveItemIcon();
     }
     public void RemoveDropItem(DropItem dropItem)
     {
+        Debug.Log("test");
         dropItem.RemoveDropItem();
     }
 
@@ -385,9 +384,14 @@ public class InventoryController : Singleton<InventoryController>
 
     public void ExitDropItem(DropItem dropItem)
     {
+        Debug.Log($"1️⃣ ExitDropItem 호출됨. DropItem: {dropItem?.gameObject.name} | Hash: {dropItem?.GetHashCode()}");
+        Debug.Log($"InventoryController {InventoryController.Instance.gameObject.name}");
         if(dropItem == null) { return; }
+        Debug.Log($"dropItem  list {dropItemList.Count}");
+        Debug.Log("tlqkf ");
         if (dropItemList.Contains(dropItem))
         {
+            Debug.Log($"Exit dropiTem test");
             dropItemList.Remove(dropItem);
             RemoveItemIcon(dropItem);
         }
@@ -460,13 +464,15 @@ public class InventoryController : Singleton<InventoryController>
 
     public void SetPlayer(PlayerTrigger player)
     {
+        Debug.Log($"player is {player}");
         if(this.player == null)
         {
             this.player = player;
             SetInventoryCanvas();
-            Debug.Log($"Player test {player}");
-            if(weaponSlotManager == null) weaponSlotManager = player.transform.parent.gameObject.GetComponent<WeaponSlotManager>();
+
+            if (weaponSlotManager == null) weaponSlotManager = player.transform.parent.gameObject.GetComponent<WeaponSlotManager>();
         }
+        Debug.Log("SetPlayer is finish");
     }
 
     public void SetInventoryCanvas()

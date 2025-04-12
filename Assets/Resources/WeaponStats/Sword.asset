@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ce311449d483c42aec1cbe7e5df267, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  modelPrefab: {fileID: 6399679388099792310, guid: ecca12e21a7e299459d8dfb95a613617,
+  weaponPrefab: {fileID: 8121750119794712487, guid: 0d1f2e083608516478cf491c171e516f,
     type: 3}
-  isUnarmed: 0
-  OH_Light_Attack_1: OH_Light_Attack_01
-  OH_Light_Attack_2: OH_Light_Attack_02
-  OH_Heavy_Attack_1: OH_Heavy_Attack_01
+  weaponOverride: {fileID: 22100000, guid: a36199f037320de4b924ff6b8b278369, type: 2}
+  damage: 10
+  isRanged: 0
+  projectile: {fileID: 0}
+  hitEffect: {fileID: 970440554703164915, guid: e06bd24a45153e64897394a55e3fed02,
+    type: 3}
+  isLeft: 0
+  staminaUsage: 7
+  tenacity: 5

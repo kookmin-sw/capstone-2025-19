@@ -98,16 +98,16 @@
                 {
                     "name": "UseItem",
                     "type": "Button",
-                    "id": "4311ad2a-076a-4f35-b39c-557d2048608a",
+                    "id": "975c88af-4e86-45cc-aea0-972f81be3e09",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "PickUp",
                     "type": "Button",
-                    "id": "3bc9b293-c893-4615-b8a2-3093d9c0395d",
+                    "id": "12e4e24f-c6d5-4ced-b197-3989f7c19e03",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -239,7 +239,7 @@
                 {
                     "name": "",
                     "id": "dc65b89f-9bd3-43fb-92af-d0d87ba5faa4",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
@@ -250,7 +250,7 @@
                 {
                     "name": "",
                     "id": "b1c29911-a68b-4493-9ffd-69bc53762c59",
-                    "path": "<Keyboard>/q",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -315,7 +315,7 @@
                 },
                 {
                     "name": "",
-                    "id": "16de9155-4020-4455-9c6b-ccefcd8ddfce",
+                    "id": "bbaf2675-800e-4684-b795-df7ed1d63388",
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
@@ -326,12 +326,12 @@
                 },
                 {
                     "name": "",
-                    "id": "d5c8bef2-8ef3-484b-8c23-fb918bac1f3a",
+                    "id": "b641e358-e3ec-417d-b7ee-7e239c6a82f9",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Interact",
+                    "action": "PickUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

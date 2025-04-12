@@ -37,7 +37,8 @@ public class Wall_Arrow : MonoBehaviour
         float timer = 0f;
         while (timer < arrowLifeTime)
         {
-            arrow.transform.Translate(Vector3.forward * arrowSpeed * Time.deltaTime, Space.World);
+            //arrow.transform.Translate(Vector3.forward * arrowSpeed * Time.deltaTime, Space.World);
+            arrow.transform.Translate(Vector3.right * arrowSpeed * Time.deltaTime, Space.World);
             timer += Time.deltaTime;
             yield return null;
         }

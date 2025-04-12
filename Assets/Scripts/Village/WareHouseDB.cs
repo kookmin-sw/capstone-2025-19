@@ -73,7 +73,7 @@ public class WareHouseDB : MonoBehaviour
             {
                 Dictionary<string, object> dict = doc.ToDictionary();
 
-                WareHouseItem item = new WareHouseItem();
+                VillageManager.DBItem item = new VillageManager.DBItem();
                 item.itemDocId = doc.Id;
                 item.itemType = dict["itemType"].ToString();
                 item.itemName = dict["itemName"].ToString();

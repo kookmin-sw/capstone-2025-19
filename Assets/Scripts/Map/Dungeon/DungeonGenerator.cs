@@ -7,6 +7,7 @@ using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
+using Unity.AI.Navigation;
 
 
 public class DungeonGenerator : Singleton<DungeonGenerator>

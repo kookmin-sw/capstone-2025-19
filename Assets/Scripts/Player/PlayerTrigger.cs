@@ -21,7 +21,6 @@ public class PlayerTrigger : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger test");
         if (other.CompareTag("Interact"))
         {
             InteractGo interact = other.GetComponent<InteractGo>();
@@ -29,7 +28,10 @@ public class PlayerTrigger : MonoBehaviour
             {
                 interactGoList.Add(interact);
             }
-            Debug.Log($"testset {interactGoList.Count}");
+            if(other.TryGetComponent<DropItem>(out DropItem dropItem))
+            {
+                InventoryController.Instance.EnterDropItem(dropItem);
+            }
         }
         /*if (other.CompareTag("DropItem"))
         {
@@ -64,13 +66,19 @@ public class PlayerTrigger : MonoBehaviour
     //Function Player dectected objects
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log($"other is {other.gameObject.name}");
+        
         if (other.CompareTag("Interact"))
         {
-            Debug.Log($"test {interactGoList.Count}");
             InteractGo interact = other.GetComponent<InteractGo>();
             if (interactGoList.Contains(interact))
             {
                 interactGoList.Remove(interact);
+            }
+            if(other.TryGetComponent<DropItem>(out DropItem dropItem))
+            {
+                Debug.Log("왜 두번 실행하는거야");
+                InventoryController.Instance.ExitDropItem(dropItem);
             }
         }
        /* //DebugText.Instance.Debug("trigger exit test");

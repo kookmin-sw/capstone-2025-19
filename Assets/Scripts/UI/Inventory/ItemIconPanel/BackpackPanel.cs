@@ -38,7 +38,6 @@ public class BackpackPanel : ItemPanel
     }
     public void SetBackpack()
     {
-        Debug.Log($"{InventoryController.Instance.currentInventoryItemSizeValue} {backpackitemIcon}");
         if(backpackitemIcon != null)
         {
             loadRate.SetValue(InventoryController.Instance.currentInventoryItemSizeValue, backpackitemIcon.item.itemData.containerValue);

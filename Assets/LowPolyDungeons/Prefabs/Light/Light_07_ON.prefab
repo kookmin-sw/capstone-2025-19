@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &115734692597878813
+--- !u!1 &4275981664203632825
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5447532619228066524}
-  - component: {fileID: 6292184782091848439}
-  - component: {fileID: 5375693466111799524}
-  - component: {fileID: 669077392257927739}
+  - component: {fileID: 1189436318216156892}
+  - component: {fileID: 1142519841811945412}
+  - component: {fileID: 3874645170528063282}
+  - component: {fileID: 3157988674713860158}
   m_Layer: 0
-  m_Name: Light_01
+  m_Name: Light_07_ON
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5447532619228066524
+--- !u!4 &1189436318216156892
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115734692597878813}
+  m_GameObject: {fileID: 4275981664203632825}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -53.760815, y: -1040.0338, z: 28.696226}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4217522828529714185}
+  - {fileID: 885942224795263293}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6292184782091848439
+--- !u!33 &1142519841811945412
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115734692597878813}
-  m_Mesh: {fileID: 4300000, guid: da5122fd1eabade4a87c97cd4588c6eb, type: 3}
---- !u!23 &5375693466111799524
+  m_GameObject: {fileID: 4275981664203632825}
+  m_Mesh: {fileID: 4300000, guid: d18c6a82d7c4b05418f87a4c97ce21ce, type: 3}
+--- !u!23 &3874645170528063282
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115734692597878813}
+  m_GameObject: {fileID: 4275981664203632825}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -85,13 +85,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &669077392257927739
+--- !u!64 &3157988674713860158
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115734692597878813}
+  m_GameObject: {fileID: 4275981664203632825}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -106,8 +106,8 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: da5122fd1eabade4a87c97cd4588c6eb, type: 3}
---- !u!1 &4787972619886182734
+  m_Mesh: {fileID: 4300000, guid: d18c6a82d7c4b05418f87a4c97ce21ce, type: 3}
+--- !u!1 &5787389265394991480
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,9 +115,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4217522828529714185}
-  - component: {fileID: 1901338707713117640}
-  - component: {fileID: 1857042474901973111}
+  - component: {fileID: 885942224795263293}
+  - component: {fileID: 2849044613413588915}
+  - component: {fileID: 8404580459441127366}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -125,35 +125,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4217522828529714185
+--- !u!4 &885942224795263293
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4787972619886182734}
+  m_GameObject: {fileID: 5787389265394991480}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.412, z: 0.264}
+  m_LocalPosition: {x: 0, y: 1.329, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5447532619228066524}
+  m_Father: {fileID: 1189436318216156892}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &1901338707713117640
+--- !u!108 &2849044613413588915
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4787972619886182734}
+  m_GameObject: {fileID: 5787389265394991480}
   m_Enabled: 1
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.9622642, g: 0.8824079, b: 0.8260947, a: 1}
-  m_Intensity: 4
-  m_Range: 10
+  m_Color: {r: 0.82641506, g: 0.51488906, b: 0.30405825, a: 1}
+  m_Intensity: 10
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -161,7 +161,7 @@ Light:
     m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.635
+    m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -195,20 +195,20 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 3561
-  m_UseColorTemperature: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &1857042474901973111
+--- !u!114 &8404580459441127366
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4787972619886182734}
+  m_GameObject: {fileID: 5787389265394991480}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}

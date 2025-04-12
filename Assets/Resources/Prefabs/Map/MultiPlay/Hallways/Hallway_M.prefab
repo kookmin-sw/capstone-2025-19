@@ -64,11 +64,11 @@ MonoBehaviour:
   dungeonPartType: 1
   fillerWall: {fileID: 0}
   roomUse: 0
-  spawnPoint: {fileID: 0}
   spawnItemList: []
   spawnMonsterList: []
   colliderList:
   - {fileID: 8285027916893098955}
+  playerSpawnPoints: []
   entryPoints:
   - {fileID: 2116747460149620717}
   - {fileID: 8231552418512312081}
@@ -108,7 +108,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 899192116650666925}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -194,6 +195,12 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 0100000003000000
+    values:
+    - 0.8
+    - 1
+    foldout: 1
   testCube: {fileID: 4606209367431492974}
 --- !u!1 &1123669155737803912
 GameObject:
@@ -290,6 +297,12 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 0100000003000000
+    values:
+    - 0.8
+    - 1
+    foldout: 1
   testCube: {fileID: 168015527626874488}
 --- !u!1 &6003926541906687133
 GameObject:
@@ -338,6 +351,13 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 010000000200000003000000
+    values:
+    - 0.8
+    - 0.9
+    - 1
+    foldout: 1
   testCube: {fileID: 1242888435371907779}
 --- !u!1 &6128567660028526260
 GameObject:
@@ -477,6 +497,12 @@ MonoBehaviour:
   needRoomType: 0
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 0100000003000000
+    values:
+    - 0.8
+    - 1
+    foldout: 1
   testCube: {fileID: 1678855004084809393}
 --- !u!1001 &40689297048533263
 PrefabInstance:

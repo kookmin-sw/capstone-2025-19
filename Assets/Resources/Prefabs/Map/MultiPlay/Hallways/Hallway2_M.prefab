@@ -48,9 +48,12 @@ MonoBehaviour:
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
   needRoomArray:
-    keys: 
-    values: []
-    foldout: 0
+    keys: 010000000200000003000000
+    values:
+    - 0.5
+    - 0.7
+    - 1
+    foldout: 1
   testCube: {fileID: 7798680238382481399}
 --- !u!1 &1163112709984964059
 GameObject:
@@ -269,9 +272,11 @@ MonoBehaviour:
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
   needRoomArray:
-    keys: 
-    values: []
-    foldout: 0
+    keys: 0100000003000000
+    values:
+    - 0.7
+    - 1
+    foldout: 1
   testCube: {fileID: 6467488330696543673}
 --- !u!1 &5722230678197234652
 GameObject:
@@ -362,7 +367,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -106879423892877125}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -430,9 +436,11 @@ MonoBehaviour:
   entrance: {fileID: 0}
   wallObject: {fileID: 0}
   needRoomArray:
-    keys: 
-    values: []
-    foldout: 0
+    keys: 0100000003000000
+    values:
+    - 0.5
+    - 1
+    foldout: 1
   testCube: {fileID: 3041282753657335333}
 --- !u!1001 &156748342945325144
 PrefabInstance:

@@ -34,6 +34,7 @@ public class AnimationHandler : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        print(animator.runtimeAnimatorController.name);
 
         animParamIDs[AnimParam.Speed] = "Speed";
         animParamIDs[AnimParam.Grounded] = "Grounded";
@@ -53,6 +54,9 @@ public class AnimationHandler : MonoBehaviour
         animParamIDs[AnimParam.Interacting] = "Interacting";
         animParamIDs[AnimParam.Blocking] = "Blocking";
         animParamIDs[AnimParam.CanDoCombo] = "CanDoCombo";
+
+        print(animator.GetBool("Test"));
+        print(animator.GetBool(animParamIDs[AnimParam.Attacking]));
     }
 
     public void SetBool(AnimParam param, bool value)

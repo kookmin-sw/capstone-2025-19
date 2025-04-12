@@ -411,7 +411,7 @@ public class InventoryController : Singleton<InventoryController>
         if (inventory.Count <= 0) { return; }
         Item item = inventory[0];
         item.durability += 1;
-        DebugText.Instance.Debug($"{item.itemData.name} durability is {item.durability}");
+        //DebugText.Instance.Debug($"{item.itemData.name} durability is {item.durability}");
     }
 
     public void UpQuantity()

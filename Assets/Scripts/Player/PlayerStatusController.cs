@@ -40,9 +40,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public bool canAttack;
 
     //현재 플레이어 체력 (max체력은 realValue["Hp"]값
-    [HideInInspector]
     public float curHp;
-    [HideInInspector]
     public float curSp;
 
     int playerLevel;
@@ -76,8 +74,36 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
 
-        realValue["Hp"] = 1000;
-        realValue["Sp"] = 1000;
+        SetDictionaryKey();
+    }
+
+    public void SetDictionaryKey()
+    {
+        playerStatusValue["Exp"] = 0;
+        playerStatusValue["Hp"] = 10;
+        playerStatusValue["Sp"] = 10;
+        playerStatusValue["Ap"] = 10;
+        playerStatusValue["Wp"] = 10;
+
+        realValue["Exp"] = 10;
+        realValue["Hp"] = 10;
+        realValue["Sp"] = 10;
+        realValue["Ap"] = 10;
+        realValue["Wp"] = 10;
+    }
+
+
+    public VillageManager.Status GetPlayerStatus()
+    {
+        VillageManager.Status status = new VillageManager.Status();
+        status.level = playerLevel;
+        status.exp = (int)playerStatusValue["Exp"];
+        status.hp = playerStatusValue["Hp"];
+        status.sp = playerStatusValue["Sp"];
+        status.ap = playerStatusValue["Ap"];
+        status.wp = playerStatusValue["Wp"];
+
+        return status;
     }
 
     public void LoadPlayerStatus(VillageManager.Status status)
@@ -144,11 +170,15 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     void UpdateHpBar()
     {
-        HpBar.value = curHp / realValue["Hp"];
+        float HpBarValue = curHp / realValue["Hp"];
+        if (HpBarValue != float.NaN) HpBar.value = HpBarValue;
+
+        Debug.Log($"현재 Hp : {HpBar.value}, curHp : {curHp}, realValue[Hp] : {realValue["Hp"]}");
     }
     void UpdateSpBar()
     {
         SpBar.value = curSp / realValue["Sp"];
+        //Debug.Log($"현재 Sp : {SpBar.value}, curSp : {curSp}, realValue[Sp] : {realValue["Sp"]}");
     }
 
     private void UpdateStatusText()

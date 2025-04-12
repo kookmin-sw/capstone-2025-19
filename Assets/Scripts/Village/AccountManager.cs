@@ -97,6 +97,7 @@ public class AccountManager : MonoBehaviour
                     {
                         Debug.Log("Firestore에 유저 정보 저장 완료!");
                         VillageManager.GetComponent<VillageManager>().SpawnPlayer();
+                        VillageManager.GetComponent<VillageManager>().SynchronizeDBtoCash();
                     }
                 });
             });

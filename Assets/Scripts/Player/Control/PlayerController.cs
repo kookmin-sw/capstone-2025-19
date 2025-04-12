@@ -1,4 +1,5 @@
 using System.Collections;
+using ExitGames.Client.Photon.StructWrapping;
 using Photon.Realtime;
 using PlayerControl;
 using UnityEngine;
@@ -126,7 +127,6 @@ namespace PlayerControl
         private InputHandler _input;
         private GameObject _mainCamera;
         private LockOn _lockOn;
-        private PlayerInventory_ _p;
 
         [SerializeField] PlayerGhostEffect playerGhostEffect;
 
@@ -156,7 +156,6 @@ namespace PlayerControl
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<InputHandler>();
             _lockOn = GetComponent<LockOn>();
-            _p = GetComponent<PlayerInventory_>();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
@@ -353,19 +352,22 @@ namespace PlayerControl
         {
             if (_input.attack)
             {
+                WeaponStats weapon = InventoryController.Instance.weaponPanel.GetWeapon();
                 _input.attack = false;
                 if (!Grounded) return;
                 if (PlayerStatusController.Instance.curSp <= 0) return;
+                if(weapon == null) return;
                 if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
                     || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
-                {
-                    if (!_p.isRanged) animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
+                 {
+                    if (!weapon.isRanged) animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
                     else animationHandler.SetTrigger(AnimationHandler.AnimParam.RangedAttack);
+
                     animationHandler.RootMotion(true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
                     animationHandler.SetBool(AnimationHandler.AnimParam.Attacking, true);
-                    PlayerStatusController.Instance.UseStamina(_p.staminaUsage);
+                    PlayerStatusController.Instance.UseStamina(weapon.staminaUsage);
                 }
             }
         }
@@ -392,6 +394,8 @@ namespace PlayerControl
                 animationHandler.SetTrigger(AnimationHandler.AnimParam.PickUp);
                 animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
                 animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                WeaponStats weapon;
+                weapon = InventoryController.Instance.weaponPanel.GetWeapon();
             }
         }
 

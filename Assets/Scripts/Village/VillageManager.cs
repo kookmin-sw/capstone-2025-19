@@ -72,23 +72,16 @@ public class VillageManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        Debug.Log("1");
         Quaternion spawnRotation = Quaternion.Euler(0f, 200f, 0f);
-        Debug.Log("2");
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/Player_Village"), playerSpawnPosition.position, spawnRotation);
-        Debug.Log("3");
         InventoryController.Instance.SetPlayer(player.GetComponent<PlayerTrigger>());
-        Debug.Log("4");
         //TODO Player MainCamera 생성
         //GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));
-        Debug.Log("5");
         CinemachineVirtualCamera virtualCamera = playerFollowCamera.GetComponent<CinemachineVirtualCamera>();
-        Debug.Log("6");
         virtualCamera.Follow = player.transform.Find("PlayerCameraRoot");
-        Debug.Log("7");
         player.GetComponent<PlayerController>().SetMainCamera(mainCamera);
-        Debug.Log("8");
+
         //player.GetComponent<PlayerController>().SetCinemachineTarget(player.transform.Find("PlayerCameraRoot").gameObject);
         //카메라 캐릭터에게로 회전
         OnLoginComplete(); 
@@ -119,8 +112,8 @@ public class VillageManager : MonoBehaviour
         }
 
         // Synchronize PlayerStatus
+        PlayerStatusDBtoCash(auth, db, user);
 
-        
         // Synchronize PlayerQuest
         QuestDBtoCash(auth, db, user);
         
@@ -150,7 +143,7 @@ public class VillageManager : MonoBehaviour
         }
 
         // Synchronize PlayerStatus
-
+        PlayerStatusCashtoDB(auth, db, user);
 
         // Synchronize PlayerQuest
         QuestCashtoDB(auth, db, user);
@@ -169,11 +162,13 @@ public class VillageManager : MonoBehaviour
     }
 
     // PlayerStatus Sync
+    #region PlayerStatus
     public void PlayerStatusDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
     {
-        CollectionReference StatusRef = db.Collection("Users")
+        DocumentReference StatusRef = db.Collection("Users")
                                              .Document(user.UserId)
-                                             .Collection("Status");
+                                             .Collection("Status")
+                                             .Document("StatusDoc");
 
         StatusRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
@@ -182,31 +177,68 @@ public class VillageManager : MonoBehaviour
                 Debug.LogError("Failed to load inventory: " + task.Exception);
                 return;
             }
-            var snapshot = task.Result;
-            
+            var doc = task.Result;
 
-            foreach (var doc in snapshot.Documents)
+            if (!doc.Exists)
             {
-                Dictionary<string, object> dict = doc.ToDictionary();
-
-                Status stat = new Status();
-                stat.level = System.Convert.ToInt32(dict["level"]);
-                stat.exp = System.Convert.ToInt32(dict["exp"]);
-                stat.ap = float.Parse(dict["ap"].ToString());
-                stat.sp = float.Parse(dict["sp"].ToString());
-                stat.hp = float.Parse(dict["hp"].ToString());
-                stat.wp = float.Parse(dict["wp"].ToString());
-
-                //PlayerStatusController.Instance.LoadPlayerStatus(stat);
+                Debug.Log("No status document!");
+                Status initStat = new Status();
+                initStat.level = 1;
+                initStat.exp = 0;
+                initStat.ap = 10;
+                initStat.sp = 100;
+                initStat.hp = 10;
+                initStat.wp = 10;
+                PlayerStatusController.Instance.LoadPlayerStatus(initStat);
+                return;
             }
 
+            Dictionary<string, object> dict = doc.ToDictionary();
+
+            Status stat = new Status();
+            stat.level = System.Convert.ToInt32(dict["level"]);
+            stat.exp = System.Convert.ToInt32(dict["exp"]);
+            stat.ap = float.Parse(dict["ap"].ToString());
+            stat.sp = float.Parse(dict["sp"].ToString());
+            stat.hp = float.Parse(dict["hp"].ToString());
+            stat.wp = float.Parse(dict["wp"].ToString());
+
+            PlayerStatusController.Instance.LoadPlayerStatus(stat);
         });
     }
 
     public void PlayerStatusCashtoDB(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
     {
+        VillageManager.Status currentStatus = PlayerStatusController.Instance.GetPlayerStatus();
 
+        Dictionary<string, object> statusData = new Dictionary<string, object>()
+    {
+        { "level", currentStatus.level },
+        { "exp", currentStatus.exp },
+        { "hp", currentStatus.hp },
+        { "sp", currentStatus.sp },
+        { "ap", currentStatus.ap },
+        { "wp", currentStatus.wp }
+    };
+
+        DocumentReference StatusRef = db.Collection("Users")
+                                        .Document(user.UserId)
+                                        .Collection("Status")
+                                        .Document("StatusDoc");
+
+        StatusRef.SetAsync(statusData).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to save status: " + task.Exception);
+            }
+            else
+            {
+                Debug.Log("Status saved successfully!");
+            }
+        });
     }
+    #endregion;
 
     //PlayerQuest Sync
     #region PlayerQuest

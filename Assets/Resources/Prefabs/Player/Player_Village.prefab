@@ -772,6 +772,7 @@ GameObject:
   - component: {fileID: 4490464932535565750}
   - component: {fileID: 3446109753406492648}
   - component: {fileID: 8504948827349979443}
+  - component: {fileID: -5242618434993486934}
   m_Layer: 6
   m_Name: Player_Village
   m_TagString: Player
@@ -867,11 +868,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa700b7345cdd9d4c9cde8efc17b3f93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 2
+  MoveSpeed: 4
   SprintSpeed: 5.335
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
-  LandingAudioClip: {fileID: 0}
+  LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips: []
   FootstepAudioVolume: 0.5
   JumpHeight: 1.2
@@ -895,8 +896,8 @@ MonoBehaviour:
   _useItemSpeed: 1.5
   _sprintStaminaUsage: 10
   _dodgeStaminaUsage: 20
-  _dashDuration: 0.2
-  _dashMaxAmount: 5
+  _dashDuration: 0.3
+  _dashMaxAmount: 15
   _ghostDuration: 0.15
   fadeTime: 3
   playerGhostEffect: {fileID: 0}
@@ -973,7 +974,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pushLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   canPush: 1
   strength: 0.5
 --- !u!114 &7003741957633542788
@@ -1044,12 +1045,33 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3246215277211317416}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a78b35d273109ce4fb1050d4370d0d1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropItemPosition: {fileID: 0}
+--- !u!65 &-5242618434993486934
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3246215277211317416}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3506197119744677739
 GameObject:
   m_ObjectHideFlags: 0

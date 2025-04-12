@@ -1,13 +1,19 @@
+
 ﻿using Photon.Pun;
+using System.Collections;
+using ExitGames.Client.Photon.StructWrapping;
+using Photon.Realtime;
 using PlayerControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace PlayerControl
 {
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(InputHandler))]
+    [RequireComponent(typeof(AnimationHandler))]
 
     public class PlayerController : MonoBehaviour
     {
@@ -15,7 +21,7 @@ namespace PlayerControl
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
-        [Tooltip("Sprint speed of the character in m/s")]
+        [Tooltip("Sprint speed of the character in m/s")]   
         public float SprintSpeed = 5.335f;
 
         [Tooltip("How fast the character turns to face movement direction")]
@@ -75,6 +81,30 @@ namespace PlayerControl
         [Header("LockOn")]
         public float _cameraDirectionY = -0.3f;
         public float _cameraSmoothing = 50;
+        public float _lockOnSpeed = 2.5f;
+
+        [Header("Item")]
+        public float _useItemSpeed = 1.5f;
+
+        [Header("Stamina")]
+        public float _sprintStaminaUsage = 10f;
+        public float _dodgeStaminaUsage = 20f;
+    
+        [Header("Short Dash")]
+        public float _dashDuration = 0.2f;
+        public float _dashMaxAmount = 5f;
+        private float _dashCurrentAmount = 0f;
+        private Vector3 _dashDirection;
+        private bool _IsDashing = false;
+
+        [Header("Ghost Effect")]
+        public float _ghostDuration = 0.15f;
+
+        [Header("Die")]
+        public float fadeTime = 3f;
+
+
+        private bool _characterRollFreeze = false;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -92,24 +122,21 @@ namespace PlayerControl
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
-        // animation IDs
-        private int _animIDSpeed;
-        private int _animIDGrounded;
-        private int _animIDJump;
-        private int _animIDFreeFall;
-        private int _animIDMotionSpeed;
-        private int _animIDRolling;
+        private bool test_useItem;
 
-        private Animator _animator;
+        private AnimationHandler animationHandler;
         private CharacterController _controller;
         private InputHandler _input;
         private GameObject mainCamera;
         private LockOn _lockOn;
 
+
         private PhotonView photonView;
 
+        [SerializeField] PlayerGhostEffect playerGhostEffect;
+
+
         private const float _threshold = 0.01f;
-        private bool _hasAnimator;
 
         private void Awake()
         {
@@ -129,14 +156,14 @@ namespace PlayerControl
 
         private void Start()
         {
+            CreateAfterImages();
+    
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
-            _hasAnimator = TryGetComponent(out _animator);
+
+            animationHandler = GetComponent<AnimationHandler>();
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<InputHandler>();
             _lockOn = GetComponent<LockOn>();
-
-            AssignAnimationIDs();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
@@ -159,8 +186,20 @@ namespace PlayerControl
             }
         }
 
+        public void SetCinemachineTarget(GameObject target)
+        {
+            CinemachineCameraTarget = target;
+        }
+
+        void CreateAfterImages()
+        {
+            playerGhostEffect = GetComponent<PlayerGhostEffect>();
+            playerGhostEffect.Setup(transform.GetComponentInChildren<SkinnedMeshRenderer>(), 10, _ghostDuration);
+        }
+
         private void Update()
         {
+
             if (photonView.IsMine) 
             {
                 _hasAnimator = TryGetComponent(out _animator);
@@ -172,22 +211,21 @@ namespace PlayerControl
             }
             
 
+
+            if (PlayerState.Instance.state == PlayerState.State.Die) return;
+            Move();
+            GroundedCheck();
+            UseItem();
+            PickUp();
+            JumpAndGravity();
+            Rolling();
+            Attack();
+
         }
 
         private void LateUpdate()
         {
             CameraRotation();
-        }
-
-        private void AssignAnimationIDs()
-        {
-            _animIDSpeed = Animator.StringToHash("Speed");
-            _animIDGrounded = Animator.StringToHash("Grounded");
-            _animIDJump = Animator.StringToHash("Jump");
-            _animIDFreeFall = Animator.StringToHash("FreeFall");
-            _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-            _animIDRolling = Animator.StringToHash("Rolling");
-            
         }
 
         private void GroundedCheck()
@@ -198,11 +236,7 @@ namespace PlayerControl
             Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
                 QueryTriggerInteraction.Ignore);
 
-            // update animator if using character
-            if (_hasAnimator)
-            {
-                _animator.SetBool(_animIDGrounded, Grounded);
-            }
+            animationHandler.SetBool(AnimationHandler.AnimParam.Grounded, Grounded);
         }
 
         private void CameraRotation()
@@ -221,7 +255,8 @@ namespace PlayerControl
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-            if (_lockOn.isFindTarget && _lockOn.currentTarget != null)
+            /* Camera Folling to LockOn Target (It is weird so i turned off)
+            if (_lockOn.isFindTarget && _lockOn.currentTarget != null && !animationHandler.GetBool(_animIDInteracting))
             {
                 Vector3 direction = (_lockOn.currentTarget.lockOnTarget.transform.position - CinemachineCameraTarget.transform.position).normalized;
                 direction.y = _cameraDirectionY;
@@ -237,23 +272,31 @@ namespace PlayerControl
                 // Cinemachine will follow this target
                 CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                     _cinemachineTargetYaw, 0.0f);
-            }
+            }*/
+            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+                    _cinemachineTargetYaw, 0.0f);
             
         }
 
         private void Move()
-        {
-            float lockOnSpeed;
-            if(_lockOn.isFindTarget)
+        {   
+            float Sprint = SprintSpeed;
+            if (!Grounded) Sprint = MoveSpeed;
+            // set target speed based on move speed, sprint speed and if sprint is pressed
+            float targetSpeed;
+            if (_input.sprint && PlayerStatusController.Instance.curSp > 0)
             {
-                lockOnSpeed = SprintSpeed / 2;
+                targetSpeed = Sprint;
+                PlayerStatusController.Instance.UseStamina(_sprintStaminaUsage * Time.deltaTime);
             }
             else
             {
-                lockOnSpeed = SprintSpeed;
+                targetSpeed = MoveSpeed;
             }
-            // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? lockOnSpeed : MoveSpeed;
+
+            // 감속처리
+            if (_lockOn.isFindTarget) targetSpeed = Mathf.Clamp(targetSpeed, 0, _lockOnSpeed);
+            if (test_useItem) targetSpeed = Mathf.Clamp(targetSpeed, 0, _useItemSpeed);
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -298,51 +341,152 @@ namespace PlayerControl
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + mainCamera.transform.eulerAngles.y;
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
-
                 // rotate to face input direction relative to camera position
-                if (!_lockOn.isFindTarget)
+                if (!_lockOn.isFindTarget && !animationHandler.GetBool(AnimationHandler.AnimParam.Interacting))
                 {
                     transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
                 }
             }
-
-
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
+            if (_IsDashing)
+            {
+                _controller.Move(_dashDirection * (_dashCurrentAmount * Time.deltaTime) +
+                            new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                return;
+            }
+
+            if (animationHandler.GetBool(AnimationHandler.AnimParam.Interacting)) _speed = 0;
+        
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                                new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
             // update animator if using character
-            if (_hasAnimator)
-            {
-                _animator.SetFloat(_animIDSpeed, _animationBlend);
-                _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
-            }
+            animationHandler.SetFloat(AnimationHandler.AnimParam.Speed, _animationBlend);
+            animationHandler.SetFloat(AnimationHandler.AnimParam.MotionSpeed, inputMagnitude);
         }
 
         private void Rolling()
         {
             if (_input.rolling)
             {
-                _animator.SetTrigger(_animIDRolling);
                 _input.rolling = false;
+                if (PlayerStatusController.Instance.curSp <= 0) return;
+                if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
+                transform.rotation = Quaternion.Euler(0.0f, _targetRotation, 0.0f);
+                _dashDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+                animationHandler.SetTrigger(AnimationHandler.AnimParam.Rolling);
+                PlayerStatusController.Instance.UseStamina(_dodgeStaminaUsage);
+                StartCoroutine(SmallDash());
+                /*
+                animationHandler.RootMotion(true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                PlayerState.Instance.state = PlayerState.State.Invincible;*/
             }
+        }
+
+        private void Attack()
+        {
+            if (_input.attack)
+            {
+                WeaponStats weapon = InventoryController.Instance.weaponPanel.GetWeapon();
+                _input.attack = false;
+                if (!Grounded) return;
+                if (PlayerStatusController.Instance.curSp <= 0) return;
+                if(weapon == null) return;
+                if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
+                    || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
+                 {
+                    if (!weapon.isRanged) animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
+                    else animationHandler.SetTrigger(AnimationHandler.AnimParam.RangedAttack);
+
+                    animationHandler.RootMotion(true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Attacking, true);
+                    PlayerStatusController.Instance.UseStamina(weapon.staminaUsage);
+                }
+            }
+        }
+
+        private void UseItem()
+        {
+            if (_input.useItem)
+            {
+                _input.useItem = false;
+                // 대충 아이템 확인하는 조건문 들어가야함
+                if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
+                animationHandler.SetTrigger(AnimationHandler.AnimParam.UseItem);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                test_useItem = true;
+            }
+        }
+
+        private void PickUp()
+        {
+            if (_input.pickup)
+            {
+                _input.pickup = false;
+                if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
+                animationHandler.SetTrigger(AnimationHandler.AnimParam.PickUp);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                WeaponStats weapon;
+                weapon = InventoryController.Instance.weaponPanel.GetWeapon();
+            }
+        }
+
+        // state machine
+        public void TestUseItemEnd()
+        {
+            test_useItem = false;
+        }
+        private IEnumerator SmallDash()
+        {
+            float delta = 0;
+            _IsDashing = true;
+
+            playerGhostEffect.Create(true);
+            animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+            animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+            PlayerState.Instance.state = PlayerState.State.Invincible;
+            
+            while (delta < _dashDuration)
+            {
+                _dashCurrentAmount = Mathf.Lerp(0, _dashMaxAmount, delta / _dashDuration);
+                delta += Time.deltaTime;
+                yield return null;
+            }
+            CancelDash();
+        }
+
+        private void CancelDash()
+        {
+            playerGhostEffect.Create(false);
+            _IsDashing = false;
+
+            animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, false);
+            animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, false);
+            animationHandler.ResetTrigger(AnimationHandler.AnimParam.Rolling);
+            PlayerState.Instance.state = PlayerState.State.Idle;
         }
 
         private void JumpAndGravity()
         {
+            if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)) 
+            {
+                _input.jump = false;
+                return;
+            }
             if (Grounded)
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
 
-                // update animator if using character
-                if (_hasAnimator)
-                {
-                    _animator.SetBool(_animIDJump, false);
-                    _animator.SetBool(_animIDFreeFall, false);
-                }
+                animationHandler.SetBool(AnimationHandler.AnimParam.Jump, false);
+                animationHandler.SetBool(AnimationHandler.AnimParam.FreeFall, false);
 
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
@@ -353,19 +497,9 @@ namespace PlayerControl
                 // Jump
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
-                    if (_lockOn.isFindTarget)
-                    {
-                        _input.jump = false;
-                        return;
-                    }
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-
-                    // update animator if using character
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDJump, true);
-                    }
+                    animationHandler.SetBool(AnimationHandler.AnimParam.Jump, true);
                 }
 
                 // jump timeout
@@ -386,11 +520,7 @@ namespace PlayerControl
                 }
                 else
                 {
-                    // update animator if using character
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDFreeFall, true);
-                    }
+                    animationHandler.SetBool(AnimationHandler.AnimParam.FreeFall, true);
                 }
 
                 // if we are not grounded, do not jump
@@ -402,6 +532,50 @@ namespace PlayerControl
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
+        }
+
+        #region Dying
+        public void DeathTrigger()
+        {
+            PlayerState.Instance.state = PlayerState.State.Die;
+            StopAllCoroutines();
+            StartCoroutine(DecayAndVanish(fadeTime));
+        }
+        IEnumerator DecayAndVanish(float fadeTime)
+        {
+            /*
+            SkinnedMeshRenderer rend = GetComponentInChildren<SkinnedMeshRenderer>();
+            if (rend == null) yield break;
+
+            Material mat = rend.material;
+            Color originalColor = mat.color;
+
+            // URP setting
+            mat.SetFloat("_Surface", 1); // 1 = Transparent
+            mat.SetFloat("_Blend", 0); // Alpha blend
+            mat.SetFloat("_ZWrite", 0);
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;*/
+
+            float t = 0f;
+            while (t < fadeTime)
+            {
+                /*
+                float alpha = Mathf.Lerp(1f, 0f, t / fadeTime);
+                mat.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);*/
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            // Add Death Event Here
+    
+        }
+        #endregion
+        public void ForceJumpStop()
+        {
+            animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, false);
+            _input.jump = false;
+            _jumpTimeoutDelta = 0;
+            _fallTimeoutDelta = FallTimeout;
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

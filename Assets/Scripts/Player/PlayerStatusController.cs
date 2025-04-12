@@ -20,44 +20,48 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     [SerializeField] TextMeshProUGUI LevelUpPoint;
 
     [Header("LevelUp")]
-    [SerializeField] GameObject PlusButton;
+    [SerializeField] GameObject ApPlusButton;
+    [SerializeField] GameObject ApMinusButton;
     [SerializeField] TextMeshProUGUI AP_Result;
 
     [Header("Stamina")]
-    [SerializeField] float recoverSpValue = 3f;
+    [SerializeField] float recoverSpValue = 20f;
     [SerializeField] float sprintStamina = 5f;
     [SerializeField] float rollingStamina = 5f;
     [SerializeField] float attackStamina = 5f;
+    [SerializeField] float timeToChargeStamina = 2f;
+
+    private bool recoverStamina = false;
+    private float chargeStaminaDelta = 0;
 
     [Header("player move bool")]
     public bool canSprint;
     public bool canRolling;
     public bool canAttack;
 
-    //ÇöÀç ÇÃ·¹ÀÌ¾î Ã¼·Â (maxÃ¼·ÂÀº realValue["Hp"]°ª
-    [HideInInspector]
+    //í˜„ì¬ í”Œë ˆì´ì–´ ì²´ë ¥ (maxì²´ë ¥ì€ realValue["Hp"]ê°’
     public float curHp;
-    [HideInInspector]
     public float curSp;
 
     int playerLevel;
-    int needExpPoint; //´ÙÀ½±îÁö ÇÊ¿äÇÑ °æÇèÄ¡
+    int needExpPoint; //ë‹¤ìŒê¹Œì§€ í•„ìš”í•œ ê²½í—˜ì¹˜
 
-    int levelPoint; //·¹º§¾÷ ½Ã ¾ò´Â Æ÷ÀÎÆ®
+    int levelPoint; //ë ˆë²¨ì—… ì‹œ ì–»ëŠ” í¬ì¸íŠ¸
 
-    //ÇÃ·¹ÀÌ¾î ½ºÅÈ Á¾·ù (Dic ÀúÀåµÈ)
+    //í”Œë ˆì´ì–´ ìŠ¤íƒ¯ ì¢…ë¥˜ (Dic ì €ì¥ëœ)
     //Hp
     //Sp
-    //Ap - °ø°İ·Â
-    //Wp - ÀûÀç·®
+    //Ap - ê³µê²©ë ¥
+    //Wp - ì ì¬ëŸ‰
 
-    //ÇöÀç ÀåÂøÁßÀÎ ¾ÆÀÌÅÛÀÇ È¿°ú -> ÀúÀå½Ã Hp °°ÀÌ Ã¹±ÛÀÚ¸¸ ´ë¹®ÀÚ
+    //í˜„ì¬ ì¥ì°©ì¤‘ì¸ ì•„ì´í…œì˜ íš¨ê³¼ -> ì €ì¥ì‹œ Hp ê°™ì´ ì²«ê¸€ìë§Œ ëŒ€ë¬¸ì
     Dictionary<string, float> itemStatus = new Dictionary<string, float>();
-    //ÇöÀç ÇÃ·¹ÀÌ¾î¿¡°Ô Àû¿ëµÇ´Â ¹öÇÁ È¤Àº ÀúÁÖ È¿°ú
+    //í˜„ì¬ í”Œë ˆì´ì–´ì—ê²Œ ì ìš©ë˜ëŠ” ë²„í”„ í˜¹ì€ ì €ì£¼ íš¨ê³¼
     Dictionary<string, float> itemBuffStatus = new Dictionary<string, float>();
-    //¾ÆÀÌÅÛ È¿°ú ¹İ¿µ ¾ÈµÈ ÇÃ·¹ÀÌ¾îÀÇ ½ºÅÈ
+    //ì•„ì´í…œ íš¨ê³¼ ë°˜ì˜ ì•ˆëœ í”Œë ˆì´ì–´ì˜ ìŠ¤íƒ¯
     Dictionary<string, float> playerStatusValue = new Dictionary<string, float>();
-    //ÀüÃ¼¸¦ ´Ù °è»êÇÑ ½ºÅÈ È¿°ú
+    //ì „ì²´ë¥¼ ë‹¤ ê³„ì‚°í•œ ìŠ¤íƒ¯ íš¨ê³¼
+
     Dictionary<string, float> realValue = new Dictionary<string, float>();
 
     protected override void Awake()
@@ -66,41 +70,62 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
     void Start()
     {
-        PlusButton.SetActive(false);
+        Plus_Minus_Button_SetActive_False();
         LevelUpButton.gameObject.SetActive(false);
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
 
-        InitPlayerStatus(); //Dic¿¡ ±âº» °ªµé »ı¼º -> VillageManger¿¡¼­ DB¿¡ µ¿±âÈ­µÈ °ªÀ¸·Î ÈÄ¿¡ ¾÷µ¥ÀÌÆ®
-        //³ªÁß¿¡´Â DB¿¡¼­ µ¿±âÈ­ÇØ¿À´Â °É·Î ¹Ù²ã¾ß ÇÔ.
-        InitReal();
-
-        //½ºÅÈÀÌ DB¿¡¼­ µ¿±âÈ­ µÈ ÈÄ
-        UpdateStatusText();
+        SetDictionaryKey();
     }
 
-    private void InitPlayerStatus()
+    public void SetDictionaryKey()
     {
-        //key¸¸ »ı¼º
         playerStatusValue["Exp"] = 0;
-        playerStatusValue["Hp"] = 0;
-        playerStatusValue["Sp"] = 0;
-        playerStatusValue["Ap"] = 0;
-        playerStatusValue["Wp"] = 0;
+        playerStatusValue["Hp"] = 10;
+        playerStatusValue["Sp"] = 10;
+        playerStatusValue["Ap"] = 10;
+        playerStatusValue["Wp"] = 10;
+
+        realValue["Exp"] = 10;
+        realValue["Hp"] = 10;
+        realValue["Sp"] = 10;
+        realValue["Ap"] = 10;
+        realValue["Wp"] = 10;
+    }
+
+
+    public VillageManager.Status GetPlayerStatus()
+    {
+        VillageManager.Status status = new VillageManager.Status();
+        status.level = playerLevel;
+        status.exp = (int)playerStatusValue["Exp"];
+        status.hp = playerStatusValue["Hp"];
+        status.sp = playerStatusValue["Sp"];
+        status.ap = playerStatusValue["Ap"];
+        status.wp = playerStatusValue["Wp"];
+
+        return status;
+    }
+
+    public void LoadPlayerStatus(VillageManager.Status status)
+    {
+        playerLevel = status.level;
+        playerStatusValue["Exp"] = status.exp;
+        playerStatusValue["Hp"] = status.hp;
+        playerStatusValue["Sp"] = status.sp;
+        playerStatusValue["Ap"] = status.ap;
+        playerStatusValue["Wp"] = status.wp;
+
+        //Calculate stat include weapon and item effect
+        InitReal();
+
+        //show stat to statusCanvas
+        UpdateStatusText();
     }
 
     public void InitReal()
     {
-        //¿ø·¡´Â ¾Æ¹«°Íµµ ¾ø¾î¾ß ÇÏÁö¸¸ ¾ÆÁ÷ DB¸¦ ÇÏÁö ¸øÇÑ °ü°è·Î ÀÓ½Ã
-        playerLevel = 1;
-        needExpPoint = 10;
-        //¿ø·¡´Â playerStatusValue Dic¿¡´Ù°¡ ÀúÀåÇÏ°í realValue¿¡ ÃÖÁ¾ °è»êÇØ¾ß ÇÏÁö¸¸ ³ªÁß¿¡
-        playerStatusValue["Exp"] = 0;
-        playerStatusValue["Hp"] = 1000;
-        playerStatusValue["Sp"] = 10;
-        playerStatusValue["Ap"] = 10;
-        playerStatusValue["Wp"] = 20;
-
+        needExpPoint = playerLevel * (playerLevel + 2);
         StatusCalculate();
 
         curHp = realValue["Hp"];
@@ -110,36 +135,45 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     // Update is called once per frame
     void Update()
     {
-        //Ã¼·Â, ½ºÅ×¹Ì³ª ¹Ù ¾÷µ¥ÀÌÆ®
         UpdateHpBar();
         UpdateSpBar();
         UpdateBehaviorBool();
 
-        //½ºÅ×¹Ì³ª È¸º¹
-        RecoverStamina(recoverSpValue);
+        //ìŠ¤í…Œë¯¸ë‚˜ íšŒë³µ
+        if (recoverStamina && curSp < realValue["Sp"])
+        {
+            curSp += Time.deltaTime * recoverSpValue;
+        }
+
+        if (chargeStaminaDelta < timeToChargeStamina) chargeStaminaDelta += Time.deltaTime;
+        else recoverStamina = true;
     }
 
-    
 
-    //½ºÅ×¹Ì³ª »óÅÂ¿¡ µû¶ó¼­ Çàµ¿ÀÌ °¡´ÉÇÑÁö 
+
+    //ìŠ¤í…Œë¯¸ë‚˜ ìƒíƒœì— ë”°ë¼ì„œ í–‰ë™ì´ ê°€ëŠ¥í•œì§€ 
     void UpdateBehaviorBool()
     {
-        //´Ş¸®±â °¡´É
-        if(curSp < sprintStamina) canSprint = false;
+        //ë‹¬ë¦¬ê¸° ê°€ëŠ¥
+        if (curSp < sprintStamina) canSprint = false;
         else canSprint = true;
 
-        //±¸¸£±â °¡´É
+        //êµ¬ë¥´ê¸° ê°€ëŠ¥
         if (curSp < rollingStamina) canRolling = false;
         else canRolling = true;
 
-        //°ø°İ °¡´É
+        //ê³µê²© ê°€ëŠ¥
         if (curSp < attackStamina) canAttack = false;
         else canAttack = true;
     }
 
     void UpdateHpBar()
     {
-        HpBar.value = curHp / realValue["Hp"];
+
+        float HpBarValue = curHp / realValue["Hp"];
+        if (HpBarValue != float.NaN) HpBar.value = HpBarValue;
+
+        Debug.Log($"í˜„ì¬ Hp : {HpBar.value}, curHp : {curHp}, realValue[Hp] : {realValue["Hp"]}");
     }
     void UpdateSpBar()
     {
@@ -148,46 +182,44 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     private void UpdateStatusText()
     {
-        //Ã³À½ °ÔÀÓ ½ÇÇàÇÏ°í °è»êµÈ RealStatus¸¦ text¿¡ Àü´Ş
         LevelText.text = playerLevel.ToString();
         ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
         ApText.text = realValue["Ap"].ToString();
     }
 
-    //°è»ê ½ÃÁ¡
-    //¾ÆÀÌÅÛÀÌ ÀåÂøµÇ´Â ½ÃÁ¡ + ¹°¾àÀÌ³ª ÀúÁÖ + ·¹º§¾÷
-    //playerStatus¸¦ ±âÁØÀ¸·Î realValue¸¦ ¾÷µ¥ÀÌÆ®
+
     private void StatusCalculate()
     {
         realValue["Exp"] = playerStatusValue["Exp"];
         realValue["Hp"] = playerStatusValue["Hp"];
-        realValue["Sp"] = playerStatusValue["Sp"] * 100.0f + playerLevel * 0.0f;
+        realValue["Sp"] = playerStatusValue["Sp"];
         realValue["Ap"] = playerStatusValue["Ap"];
-        //realValue["Cp"] = playerStatusValue["Cp"] * 10.0f + playerLevel * 1.0f;
-        needExpPoint = 10 * playerLevel;
+        realValue["Wp"] = playerStatusValue["Wp"];
     }
 
     void StatusUpdate()
     {
-        //playerStatusValue¸¦ ±âÁØÀ¸·Î realValue¸¦ ¾÷µ¥ÀÌÆ®
+        //playerStatusValueë¥¼ ê¸°ì¤€ìœ¼ë¡œ realValueë¥¼ ì—…ë°ì´íŠ¸
         StatusCalculate();
 
-        //¾÷µ¥ÀÌÆ®µÈ realValueÀÇ °ªÀ» text¿Í µ¿±âÈ­
+        //ì—…ë°ì´íŠ¸ëœ realValueì˜ ê°’ì„ textì™€ ë™ê¸°í™”
         UpdateStatusText();
     }
 
-    //ÇÃ·¹ÀÌ¾î µ¥¹ÌÁö
+    //í”Œë ˆì´ì–´ ë°ë¯¸ì§€
     public void getDamage(int damage)
     {
         curHp -= damage;
-        //Debug.Log($"³²Àº Ã¼·Â : {curHp}");
+        //Debug.Log($"ë‚¨ì€ ì²´ë ¥ : {curHp}");
     }
-    
-    //public void UseStamina(float value)
-    //{
-    //    curSp -= value;
-    //    Debug.Log($"³²Àº ½ºÅ×¹Ì³ª : {curSp}");
-    //}
+
+    public void UseStamina(float usage)
+    {
+        curSp -= usage;
+        chargeStaminaDelta = 0;
+        recoverStamina = false;
+        if (curSp <= 0) curSp = 0;
+    }
 
     public void rolling()
     {
@@ -204,31 +236,21 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         curSp -= attackStamina;
     }
 
-    private void RecoverStamina(float recoverSpValue)
-    {
-        if (realValue["Sp"] > curSp) 
-        {
-            curSp += recoverSpValue* Time.deltaTime;
-        }
-    }
+    //private void RecoverStamina(float recoverSpValue)
+    //{
+    //    if (realValue["Sp"] > curSp) 
+    //    {
+    //        curSp += recoverSpValue* Time.deltaTime;
+    //    }
+    //}
 
-
-    private void Die()
-    {
-        if(curHp <= 0)
-        {
-            //ÇÃ·¹ÀÌ¾î Á×À½.
-            Debug.Log("ÇÃ·¹ÀÌ¾î »ç¸Á");
-        }
-    }
-
-    //player °æÇèÄ¡°¡ ´Ù Â÷¸é ·¹º§¾÷ °¡´É
+    //player ê²½í—˜ì¹˜ê°€ ë‹¤ ì°¨ë©´ ë ˆë²¨ì—… ê°€ëŠ¥
     public void getExp(int exp)
     {
         playerStatusValue["Exp"] += exp;
         realValue["Exp"] = playerStatusValue["Exp"];
 
-        //°æÇèÄ¡ ¾òÀº°Å »óÅÂ ¾÷µ¥ÀÌÆ®
+        //ê²½í—˜ì¹˜ ì–»ì€ê±° ìƒíƒœ ì—…ë°ì´íŠ¸
         ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
 
         if (realValue["Exp"] >= needExpPoint)
@@ -237,27 +259,41 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         }
     }
 
-    //ÇÃ·¹ÀÌ¾î°¡ LevelUp¹öÆ°À» ´­·¶À» °æ¿ì
+    //í”Œë ˆì´ì–´ê°€ LevelUpë²„íŠ¼ì„ ëˆŒë €ì„ ê²½ìš°
     public void LevelUpStep1()
     {
-        //UI ÀÛµ¿
-        PlusButton.SetActive(true);
+        //UI ì‘ë™
+        Plus_Minus_Button_SetActive_True();
         LevelUpButton.gameObject.SetActive(false);
         PointDecomposeCompleteBnt.gameObject.SetActive(true);
         LevelUpPoint.gameObject.SetActive(true);
-        PointDecomposeCompleteBnt.interactable = false; //º¸ÀÌ±â¸¸ ÇÏ°í ¾ÆÁ÷ Å¬¸¯Àº ¸øÇÏµµ·Ï
+        PointDecomposeCompleteBnt.interactable = false; //ë³´ì´ê¸°ë§Œ í•˜ê³  ì•„ì§ í´ë¦­ì€ ëª»í•˜ë„ë¡
 
-        //´É·ÂÄ¡ Æ÷ÀÎÆ® ¹× Ç¥½Ã
+        //ëŠ¥ë ¥ì¹˜ í¬ì¸íŠ¸ ë° í‘œì‹œ
         levelPoint = 5;
         LevelUpPoint.text = "LevelPoint : " + levelPoint;
 
-        //+ ¿·¿¡ Ç¥½ÃÇÒ ¿Ï·á ÀÌÈÄ ´É·ÂÄ¡µé
-        //ÁÖÀÇÇÒ Á¡Àº realValue°¡ ¾Æ´Ñ playerStatusValue¸¦ »ç¿ëÇØ¼­ °è»êÇØ¾ß ÇÑ´Ù. 
+        //+ ì˜†ì— í‘œì‹œí•  ì™„ë£Œ ì´í›„ ëŠ¥ë ¥ì¹˜ë“¤
+        //ì£¼ì˜í•  ì ì€ realValueê°€ ì•„ë‹Œ playerStatusValueë¥¼ ì‚¬ìš©í•´ì„œ ê³„ì‚°í•´ì•¼ í•œë‹¤. 
         AP_Result.text = playerStatusValue["Ap"].ToString();
     }
 
-    //Ap+¹öÆ°À» ´­·¶À» °æ¿ì ½ÇÇà
-    public void ApPlusButton()
+    public void Plus_Minus_Button_SetActive_True()
+    {
+        ApPlusButton.SetActive(true);
+        ApMinusButton.SetActive(true);
+    }
+
+    public void Plus_Minus_Button_SetActive_False()
+    {
+        ApPlusButton.SetActive(false);
+        ApMinusButton.SetActive(false);
+    }
+
+    #region Stat_plus_minus
+
+    //Ap+ë²„íŠ¼ì„ ëˆŒë €ì„ ê²½ìš° ì‹¤í–‰
+    public void ApPlus()
     {
         AP_Result.text = (float.Parse(AP_Result.text) + 1).ToString();
         levelPoint--;
@@ -265,7 +301,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         isLevelPoint0();
     }
 
-    public void ApMinusButton()
+
+    public void ApMinus()
     {
         AP_Result.text = (float.Parse(AP_Result.text) - 1).ToString();
         levelPoint++;
@@ -273,9 +310,10 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         isLevelPoint0();
     }
 
+    #endregion
     private void isLevelPoint0()
     {
-        if(levelPoint <= 0)
+        if (levelPoint <= 0)
         {
             PointDecomposeCompleteBnt.interactable = true;
         }
@@ -287,17 +325,18 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
     public void PressPointDecomposeCompleteBnt()
     {
-        //Exp ¼Ò¸ğ
+        //Exp ì†Œëª¨
         playerStatusValue["Exp"] -= needExpPoint;
 
-        //¹Ù²ï ´É·ÂÄ¡¸¦ ÀúÀå
+        //ë°”ë€ ëŠ¥ë ¥ì¹˜ë¥¼ ì €ì¥
         playerStatusValue["Ap"] = float.Parse(AP_Result.text);
 
         playerLevel++;
         StatusUpdate();
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
-        PlusButton.SetActive(false);
+
+        Plus_Minus_Button_SetActive_False();
     }
 
 }

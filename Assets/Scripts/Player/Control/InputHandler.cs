@@ -17,6 +17,8 @@ namespace PlayerControl
 		public bool lockOnNext;
 		public bool attack;
 		public bool inventory;
+		public bool useItem;
+		public bool pickup;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -25,13 +27,6 @@ namespace PlayerControl
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 		[Range(0.1f, 10)] public float mouseSensitivity = 1f;
-
-		[SerializeField] public PlayerTrigger playerTrigger;
-
-        private void Awake()
-        {
-            //playerTrigger = GetComponent<PlayerTrigger>();
-        }
 
         public void OnMove(InputValue value)
 		{
@@ -97,11 +92,20 @@ namespace PlayerControl
 			}
         }
 
+
 		public void OnInteract(InputValue value)
 		{
 			Debug.Log("Input test");
 			playerTrigger.InteractObject();
 		}
+
+		public void OnUseItem(InputValue value)
+		{
+			UseItemInput(value.isPressed);
+		}
+
+
+
 		
 		public void MoveInput(Vector2 newMoveDirection)
 		{
@@ -146,6 +150,16 @@ namespace PlayerControl
 		public void AttackInput(bool newAttackState)
 		{
 			attack = newAttackState;
+		}
+
+		public void UseItemInput(bool newUseItemState)
+		{
+			useItem = newUseItemState;
+		}
+
+		public void PickUpInput(bool newPickUpState)
+		{
+			pickup = newPickUpState;
 		}
 
         private void OnApplicationFocus(bool hasFocus)

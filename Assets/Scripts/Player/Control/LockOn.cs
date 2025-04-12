@@ -21,19 +21,28 @@ namespace PlayerControl
 
         [Header("Debug")]
         public bool isFindTarget = false;
-        public Enemy currentTarget;
-        public List<Enemy> targetEnemies = new List<Enemy>();
+        public LockOnTarget currentTarget;
+        public List<LockOnTarget> targetEnemies = new List<LockOnTarget>();
         
         private InputHandler input;
         private bool isLockOn = false;
         private int currentIndex = 0;
 
-        
+        private Animator animator;
+
+        void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
         // Start is called before the first frame update
         void Start()
         {
             input = GetComponent<InputHandler>();
-            lockOnImage.gameObject.SetActive(false);
+            if(lockOnImage != null)
+            {
+                lockOnImage.gameObject.SetActive(false);
+            }
+            
         }
 
         // Update is called once per frame
@@ -55,6 +64,11 @@ namespace PlayerControl
 
             if (isFindTarget)
             {
+                if (currentTarget == null)
+                {
+                    ResetTarget();
+                    return;
+                }
                 if(IsTargetRange())
                 {
                     LookAtTarget();
@@ -90,7 +104,7 @@ namespace PlayerControl
 
             foreach (Collider findTarget in findTargets)
             {
-                Enemy target = findTarget.GetComponent<Enemy>();
+                LockOnTarget target = findTarget.GetComponent<LockOnTarget>();
 
                 if(target != null)
                 {
@@ -162,9 +176,11 @@ namespace PlayerControl
             Vector3 dir = (currentTargetPosition - transform.position).normalized;
             //dir.y = transform.position.y;
 
-            transform.forward = Vector3.Lerp(transform.forward, dir, Time.deltaTime * lookAtSmoothing);
-
-            transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+            if (!animator.GetBool("Interacting"))
+            {
+                transform.forward = Vector3.Lerp(transform.forward, dir, Time.deltaTime * lookAtSmoothing);
+                transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+            }
         }
 
         private void ChangeNextTarget()
@@ -213,10 +229,6 @@ namespace PlayerControl
             }
 
             float distance = (transform.position - currentTarget.transform.position).magnitude;
-            print(currentTarget.gameObject.name);
-            print(distance);
-            
-
             if (distance > lockOnRadius)
             {
                 return false;

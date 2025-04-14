@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class WeaponHolderSlot : MonoBehaviour
@@ -41,8 +42,9 @@ public class WeaponHolderSlot : MonoBehaviour
             UnloadWeapon();
             return;
         }
-
-        GameObject weapon = Instantiate(weaponStats.weaponPrefab) as GameObject;
+        GameObject weapon = null;
+        if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene") { weapon = PhotonNetwork.Instantiate($"Prefabs/PlayerWeapon/Multiplay/{weaponStats.weaponPrefab.name}", Vector3.zero, Quaternion.identity); }
+        else { weapon = Instantiate(weaponStats.weaponPrefab) as GameObject; }
 
         if(!weaponStats.isRanged)
         {

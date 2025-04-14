@@ -170,7 +170,7 @@ namespace PlayerControl
             _fallTimeoutDelta = FallTimeout;
 
             Debug.Log("PlayerController is Start");
-            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            /*if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
             {
 
                 if (!photonView.IsMine) {
@@ -184,7 +184,7 @@ namespace PlayerControl
                     
                     
                     Destroy(this); }
-            }
+            }*/
         }
 
         public void SetCinemachineTarget(GameObject target)
@@ -202,8 +202,10 @@ namespace PlayerControl
         {
             if(SceneController.Instance.GetCurrentSceneName() == "MultiplayTestScene")
             {
+                Debug.Log("test1");
                 if (photonView.IsMine)
                 {
+                    Debug.Log("test");
                     if (PlayerState.Instance.state == PlayerState.State.Die) return;
                     Move();
                     GroundedCheck();

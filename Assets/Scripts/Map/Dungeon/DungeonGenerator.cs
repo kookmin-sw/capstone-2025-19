@@ -237,7 +237,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             {
                 //지금 당장은 처음 만든 방이 플레이어 스폰 방임
                 Debug.Log("Photon test");
-                GameObject generatedRoom = PhotonNetwork.Instantiate("Prefabs/Map/Entrance", transform.position, transform.rotation);
+                GameObject generatedRoom = PhotonNetwork.Instantiate("Prefabs/Map/TestRoom", transform.position, transform.rotation);
                 //GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation); //여기에 있는 entrance가 던전의 시작점이 될것임
                 generatedRoom.transform.SetParent(null);
                 //멀티플레이 요소임
@@ -626,7 +626,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         {
             player = PhotonNetwork.Instantiate("Prefabs/Player/Player_Multiplay", playerSpawnPosition.position, Quaternion.identity);
         }
-        else { player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/DemoPlayer"), playerSpawnPosition.position, Quaternion.identity); }
+        else { player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/Player_SinglePlay"), playerSpawnPosition.position, Quaternion.identity); }
         InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());
         playerSpawnDungeonPart.roomUse = DungeonPart.RoomUse.PlayerSpawn;
         Debug.Log(player.transform.position);
@@ -658,7 +658,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     
     public void SpawnPlayer_Multiplay(Vector3 spawnPos)
     {
-        GameObject player = PhotonNetwork.Instantiate($"Prefabs/Player/DemoPlayer_Multiplay", spawnPos, Quaternion.identity);
+        GameObject player = PhotonNetwork.Instantiate($"Prefabs/Player/Player_Multiplay", spawnPos, Quaternion.identity);
         GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         GameObject followCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/PlayerFollowCamera"));
         CinemachineVirtualCamera virtualCamera = followCamera.GetComponent<CinemachineVirtualCamera>();
@@ -671,7 +671,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     public Vector3 GetPlayerSpawnPosition(int index)
     {
-        return playerSpawnDungeonPart.playerSpawnPoints[index+1].position;
+        return playerSpawnDungeonPart.playerSpawnPoints[index-1].position;
     }
 
     public void StartClientAfterMapReady(int spawnRoomIndex)

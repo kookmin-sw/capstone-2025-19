@@ -132,6 +132,7 @@ namespace PlayerControl
 
 
         private PhotonView photonView;
+        private bool photonIsMine = true;
 
         [SerializeField] PlayerGhostEffect playerGhostEffect;
 
@@ -170,6 +171,13 @@ namespace PlayerControl
             _fallTimeoutDelta = FallTimeout;
 
             Debug.Log("PlayerController is Start");
+            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            {
+                if(!photonView.IsMine)
+                {
+                    photonIsMine = false;
+                }
+            }
             /*if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
             {
 

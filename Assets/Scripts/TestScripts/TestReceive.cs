@@ -6,10 +6,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestReceive : MonoBehaviour, IOnEventCallback
+public class TestReceive : MonoBehaviour
 {
     
-    TestScript testScript;
+    /*TestScript testScript;
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.RemoveCallbackTarget(this);
     Dictionary<byte, Action<EventData>> handlers;
@@ -42,5 +42,5 @@ public class TestReceive : MonoBehaviour, IOnEventCallback
     private void Test1Receive(EventData photonEvent)
     {
         if (PhotonNetwork.IsMasterClient) { testScript.SendPosition((int)photonEvent.CustomData); }
-    }
+    }*/
 }

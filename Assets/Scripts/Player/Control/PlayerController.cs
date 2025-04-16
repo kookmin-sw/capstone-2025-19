@@ -158,7 +158,22 @@ namespace PlayerControl
         private void Start()
         {
             CreateAfterImages();
-    
+            Debug.Log("PlayerController is Start");
+            if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            {
+                if (!photonView.IsMine)
+                {
+                    photonIsMine = false;
+                    GetComponent<InputHandler>().enabled = false;
+                    GetComponentInChildren<PlayerTrigger>().enabled = false;
+                    GetComponent<CharacterController>().enabled = false;
+                    GetComponent<LockOn>().enabled = false;
+                    GetComponent<PlayerInput>().enabled = false;
+                    GetComponent<PlayerInput>().enabled = false;
+                    this.enabled = false;
+                }
+            }
+
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
             animationHandler = GetComponent<AnimationHandler>();
@@ -170,14 +185,7 @@ namespace PlayerControl
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
 
-            Debug.Log("PlayerController is Start");
-            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-            {
-                if(!photonView.IsMine)
-                {
-                    photonIsMine = false;
-                }
-            }
+            
             /*if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
             {
 
@@ -208,12 +216,10 @@ namespace PlayerControl
 
         private void Update()
         {
-            if(SceneController.Instance.GetCurrentSceneName() == "MultiplayTestScene")
+            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
             {
-                Debug.Log("test1");
                 if (photonView.IsMine)
                 {
-                    Debug.Log("test");
                     if (PlayerState.Instance.state == PlayerState.State.Die) return;
                     Move();
                     GroundedCheck();
@@ -253,7 +259,18 @@ namespace PlayerControl
 
         private void LateUpdate()
         {
-            CameraRotation();
+            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            {
+                if (photonView.IsMine)
+                {
+                    CameraRotation();
+                }
+            }
+            else
+            {
+                CameraRotation();
+            }
+            
         }
 
         private void GroundedCheck()
@@ -269,12 +286,15 @@ namespace PlayerControl
 
         private void CameraRotation()
         {
+            /*Debug.Log($"test {_input.look.sqrMagnitude}");
+            Debug.Log($"test {_threshold}");
+            Debug.Log($"test {LockCameraPosition}");*/
             // if there is an input and camera position is not fixed
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = 1.0f;
-
+                Debug.Log($"test {_input.look}");
                 _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
                 _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
             }

@@ -87,7 +87,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 //Waiting host createRoom
                 //SpawnPlayer()
                 networkEventReceiver.RequestPlayerSpawn();
-                StartCoroutine();
+                StartCoroutine(WaitHostReady());
             }
         }
         else
@@ -631,7 +631,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         //Wait other player before connect InventoryController
         networkEventReceiver.PlusPlayer();
         StartCoroutine(WaitOtherPlayerEnter(player));
-        StartCoroutine(ResetPlayerPosition());
+        
     }
 
     //지금 게임을 플레이 할 때 계속 player의 position을 돌려버림 왜인지 찾을 때까지 대기
@@ -660,12 +660,14 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         player_ = player;
 
         networkEventReceiver.SendAllPlayerReady();
+        StartCoroutine(ResetPlayerPosition());
     }
 
     IEnumerator WaitHostReady()
     {
         while (!networkEventReceiver.playerSpawnReady)
         {
+            Debug.Log("Wait host ready");
             yield return new WaitForSeconds(1f);
         }
         InventoryController.Instance.SetPlayer(player_.transform.Find("Trigger").GetComponent<PlayerTrigger>());

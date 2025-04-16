@@ -9,7 +9,11 @@ using static DungeonGenerator;
 
 public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
 {
+    [SerializeField] public int playerCount = 1;
+    [HideInInspector] public int courrentPlayerCount = 0;
     private Dictionary<byte, Action<EventData>> handlers;
+    public bool playerSpawnReady = false;
+    
 
     private void Awake()
     {
@@ -17,12 +21,20 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
         {
             { (byte)NetworkEventCode.RequestPlayerSpawn, GetSpawnPosition },
             { (byte)NetworkEventCode.SendPlayerSpawnPosition, ReceivePosition},
+            { (byte)NetworkEventCode.CountClientPlayer, CountClientPlayer },
+            { (byte)NetworkEventCode.ReceiveReady, ChangePlayerReady },
+            { (byte)NetworkEventCode.ClientReady,CountClientPlayer  },
+
         };
     }
     public enum NetworkEventCode : byte
     {
         RequestPlayerSpawn = 1,
         SendPlayerSpawnPosition = 2,
+        CountClientPlayer = 3,
+        ReceiveReady = 4,
+        ClientReady = 5,
+
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.RemoveCallbackTarget(this);
@@ -87,6 +99,57 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
         {
             DungeonGenerator.Instance.SpawnPlayer_Multiplay(position);
         }
+    }
+
+    public void CountClientPlayer(EventData photonEvent)
+    {
+        courrentPlayerCount++;
+        if(courrentPlayerCount == playerCount) { 
+            playerSpawnReady = true; 
+            
+        }
+    }
+
+    public void PlusPlayer()
+    {
+        courrentPlayerCount++;
+        if (courrentPlayerCount == playerCount) { playerSpawnReady = true; }
+    }
+
+    public void SendAllPlayerReady()
+    {
+        Debug.Log("Player Ready!!");
+        PhotonNetwork.RaiseEvent(
+            (byte)NetworkEventReceiver.NetworkEventCode.ReceiveReady,
+            PhotonNetwork.LocalPlayer.ActorNumber, // 클라이언트 식별용
+            new RaiseEventOptions { Receivers = ReceiverGroup.All },
+            SendOptions.SendReliable
+        );
+    }
+
+    public void SendThisPlayerReady()
+    {
+        Debug.Log("This player ");
+        PhotonNetwork.RaiseEvent((byte)NetworkEventReceiver.NetworkEventCode.ClientReady,
+            PhotonNetwork.LocalPlayer.ActorNumber,
+            new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient },
+            SendOptions.SendReliable
+            );
+    }
+
+    private void ChangePlayerReady(EventData photonEvent)
+    {
+        playerSpawnReady = true;
+    }
+
+    IEnumerable WaitForplayerReady()
+    {
+        while(playerSpawnReady == false)
+        {
+            yield return new WaitForSeconds(1f);
+        }
+        DungeonGenerator.Instance.ClientPlayerSpawn();
+
     }
     
 }

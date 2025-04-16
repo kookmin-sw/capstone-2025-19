@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DungeonPart : MonoBehaviour
 {
-    //�� �ϳ��ϳ��� ���� ������Ʈ ��ũ��Ʈ
+    
     public enum DungeonPartType
     {
         Room,
@@ -69,9 +69,8 @@ public class DungeonPart : MonoBehaviour
             Transform entry = entryPoints[randomEntryIndex];
             if(entry.TryGetComponent<EntryPoint>(out EntryPoint entryPoint))
             {
-                if (!entryPoint.IsOccupied())//�Ҵ� �ȵ� ���
+                if (!entryPoint.IsOccupied())
                 {
-                    //�Ҵ��Ű��
                     resultingEntry = entry;
                     result = true;
                     entryPoint.SetOccupied();
@@ -84,7 +83,7 @@ public class DungeonPart : MonoBehaviour
         return result;
     }
     
-    public void UnuseEntrypoint(Transform entrypoint)//������ entrypoint�� �Ҵ��� �����ߴٰ� ���� ������ ���̳� ������ ���� ���ϰ� �� ��� �ٽ� �Ⱦ��ٰ� �����ϴ� �޼��� �ε�
+    public void UnuseEntrypoint(Transform entrypoint)
     {
         if(entrypoint.TryGetComponent<EntryPoint>(out EntryPoint entry))
         {
@@ -92,7 +91,7 @@ public class DungeonPart : MonoBehaviour
         }
     }
     
-    public void FillEmptyDoors()//�Ⱦ��� entry�� ������ ����� �޼���
+    public void FillEmptyDoors()
     {
         entryPoints.ForEach((entry) =>
         {
@@ -101,8 +100,7 @@ public class DungeonPart : MonoBehaviour
                 if (!entryPoint.IsOccupied())
                 {
                     GameObject wall = Instantiate(fillerWall);
-                    //wall.GetComponent<NetworkObject>().Spawn(true);//��Ƽ�÷��̽ÿ� �ʿ��� �ڵ�. PhotonNetwork.Instatiate()�� �ؾ� �ҵ�
-                    //entry ����Ʈ�� �־���� �ű� ������ ��ǥ�� Ʋ���� �� ���� (�������� ũ�⸦ ���� �ø��� �������� entry�� �����ұ�?)
+
                     wall.transform.position = entry.transform.position;
                     wall.transform.rotation = entry.transform.rotation;
                 }

@@ -36,6 +36,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     private List<DungeonPart> generatedRooms; //带傈 郴何俊 积己等 规List
     //private List<EntryPoint> emtryList;
     private bool isGenerated = false;
+    
 
 
     private DungeonPart playerSpawnDungeonPart;
@@ -86,7 +87,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 //Waiting host createRoom
                 //SpawnPlayer()
                 networkEventReceiver.RequestPlayerSpawn();
-                NvigationBake();
+                StartCoroutine();
             }
         }
         else
@@ -627,10 +628,9 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             player = PhotonNetwork.Instantiate("Prefabs/Player/Player_Multiplay", playerSpawnPosition.position, Quaternion.identity);
         }
         else { player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/Player_SinglePlay"), playerSpawnPosition.position, Quaternion.identity); }
-        InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());
-        playerSpawnDungeonPart.roomUse = DungeonPart.RoomUse.PlayerSpawn;
-        Debug.Log(player.transform.position);
-        player_ = player;
+        //Wait other player before connect InventoryController
+        networkEventReceiver.PlusPlayer();
+        StartCoroutine(WaitOtherPlayerEnter(player));
         StartCoroutine(ResetPlayerPosition());
     }
 
@@ -642,6 +642,39 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
         SetPlayer();
     }
+
+    IEnumerator WaitOtherPlayerEnter(GameObject player)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            while (!networkEventReceiver.playerSpawnReady && SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            {
+                yield return new WaitForSeconds(1f);
+            }
+        }
+        
+        
+        InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());
+        playerSpawnDungeonPart.roomUse = DungeonPart.RoomUse.PlayerSpawn;
+        Debug.Log(player.transform.position);
+        player_ = player;
+
+        networkEventReceiver.SendAllPlayerReady();
+    }
+
+    IEnumerator WaitHostReady()
+    {
+        while (!networkEventReceiver.playerSpawnReady)
+        {
+            yield return new WaitForSeconds(1f);
+        }
+        InventoryController.Instance.SetPlayer(player_.transform.Find("Trigger").GetComponent<PlayerTrigger>());
+        InventoryController.Instance.SetPlayerInventory();
+    }
+
+    
+
+
 
     private void SetPlayer()
     {
@@ -666,7 +699,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         PlayerControl.PlayerController playerController = player.GetComponent<PlayerControl.PlayerController>();
         playerController.SetMainCamera(mainCamera);
         mainCmera = mainCamera;
-        InventoryController.Instance.SetPlayerInventory();
+        networkEventReceiver.SendThisPlayerReady();
+        player_ = player;
     }
 
     public Vector3 GetPlayerSpawnPosition(int index)
@@ -689,6 +723,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
 
         PlayerSpawn(); // 扁粮 规侥
+    }
+
+    public void ClientPlayerSpawn()
+    {
+        PlayerSpawn();
+        NvigationBake();
     }
 
 

@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(EnemyState))]
 public class EnemyController : MonoBehaviour
 {    
-    [SerializeField] Transform target;
+    public Transform target;
 
     [Header("Basic Settings")]
     [SerializeField] float basicSpeed;
@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour
     [Header("Die Effect")]
     [SerializeField] float fadeTime = 3f;
 
+    Collider attackCollider;
     EnemyState enemyState;
     Animator animator;
     Vector3 spawnPosition;
@@ -48,11 +49,13 @@ public class EnemyController : MonoBehaviour
         path = new NavMeshPath();
         enemyDetection = GetComponent<EnemyDetection>();
         enemyState = GetComponent<EnemyState>();
+        attackCollider = GetComponentInChildren<Collider>();
     }
 
     private void Start()
     {
         spawnPosition = transform.position;
+        attackCollider.enabled = false;
     }
 
     void Update()
@@ -161,6 +164,16 @@ public class EnemyController : MonoBehaviour
         //enemyState.state = EnemyState.State.Invincible;
         animator.SetTrigger("ExitBattleIdle");
         inCoroutine = false;
+    }
+
+    
+    public void EnableAttack()
+    {
+        attackCollider.enabled = true;
+    }
+    public void UnableAttack()
+    {
+        attackCollider.enabled = false;
     }
 
     private void Idle()

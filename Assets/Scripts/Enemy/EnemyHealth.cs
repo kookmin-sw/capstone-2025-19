@@ -8,6 +8,7 @@ public class EnemyHealth : Health
     private Animator animator;
     private EnemyState enemyState;
     public Slider hpBar;
+    public int enemyExp;
 
     void Awake()
     {
@@ -66,6 +67,9 @@ public class EnemyHealth : Health
             currentHealth = 0;
             animator.SetTrigger("Die");
             GetComponent<EnemyController>().DeathTrigger();
+
+            Transform player = this.GetComponent<EnemyController>().target;
+            player.GetComponent<PlayerStatus>().GetExpFromEnemy(enemyExp);
         }
     }
 

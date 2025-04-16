@@ -12,7 +12,12 @@ public class BackpackLoadRate : UIInfoData
 
     private void Start()
     {
-        slider = GetComponent<Slider>();
+        Init();
+    }
+    void Init()
+    {
+        if(slider == null)
+        slider = GetComponent<Slider> ();
     }
 
     public override string GetContent()
@@ -27,6 +32,7 @@ public class BackpackLoadRate : UIInfoData
     {
         this.maxValue = maxValue;
         this.currentValue = currentValue;
+        Init();
         slider.maxValue = maxValue;
         slider.value = currentValue;
         GetContent();

@@ -45,6 +45,8 @@ public class DamageCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Attack test");
+        Debug.Log($"player tag {tag} other tag : {other.tag}");
         Vector3 contactPos = other.ClosestPoint(transform.position);
         if (tag == "PlayerWeapon" && other.tag == "Enemy")
         {

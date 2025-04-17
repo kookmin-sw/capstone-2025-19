@@ -76,6 +76,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         LevelUpPoint.gameObject.SetActive(false);
 
         SetDictionaryKey();
+        TestLoadPlayerStatus();
     }
 
     public void SetDictionaryKey()
@@ -337,6 +338,17 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         LevelUpPoint.gameObject.SetActive(false);
 
         Plus_Minus_Button_SetActive_False();
+    }
+    void TestLoadPlayerStatus()
+    {
+        playerStatusValue["Hp"] = 1000;
+        playerStatusValue["Sp"] = 1000;
+
+        //Calculate stat include weapon and item effect
+        InitReal();
+
+        //show stat to statusCanvas
+        UpdateStatusText();
     }
 
 }

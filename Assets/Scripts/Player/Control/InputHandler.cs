@@ -37,7 +37,6 @@ namespace PlayerControl
 
 		public void OnLook(InputValue value)
 		{
-			Debug.Log("mouse test");
 			if(cursorInputForLook)
 			{
 				LookInput(value.Get<Vector2>());

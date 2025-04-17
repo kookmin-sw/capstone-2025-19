@@ -294,7 +294,6 @@ namespace PlayerControl
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = 1.0f;
-                Debug.Log($"test {_input.look}");
                 _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
                 _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
             }

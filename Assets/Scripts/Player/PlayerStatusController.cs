@@ -108,6 +108,18 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         return status;
     }
 
+    void TestLoadPlayerStatus()
+    {
+        playerStatusValue["Hp"] = 100;
+        playerStatusValue["Sp"] = 100;
+
+        //Calculate stat include weapon and item effect
+        InitReal();
+
+        //show stat to statusCanvas
+        UpdateStatusText();
+    }
+
     public void LoadPlayerStatus(VillageManager.Status status)
     {
         playerLevel = status.level;

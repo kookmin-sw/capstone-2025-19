@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour
     [Header("Die Effect")]
     [SerializeField] float fadeTime = 3f;
 
+
     [SerializeField] Collider attackCollider;
     EnemyState enemyState;
     Animator animator;

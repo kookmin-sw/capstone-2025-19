@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStatus : MonoBehaviour
+public class PlayerGetStatus : MonoBehaviour
 {
     public void GetExpFromEnemy(int exp)
     {

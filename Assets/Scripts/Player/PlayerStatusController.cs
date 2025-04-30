@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class PlayerStatusController : Singleton<PlayerStatusController>
 {
+    [Header("BuffIcon")]
+    [SerializeField] private Transform buffIconList;
+    private List<BuffIcon> buffIconList_;
+
     [Header("Slider bar")]
     [SerializeField] Slider HpBar;
     [SerializeField] Slider SpBar;
@@ -351,6 +355,50 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
         Plus_Minus_Button_SetActive_False();
     }
+
+    private GameObject CreateBuffIcon(BuffIcon.BuffType type, float value, float timeValue)
+    {
+        GameObject buffIconGo = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Inventory/BuffIcon"), buffIconList);
+        BuffIcon buffIcon = buffIconGo.GetComponent<BuffIcon>();
+        buffIcon.SetType(type);
+        Sprite sprite = Resources.Load<Sprite>($"Sprites/PlayerBuffIcon/{type.ToString()}Icon");
+        buffIcon.SetBuffIcon(sprite, value, timeValue);
+        buffIconList_.Add(buffIcon);
+        return buffIconGo;
+    }
+
+    private void RemoveBuffIcon(BuffIcon buffIcon)
+    {
+
+    }
+
+    private bool CheckBuffType(BuffIcon.BuffType type, out BuffIcon buffIcon_)
+    {
+        foreach(BuffIcon buffIcon in buffIconList_)
+        {
+            if(buffIcon.type == type)
+            {
+                buffIcon_ = buffIcon;
+                return true;
+            }
+        }
+        buffIcon_ = null;
+        return false;
+    }
+
+    #region buffIconFunction
+    public void RecoveryStaminaBuff(float recoveryValue, float timeValue)
+    {
+        if(CheckBuffType(BuffIcon.BuffType.RecoveryStamina, out BuffIcon buffIcon_)) { RemoveBuffIcon(buffIcon_); }
+        //if (recoverySp != null) { DisappearBuffIcon(recoverySp.gameObject); }
+        GameObject buffIcon = CreateBuffIcon(BuffIcon.BuffType.RecoveryStamina, recoveryValue, timeValue);
+        recoverSpValue += recoveryValue;
+
+    }
+    
+
+
+    #endregion
 
 
 }

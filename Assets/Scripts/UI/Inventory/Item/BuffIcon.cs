@@ -5,25 +5,32 @@ using UnityEngine;
 
 public class BuffIcon : MonoBehaviour
 {
+    public enum BuffType
+    {
+        RecoveryStamina,
+        RecoveryHP,
+        LossHp,
+        AttackPointUp,
+        AttackPointDown,
+        Shield,
+    }
     float timeToComplete = 10f;
     [SerializeField] float timerValue;
     float fillFraction;
     [SerializeField] float setTime;
 
-    //public StatusBuff statusBuff;
+    [SerializeField] private Image childImage;
 
-    Dictionary<string, float> statusBuffDic;
+    float buffValue;
 
 
-    string type;
+    public BuffType type;
 
 
     Sprite sprite;
     Image image;
 
-    Image childImage;
 
-    PlayerStatusController playerStatusController;
 
     private void Awake()
     {
@@ -35,13 +42,6 @@ public class BuffIcon : MonoBehaviour
         image = GetComponent<Image>();
 
 
-        Transform child = transform.GetChild(0);
-        childImage = child.GetComponent<Image>();
-
-        //statusBuff = new StatusBuff();
-        statusBuffDic = new Dictionary<string, float>();
-        playerStatusController = GameObject.Find("PlayerStatusPanel").GetComponent<PlayerStatusController>();
-        InitDictionary();
     }
     void Start()
     {
@@ -54,18 +54,7 @@ public class BuffIcon : MonoBehaviour
     }
 
 
-    void InitDictionary()
-    {
-        statusBuffDic.Add("plusMaxHp", 0);
-        statusBuffDic.Add("plusMaxSp", 0);
-        statusBuffDic.Add("plusAttackPoint", 0);
-        statusBuffDic.Add("plusWeight", 0);
-        statusBuffDic.Add("recoveryHP", 0);
-        statusBuffDic.Add("recoverySP", 0);
-        statusBuffDic.Add("plusArmor", 0);
-        statusBuffDic.Add("changed", 0);
-        statusBuffDic.Add("durationTime", 0);
-    }
+
     void UpdateTimer()
     {
         timerValue -= Time.deltaTime;
@@ -73,7 +62,7 @@ public class BuffIcon : MonoBehaviour
         //지금 당장은 배리어만 있으니까
         if (timerValue <= 0)
         {
-            if (playerStatusController == null) { FindComponent(); }
+            
             //playerStatusController.DisappearBuffIcon(gameObject);
             //playerStatusController.DisappearBarrier(gameObject);
         }
@@ -85,21 +74,22 @@ public class BuffIcon : MonoBehaviour
         }
     }
 
-    public void SetBuffIcon(Sprite sprite, float timer)
+    public void SetBuffIcon(Sprite sprite, float buffValue, float timeValue)
     {
-        this.setTime = timer;
+        this.setTime = timeValue;
         this.timerValue = setTime;
+        this.buffValue = buffValue;
         image.sprite = sprite;
     }
 
-    public void SetType(string type, float value)
+    public void SetType(BuffType type)
     {
-        statusBuffDic[type] = value;
+        this.type = type;
     }
 
-    public float GetValue(string type)
+    public float GetValue()
     {
-        return statusBuffDic[type];
+        return buffValue;
     }
 
 

@@ -10,37 +10,37 @@ using Photon.Realtime;
 using Unity.AI.Navigation;
 
 
-public class DungeonGenerator : Singleton<DungeonGenerator>
+abstract public class DungeonGenerator : Singleton<DungeonGenerator>
 {
     [Header("던전 구성 요소")]
-    [SerializeField, Tooltip("생성될 방 개수")] private int noOfRooms = 10;
+    [SerializeField, Tooltip("생성될 방 개수")] protected int noOfRooms = 10;
     [Space(10)]
-    [SerializeField, Tooltip("시작지점 방")] private GameObject entrance; //던전의 시작지점 방
-    [SerializeField, Tooltip("일반적인 방")] private List<GameObject> rooms;
-    [SerializeField, Tooltip("작은 방")] private List<GameObject> smallRooms;
-    [SerializeField, Tooltip("계단")] private List<GameObject> stairs;
-    [SerializeField, Tooltip("특별한 방(던전 생성시 같은 방 하나 이상 생성 안됨. ex) 폴가이즈 식 함정방)")] private List<GameObject> specialRooms; //전리품이 있을 수 있는 특별한 방
-    [SerializeField, Tooltip("대체 입구 -> 안쓸거니 넣으면 안됨")] private List<GameObject> alternateEntrances; //대체 입구 ex)리썰 컴퍼니의 비상구 -> 필요 없을 듯
-    [SerializeField, Tooltip("복도. 생성시 방 카운트에 적용 안됨")] private List<GameObject> hallways;
-    [SerializeField, Tooltip("문. 아직 작동 안함")] private GameObject door;
+    [SerializeField, Tooltip("시작지점 방")] protected GameObject entrance; //던전의 시작지점 방
+    [SerializeField, Tooltip("일반적인 방")] protected List<GameObject> rooms;
+    [SerializeField, Tooltip("작은 방")] protected List<GameObject> smallRooms;
+    [SerializeField, Tooltip("계단")] protected List<GameObject> stairs;
+    [SerializeField, Tooltip("특별한 방(던전 생성시 같은 방 하나 이상 생성 안됨. ex) 폴가이즈 식 함정방)")] protected List<GameObject> specialRooms; //전리품이 있을 수 있는 특별한 방
+    [SerializeField, Tooltip("대체 입구 -> 안쓸거니 넣으면 안됨")] protected List<GameObject> alternateEntrances; //대체 입구 ex)리썰 컴퍼니의 비상구 -> 필요 없을 듯
+    [SerializeField, Tooltip("복도. 생성시 방 카운트에 적용 안됨")] protected List<GameObject> hallways;
+    [SerializeField, Tooltip("문. 아직 작동 안함")] protected GameObject door;
 
-    private List<List<GameObject>> allRoomsModules;
+    protected List<List<GameObject>> allRoomsModules;
     //영상에선 이 오브젝트의 존재가 맵의 영향을 주지 않도록 y의 값을 -1000을 했음 아닌가? 내가 해석을 잘못했나?
     [Space(10)]
     [Header("던전매니저 구성, 바뀌면 안됨")]
-    [SerializeField] LayerMask roomsLayerMask;
+    [SerializeField] protected LayerMask roomsLayerMask;
     [Space(10)]
     [Header("테스트 인스펙터")]
-    [SerializeField] GameObject dontSelectedEntryGO;
+    [SerializeField] protected GameObject dontSelectedEntryGO;
     
-    private List<DungeonPart> generatedRooms; //던전 내부에 생성된 방List
+    protected List<DungeonPart> generatedRooms; //던전 내부에 생성된 방List
     //private List<EntryPoint> emtryList;
-    private bool isGenerated = false;
-    
+    protected bool isGenerated = false;
 
 
-    private DungeonPart playerSpawnDungeonPart;
-    NetworkEventReceiver networkEventReceiver;
+
+    protected DungeonPart playerSpawnDungeonPart;
+    protected NetworkEventReceiver networkEventReceiver;
 
     [HideInInspector] public NavMeshSurface surface;
     public GameObject mainCmera;
@@ -66,65 +66,15 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         StartGeneration();
     }
     //서버 관련
-    public void StartGeneration()
-    {
-        Debug.Log("Photon test1");
-        Debug.Log($"SceneManager name = {SceneController.Instance.GetCurrentSceneName()}");
-        if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
+    abstract public void StartGeneration();
 
-                //TODO Host createRoom
-                Generate_MultiPlay();
-                //StartCoroutine(GenerateMultiplay());
-                NvigationBake();
-                PlayerSpawn();
-                SpawnRandomObject();
-            }
-            else
-            {
-                //Waiting host createRoom
-                //SpawnPlayer()
-                networkEventReceiver.RequestPlayerSpawn();
-                StartCoroutine(WaitHostReady());
-            }
-        }
-        else
-        {
-            
-            /*NvigationBake();
-            Generate();
-            SpawnRandomObject();
-            PlayerSpawn();*/
-        }
-        
-    }
 
 
     //[ServerRpc(RequireOwnership = false)]
-    private void StartGenerationServerRpc()
-    {
-        if(SceneController.Instance.GetCurrentSceneName() == "MultiplayRoomTest")
-        {
-            //TODO PhotonView Instance
-            Generate_MultiPlay();
-            //FillEmptyEntrances_MultiPlay();
-        }
-        else
-        {
-            Generate(); //던전 생성
-            //GenerateAlternateEntrances(); //다른 입구 생성 -> 일단 보류. 알고리즘 자체는 던전 방 생성과 똑같음
-            //FillEmptyEntrances(); //모든 방이 생성된 이후 남은 입구 벽으로 막기
-        }
+    abstract protected void StartGenerationServerRpc();
+    
 
-        NvigationBake();
-        SpawnRandomObject();
-        PlayerSpawn();
-        isGenerated = true;
-    }
-
-    private IEnumerator GenerateMultiplay()
+    protected IEnumerator GenerateMultiplay()
     {
         yield return new WaitForSeconds(1);
         for (int i = 0; i < noOfRooms - alternateEntrances.Count; i++)
@@ -230,7 +180,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
     }
 
-    private void Generate_MultiPlay()
+    protected void Generate_MultiPlay()
     {
         for (int i = 0; i < noOfRooms - alternateEntrances.Count; i++)
         {
@@ -366,12 +316,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         isGenerated = true;
     }
 
-    private void NvigationBake()
+    protected void NvigationBake()
     {
         surface.BuildNavMesh();
     }
 
-    private void SpawnRandomObject()
+    protected void SpawnRandomObject()
     {
         foreach(DungeonPart room in generatedRooms)
         {
@@ -381,7 +331,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
     }
 
-    private void Generate()
+    protected void Generate()
     {
         for (int i = 0; i < noOfRooms - alternateEntrances.Count; i++)
         {
@@ -453,12 +403,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         Debug.Log("완료");
         isGenerated = true;
     }
-   
 
 
 
 
-    private void RetryPlacement(GameObject itemToPlace, GameObject doorToPlace)
+
+    protected void RetryPlacement(GameObject itemToPlace, GameObject doorToPlace)
     {
         DungeonPart randomGeneratedRoom = null;
         Transform room1Entrypoint = null;
@@ -494,7 +444,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
         }
     }
-    private bool HandleIntersection(DungeonPart dungeonPart)
+    protected bool HandleIntersection(DungeonPart dungeonPart)
     {
         bool didIntersect = false;
 
@@ -519,9 +469,9 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
         return didIntersect;
     }
-  
 
-    private void AlignRooms(Transform room2, Transform room1Entry, Transform room2Entry) // room1과 room2의 입구가 정확하게 일치하게 만드는것 room1은 사용 안함 room1Entry만 필요
+
+    protected void AlignRooms(Transform room2, Transform room1Entry, Transform room2Entry) // room1과 room2의 입구가 정확하게 일치하게 만드는것 room1은 사용 안함 room1Entry만 필요
     {
 
 
@@ -538,7 +488,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
         Physics.SyncTransforms();//유니티에서 Collider가 들어있는 오브젝트가 움직일 때 제대로 동기화가 안될 때가 있음
     }
-    private IEnumerator AlignEntryCoroutine(Transform room1EntryPoint, DungeonPart room2, Action<bool> callback)
+    protected IEnumerator AlignEntryCoroutine(Transform room1EntryPoint, DungeonPart room2, Action<bool> callback)
     {
         if (room2.HasAvailableEntryPoint(out Transform room2EntryPoint))
         {
@@ -576,7 +526,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
 
 
-    private bool AlignEntry(Transform room1EntryPoint, DungeonPart room2)
+    protected bool AlignEntry(Transform room1EntryPoint, DungeonPart room2)
     {
         if(room2.HasAvailableEntryPoint(out Transform room2EntryPoint))
         {
@@ -595,12 +545,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
         return false;
     }
-    
+
 
 
     //TODO Player Spawn after create Room
 
-    private void SetPlayerSpawnRoom(DungeonPart dungeonPart)
+    protected void SetPlayerSpawnRoom(DungeonPart dungeonPart)
     {
         if(dungeonPart.roomUse == DungeonPart.RoomUse.PlayerSpawn)
         {
@@ -608,62 +558,22 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
     }
 
-    private void PlayerSpawn()
-    {
-        int tryCount = 0;
-        while(playerSpawnDungeonPart == null || playerSpawnDungeonPart.dungeonPartType == DungeonPart.DungeonPartType.SpecialRoom)
-        {
-            //무한루프 빠질 가능성 높음 
-            //무한루프 빠질 경우 각 방의 플레이어 스폰 리스트 확인하기
-            playerSpawnDungeonPart = generatedRooms[UnityEngine.Random.Range(0, generatedRooms.Count)];
-            Debug.Log(playerSpawnDungeonPart.dungeonPartType);
-            if (playerSpawnDungeonPart.playerSpawnPoints.Count <= 0) { playerSpawnDungeonPart =null; }
-            tryCount += 1;
-            if (tryCount > 100) { break; }
-        }
-        Transform playerSpawnPosition = playerSpawnDungeonPart.playerSpawnPoints[0];
-        GameObject player;
-        if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-        {
-            player = PhotonNetwork.Instantiate("Prefabs/Player/Player_Multiplay", playerSpawnPosition.position, Quaternion.identity);
-        }
-        else { player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/Player_SinglePlay"), playerSpawnPosition.position, Quaternion.identity); }
-        //Wait other player before connect InventoryController
-        networkEventReceiver.PlusPlayer();
-        StartCoroutine(WaitOtherPlayerEnter(player));
-        
-    }
+    abstract protected void PlayerSpawn();
+
 
     //지금 게임을 플레이 할 때 계속 player의 position을 돌려버림 왜인지 찾을 때까지 대기
-    GameObject player_;
-    IEnumerator ResetPlayerPosition()
+    protected GameObject player_;
+    protected IEnumerator ResetPlayerPosition()
     {
         yield return new WaitForSeconds(1f);
 
         SetPlayer();
     }
 
-    IEnumerator WaitOtherPlayerEnter(GameObject player)
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            while (!networkEventReceiver.playerSpawnReady && SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-            {
-                yield return new WaitForSeconds(1f);
-            }
-        }
-        
-        
-        InventoryController.Instance.SetPlayer(player.transform.Find("Trigger").GetComponent<PlayerTrigger>());
-        playerSpawnDungeonPart.roomUse = DungeonPart.RoomUse.PlayerSpawn;
-        Debug.Log(player.transform.position);
-        player_ = player;
+    abstract protected IEnumerator WaitOtherPlayerEnter(GameObject player);
+ 
 
-        networkEventReceiver.SendAllPlayerReady();
-        StartCoroutine(ResetPlayerPosition());
-    }
-
-    IEnumerator WaitHostReady()
+    protected IEnumerator WaitHostReady()
     {
         while (!networkEventReceiver.playerSpawnReady)
         {
@@ -674,11 +584,11 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         InventoryController.Instance.SetPlayerInventory();
     }
 
-    
 
 
 
-    private void SetPlayer()
+
+    protected void SetPlayer()
     {
         GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         GameObject followCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/PlayerFollowCamera"));

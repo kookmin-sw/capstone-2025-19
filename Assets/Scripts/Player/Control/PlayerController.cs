@@ -93,9 +93,9 @@ namespace PlayerControl
         [Header("Short Dash")]
         public float _dashDuration = 0.2f;
         public float _dashMaxAmount = 5f;
-        private float _dashCurrentAmount = 0f;
-        private Vector3 _dashDirection;
-        private bool _IsDashing = false;
+        protected float _dashCurrentAmount = 0f;
+        protected Vector3 _dashDirection;
+        protected bool _IsDashing = false;
 
         [Header("Ghost Effect")]
         public float _ghostDuration = 0.15f;
@@ -104,49 +104,48 @@ namespace PlayerControl
         public float fadeTime = 3f;
 
 
-        private bool _characterRollFreeze = false;
+        protected bool _characterRollFreeze = false;
 
         // cinemachine
-        private float _cinemachineTargetYaw;
-        private float _cinemachineTargetPitch;
+        protected float _cinemachineTargetYaw;
+        protected float _cinemachineTargetPitch;
 
         // player
-        private float _speed;
-        private float _animationBlend;
-        private float _targetRotation = 0.0f;
-        private float _rotationVelocity;
-        private float _verticalVelocity;
-        private float _terminalVelocity = 53.0f;
+        protected float _speed;
+        protected float _animationBlend;
+        protected float _targetRotation = 0.0f;
+        protected float _rotationVelocity;
+        protected float _verticalVelocity;
+        protected float _terminalVelocity = 53.0f;
 
         // timeout deltatime
-        private float _jumpTimeoutDelta;
-        private float _fallTimeoutDelta;
+        protected float _jumpTimeoutDelta;
+        protected float _fallTimeoutDelta;
 
-        private bool test_useItem;
+        protected bool test_useItem;
 
-        private AnimationHandler animationHandler;
-        private CharacterController _controller;
-        private InputHandler _input;
-        private GameObject mainCamera;
-        private LockOn _lockOn;
-
-
-        private PhotonView photonView;
-        private bool photonIsMine = true;
-
-        [SerializeField] PlayerGhostEffect playerGhostEffect;
+        protected AnimationHandler animationHandler;
+        protected CharacterController _controller;
+        protected InputHandler _input;
+        protected GameObject mainCamera;
+        protected LockOn _lockOn;
 
 
-        private const float _threshold = 0.01f;
+        
 
-        private void Awake()
+        [SerializeField] protected PlayerGhostEffect playerGhostEffect;
+
+
+        protected const float _threshold = 0.01f;
+
+        protected virtual void Awake()
         {
             // get a reference to our main camera
             if (mainCamera == null)
             {
                 mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
-            photonView = GetComponent<PhotonView>();
+            
         }
 
         public void SetMainCamera(GameObject mainCamera)
@@ -155,24 +154,10 @@ namespace PlayerControl
             Debug.Log($"main camera is {this.mainCamera}");
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             CreateAfterImages();
             Debug.Log("PlayerController is Start");
-            if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-            {
-                if (!photonView.IsMine)
-                {
-                    photonIsMine = false;
-                    GetComponent<InputHandler>().enabled = false;
-                    GetComponentInChildren<PlayerTrigger>().enabled = false;
-                    GetComponent<CharacterController>().enabled = false;
-                    GetComponent<LockOn>().enabled = false;
-                    GetComponent<PlayerInput>().enabled = false;
-                    GetComponent<PlayerInput>().enabled = false;
-                    this.enabled = false;
-                }
-            }
 
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -185,22 +170,7 @@ namespace PlayerControl
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
 
-            
-            /*if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-            {
 
-                if (!photonView.IsMine) {
-                    Destroy(GetComponentInChildren<PlayerTrigger>());
-                    Destroy(GetComponent<CharacterController>());
-                    Destroy(GetComponent<InputHandler>());
-                    Destroy(GetComponent<LockOn>());
-                    Destroy(GetComponent<PlayerInput>());
-                    Destroy(GetComponent<PlayerAttacker>());
-                    
-                    
-                    
-                    Destroy(this); }
-            }*/
         }
 
         public void SetCinemachineTarget(GameObject target)
@@ -214,66 +184,27 @@ namespace PlayerControl
             playerGhostEffect.Setup(transform.GetComponentInChildren<SkinnedMeshRenderer>(), 10, _ghostDuration);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
-            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-            {
-                if (photonView.IsMine)
-                {
-                    if (PlayerState.Instance.state == PlayerState.State.Die) return;
-                    Move();
-                    GroundedCheck();
-                    UseItem();
-                    PickUp();
-                    JumpAndGravity();
-                    Rolling();
-                    Attack();
-                }
-            }
-            else
-            {
-                if (PlayerState.Instance.state == PlayerState.State.Die) return;
-                Move();
-                GroundedCheck();
-                UseItem();
-                PickUp();
-                JumpAndGravity();
-                Rolling();
-                Attack();
-            }
-            /*if (photonView.IsMine) 
-            {
-                //_hasAnimator = TryGetComponent(out _animator);
 
-                JumpAndGravity();
-                GroundedCheck();
-                Move();
-                Rolling();
-            }*/
-            
+            if (PlayerState.Instance.state == PlayerState.State.Die) return;
+            Move();
+            GroundedCheck();
+            UseItem();
+            PickUp();
+            JumpAndGravity();
+            Rolling();
+            Attack();
 
-
-            
 
         }
 
-        private void LateUpdate()
+        protected virtual void LateUpdate()
         {
-            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-            {
-                if (photonView.IsMine)
-                {
-                    CameraRotation();
-                }
-            }
-            else
-            {
-                CameraRotation();
-            }
-            
+            CameraRotation();
         }
 
-        private void GroundedCheck()
+        protected void GroundedCheck()
         {
             // set sphere position, with offset
             Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
@@ -284,7 +215,7 @@ namespace PlayerControl
             animationHandler.SetBool(AnimationHandler.AnimParam.Grounded, Grounded);
         }
 
-        private void CameraRotation()
+        protected void CameraRotation()
         {
             /*Debug.Log($"test {_input.look.sqrMagnitude}");
             Debug.Log($"test {_threshold}");
@@ -325,7 +256,7 @@ namespace PlayerControl
             
         }
 
-        private void Move()
+        protected void Move()
         {   
             float Sprint = SprintSpeed;
             if (!Grounded) Sprint = MoveSpeed;
@@ -414,7 +345,7 @@ namespace PlayerControl
             animationHandler.SetFloat(AnimationHandler.AnimParam.MotionSpeed, inputMagnitude);
         }
 
-        private void Rolling()
+        protected void Rolling()
         {
             if (_input.rolling)
             {
@@ -434,7 +365,7 @@ namespace PlayerControl
             }
         }
 
-        private void Attack()
+        protected void Attack()
         {
             if (_input.attack)
             {
@@ -458,7 +389,7 @@ namespace PlayerControl
             }
         }
 
-        private void UseItem()
+        protected void UseItem()
         {
             if (_input.useItem)
             {
@@ -471,7 +402,7 @@ namespace PlayerControl
             }
         }
 
-        private void PickUp()
+        protected void PickUp()
         {
             if (_input.pickup)
             {
@@ -490,7 +421,7 @@ namespace PlayerControl
         {
             test_useItem = false;
         }
-        private IEnumerator SmallDash()
+        protected IEnumerator SmallDash()
         {
             float delta = 0;
             _IsDashing = true;
@@ -509,7 +440,7 @@ namespace PlayerControl
             CancelDash();
         }
 
-        private void CancelDash()
+        protected void CancelDash()
         {
             playerGhostEffect.Create(false);
             _IsDashing = false;
@@ -520,7 +451,7 @@ namespace PlayerControl
             PlayerState.Instance.state = PlayerState.State.Idle;
         }
 
-        private void JumpAndGravity()
+        protected void JumpAndGravity()
         {
             if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)) 
             {

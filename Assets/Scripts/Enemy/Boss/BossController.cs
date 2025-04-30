@@ -8,32 +8,32 @@ using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(EnemyState))]
-public class BossController : MonoBehaviour
+abstract public class BossController : MonoBehaviour
 {
     public Transform target;
 
     [Header("Basic Settings")]
-    [SerializeField] float basicSpeed;
-    [SerializeField] float attackDistance;
-    [SerializeField] float rangedThresholdDistance;
-    [SerializeField] int attackPatterns = 2;
-    [SerializeField] int rangedPatterns = 2;
+    [SerializeField] protected float basicSpeed;
+    [SerializeField] protected float attackDistance;
+    [SerializeField] protected float rangedThresholdDistance;
+    [SerializeField] protected int attackPatterns = 2;
+    [SerializeField] protected int rangedPatterns = 2;
 
     [Header("Combats")]
-    [SerializeField] GameObject rockPrefab;
-    [SerializeField] Transform rockInitPos;
-    [SerializeField] float jumpDamage = 30f;
-    [SerializeField] float rangedCool = 3f;
-    [SerializeField] float attackCoolMin = 1f;
-    [SerializeField] float attackCoolMax = 2f; // random max
+    [SerializeField] protected GameObject rockPrefab;
+    [SerializeField] protected Transform rockInitPos;
+    [SerializeField] protected float jumpDamage = 30f;
+    [SerializeField] protected float rangedCool = 3f;
+    [SerializeField] protected float attackCoolMin = 1f;
+    [SerializeField] protected float attackCoolMax = 2f; // random max
 
 
-    Animator animator;
-    Vector3 spawnPosition;
-    EnemyState enemyState;
-    NavMeshAgent agent;
-    NavMeshPath path;
-    DamageCollider damageCollider;
+    protected Animator animator;
+    protected Vector3 spawnPosition;
+    protected EnemyState enemyState;
+    protected NavMeshAgent agent;
+    protected NavMeshPath path;
+    protected DamageCollider damageCollider;
 
     float distance = Mathf.Infinity;
     private int attackPatternNo = 0;
@@ -41,7 +41,7 @@ public class BossController : MonoBehaviour
     private float attackCoolDelta = 0;
     private float rangedCoolDelta = 0;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
@@ -177,12 +177,8 @@ public class BossController : MonoBehaviour
         StartCoroutine(JumpCorutine());
     }
 
-    public void ThrowRock()
-    {
-        if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene") { PhotonNetwork.Instantiate($"Prefabs/Enemys/Multiplay/Rock", rockInitPos.position, Quaternion.identity); }
-        else { Instantiate(rockPrefab, rockInitPos); }
-        
-    }
+    abstract public void ThrowRock();
+
     public void RangedCooltime()
     {
         rangedCoolDelta = rangedCool;

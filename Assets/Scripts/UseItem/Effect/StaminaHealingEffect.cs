@@ -2,24 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "ItemEffect/StaminaHealingEffect")]
 public class StaminaHealingEffect : ItemEffect
 {
     [SerializeField] public float staminaHealingValue;
     [SerializeField] public float time;
-    public override void Effect()
+    public override bool Effect()
     {
-        PlayerStatusController.Instance.RecoveryStaminaBuff(staminaHealingValue, time);
+        PlayerStatusController.Instance.RecoveryStaminaBuff(staminaHealingValue, time, this);
+        return true;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public override void RemoveEffect()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PlayerStatusController.Instance.ResetStaminaBuff(staminaHealingValue);
     }
 }

@@ -170,7 +170,7 @@ namespace PlayerControl
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
 
-
+            Debug.Log($"_input is {_input}");
         }
 
         public void SetCinemachineTarget(GameObject target)

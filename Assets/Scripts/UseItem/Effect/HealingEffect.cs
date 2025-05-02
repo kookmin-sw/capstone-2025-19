@@ -7,15 +7,21 @@ public class HealingEffect : ItemEffect
 {
     public float healAmount;
 
-    public override void Effect()
+    public override bool Effect()
     {
         Debug.Log($"Healing {healAmount} HP.");
         //TODO PlayerStatusController ฐüทร 
         PlayerStatusController.Instance.curHp += healAmount;
+        return true;
     }
 
     public string EffectInfo()
     {
         return $"Player HP healing {healAmount}";
+    }
+
+    public override void RemoveEffect()
+    {
+        throw new System.NotImplementedException();
     }
 }

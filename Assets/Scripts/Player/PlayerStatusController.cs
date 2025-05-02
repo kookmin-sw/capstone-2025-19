@@ -9,7 +9,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 {
     [Header("BuffIcon")]
     [SerializeField] private Transform buffIconList;
-    private List<BuffIcon> buffIconList_;
+    private List<BuffIcon> buffIconList_ = new List<BuffIcon>();
 
     [Header("Slider bar")]
     [SerializeField] Slider HpBar;
@@ -96,6 +96,11 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         realValue["Sp"] = 10;
         realValue["Ap"] = 10;
         realValue["Wp"] = 10;
+
+        itemBuffStatus["Hp"] = 0;
+        itemBuffStatus["Sp"] = 0;
+        itemBuffStatus["Ap"] = 0;
+        itemBuffStatus["Wp"] = 0;
     }
 
 
@@ -208,10 +213,10 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     private void StatusCalculate()
     {
         realValue["Exp"] = playerStatusValue["Exp"];
-        realValue["Hp"] = playerStatusValue["Hp"];
-        realValue["Sp"] = playerStatusValue["Sp"];
-        realValue["Ap"] = playerStatusValue["Ap"];
-        realValue["Wp"] = playerStatusValue["Wp"];
+        realValue["Hp"] = playerStatusValue["Hp"] + itemBuffStatus["Hp"];
+        realValue["Sp"] = playerStatusValue["Sp"] + itemBuffStatus["Sp"];
+        realValue["Ap"] = playerStatusValue["Ap"] + itemBuffStatus["Ap"];
+        realValue["Wp"] = playerStatusValue["Wp"] + itemBuffStatus["Wp"];
     }
 
     void StatusUpdate()
@@ -356,26 +361,28 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         Plus_Minus_Button_SetActive_False();
     }
 
-    private GameObject CreateBuffIcon(BuffIcon.BuffType type, float value, float timeValue)
+    private GameObject CreateBuffIcon(BuffIcon.BuffType type, float value, float timeValue, ItemEffect itemEffect)
     {
         GameObject buffIconGo = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Inventory/BuffIcon"), buffIconList);
         BuffIcon buffIcon = buffIconGo.GetComponent<BuffIcon>();
         buffIcon.SetType(type);
         Sprite sprite = Resources.Load<Sprite>($"Sprites/PlayerBuffIcon/{type.ToString()}Icon");
-        buffIcon.SetBuffIcon(sprite, value, timeValue);
+        buffIcon.SetBuffIcon(sprite, value, timeValue, itemEffect);
         buffIconList_.Add(buffIcon);
         return buffIconGo;
     }
 
-    private void RemoveBuffIcon(BuffIcon buffIcon)
+    public void RemoveBuffIcon(BuffIcon buffIcon)
     {
-
+        buffIconList_.Remove(buffIcon);
     }
 
     private bool CheckBuffType(BuffIcon.BuffType type, out BuffIcon buffIcon_)
     {
         foreach(BuffIcon buffIcon in buffIconList_)
         {
+            Debug.Log(buffIcon.type);
+            Debug.Log($"type is {type}");
             if(buffIcon.type == type)
             {
                 buffIcon_ = buffIcon;
@@ -387,15 +394,50 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     }
 
     #region buffIconFunction
-    public void RecoveryStaminaBuff(float recoveryValue, float timeValue)
+    public void RecoveryStaminaBuff(float recoveryValue, float timeValue, ItemEffect itemEffect)
     {
-        if(CheckBuffType(BuffIcon.BuffType.RecoveryStamina, out BuffIcon buffIcon_)) { RemoveBuffIcon(buffIcon_); }
+        if(CheckBuffType(BuffIcon.BuffType.RecoveryStaminaUp, out BuffIcon buffIcon_)) { buffIcon_.RemoveBuffIcon(); }
         //if (recoverySp != null) { DisappearBuffIcon(recoverySp.gameObject); }
-        GameObject buffIcon = CreateBuffIcon(BuffIcon.BuffType.RecoveryStamina, recoveryValue, timeValue);
+        GameObject buffIcon = CreateBuffIcon(BuffIcon.BuffType.RecoveryStaminaUp, recoveryValue, timeValue, itemEffect);
+        Debug.Log(recoverSpValue);
         recoverSpValue += recoveryValue;
-
+        Debug.Log(recoverSpValue);
     }
     
+    public void ResetStaminaBuff(float recoveryValue) { 
+        recoverSpValue -= recoveryValue;
+    }
+
+    public void AttackPointUpBuff(float  attackPointUpValue, float timeValue, ItemEffect itemEffect)
+    {
+        if (CheckBuffType(BuffIcon.BuffType.AttackPointUp, out BuffIcon buffIcon_)) { buffIcon_.RemoveBuffIcon(); }
+        //if (recoverySp != null) { DisappearBuffIcon(recoverySp.gameObject); }
+        GameObject buffIcon = CreateBuffIcon(BuffIcon.BuffType.AttackPointUp, attackPointUpValue, timeValue, itemEffect);
+        itemBuffStatus["Ap"] += attackPointUpValue;
+        StatusCalculate();
+    }
+
+    public void ResetAttackPointUpBuff(float attackPointUpValue)
+    {
+        itemBuffStatus["Ap"] -= attackPointUpValue;
+        StatusCalculate();
+    }
+
+    public void SpeedUpBuff(float speedUpValue, float timeValue, ItemEffect itemEffect) 
+    {
+        if (CheckBuffType(BuffIcon.BuffType.SpeedUp, out BuffIcon buffIcon_)) { buffIcon_.RemoveBuffIcon(); }
+        //if (recoverySp != null) { DisappearBuffIcon(recoverySp.gameObject); }
+        GameObject buffIcon = CreateBuffIcon(BuffIcon.BuffType.SpeedUp, speedUpValue, timeValue, itemEffect);
+        InventoryController.Instance.playerController.MoveSpeed += speedUpValue;
+        InventoryController.Instance.playerController.SprintSpeed += speedUpValue;
+
+    }
+
+    public void ResetSpeed(float speedUpValue)
+    {
+        InventoryController.Instance.playerController.MoveSpeed -= speedUpValue;
+        InventoryController.Instance.playerController.SprintSpeed -= speedUpValue;
+    }
 
 
     #endregion

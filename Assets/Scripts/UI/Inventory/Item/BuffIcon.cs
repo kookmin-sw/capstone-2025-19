@@ -7,12 +7,15 @@ public class BuffIcon : MonoBehaviour
 {
     public enum BuffType
     {
-        RecoveryStamina,
+        RecoveryStaminaUp,
         RecoveryHP,
         LossHp,
         AttackPointUp,
         AttackPointDown,
         Shield,
+        SpeedUp,
+        SpeedDown,
+
     }
     float timeToComplete = 10f;
     [SerializeField] float timerValue;
@@ -25,6 +28,8 @@ public class BuffIcon : MonoBehaviour
 
 
     public BuffType type;
+
+    private ItemEffect effect;
 
 
     Sprite sprite;
@@ -62,9 +67,7 @@ public class BuffIcon : MonoBehaviour
         //지금 당장은 배리어만 있으니까
         if (timerValue <= 0)
         {
-            
-            //playerStatusController.DisappearBuffIcon(gameObject);
-            //playerStatusController.DisappearBarrier(gameObject);
+            RemoveBuffIcon();
         }
         else
         {
@@ -74,8 +77,9 @@ public class BuffIcon : MonoBehaviour
         }
     }
 
-    public void SetBuffIcon(Sprite sprite, float buffValue, float timeValue)
+    public void SetBuffIcon(Sprite sprite, float buffValue, float timeValue, ItemEffect itemEffect)
     {
+        effect = itemEffect;
         this.setTime = timeValue;
         this.timerValue = setTime;
         this.buffValue = buffValue;
@@ -92,7 +96,13 @@ public class BuffIcon : MonoBehaviour
         return buffValue;
     }
 
-
+    public void RemoveBuffIcon()
+    {
+        effect.RemoveEffect();
+        PlayerStatusController.Instance.RemoveBuffIcon(this);
+        Destroy(gameObject);
+        //playerStatusController.DisappearBarrier(gameObject);
+    }
 
     /*IEnumerator IncreaseAndRevertValue()
     {

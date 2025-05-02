@@ -4,5 +4,6 @@ using UnityEngine;
 
 public abstract class ItemEffect : ScriptableObject 
 {
-    public abstract void Effect();    
+    public abstract bool Effect();
+    public abstract void RemoveEffect();
 }

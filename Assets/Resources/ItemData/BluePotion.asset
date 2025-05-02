@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BluePotion
   m_EditorClassIdentifier: 
   itemType: 0
-  itemIcon: {fileID: 21300000, guid: bc1310cf9d188fd4b884477f3b5f50a9, type: 3}
+  itemIcon: {fileID: 21300000, guid: c87dc50e199ae9643acb0c51eb65b513, type: 3}
   size: 5
   Weight: 0.4
   isUse: 0
@@ -22,4 +22,5 @@ MonoBehaviour:
   price: 300
   maxItemDurability: 10
   weaponStats: {fileID: 0}
-  effectList: []
+  effectList:
+  - {fileID: 11400000, guid: c035b8ae3cd5ac242bf7fd4b6c31ee52, type: 2}

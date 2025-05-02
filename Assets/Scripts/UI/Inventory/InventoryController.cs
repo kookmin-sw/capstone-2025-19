@@ -30,6 +30,7 @@ public class InventoryController : Singleton<InventoryController>
     //public TestPlayerMovement player;
     //public PlayerManager player;
     public PlayerTrigger player;
+    public PlayerControl.PlayerController playerController;
     [SerializeField] GameObject itemIconPrefab;
 
     [Header("ItemPanel Inspector")]
@@ -245,7 +246,7 @@ public class InventoryController : Singleton<InventoryController>
         GameObject dropItem;
         if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
         {
-            dropItem = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/DropItem", Vector3.zero, Quaternion.identity) ;
+            dropItem = PhotonNetwork.Instantiate($"Prefabs/Objects/DropItem/DropItem_M", Vector3.zero, Quaternion.identity) ;
             DropItem dropItem_ = dropItem.GetComponent<DropItem>();
             //TODO SetItem;
             dropItem_.SetItem(item);
@@ -487,6 +488,11 @@ public class InventoryController : Singleton<InventoryController>
         Debug.Log("SetPlayer is finish");
     }
 
+    public void SetPlayerController(PlayerControl.PlayerController controller)
+    {
+        playerController = controller;
+    }
+
     public void SetInventoryCanvas()
     {
         if (PlayerState.Instance.state == PlayerState.State.Inventory)
@@ -570,6 +576,13 @@ public class InventoryController : Singleton<InventoryController>
     {
         //Scene 이동 시 Inventory 내에서 적용 해야 할 아이템 적용 시키기
         weaponPanel.SetWeapon();
+    }
+
+    public bool WeaponRepair(float repairValue)
+    {
+        if(weaponPanel.GetWeapon() == null) { return false; }
+        weaponPanel.GetWeaponItemIcon().PlusItemDurability(repairValue);
+        return true;
     }
 
 }

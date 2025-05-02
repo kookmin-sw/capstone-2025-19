@@ -18,6 +18,8 @@ public class PlayerController_M : PlayerControl.PlayerController
     }
     protected override void Start()
     {
+        Debug.Log("start test");
+        base.Start();
         if (!photonView.IsMine)
         {
             photonIsMine = false;
@@ -29,7 +31,7 @@ public class PlayerController_M : PlayerControl.PlayerController
             GetComponent<PlayerInput>().enabled = false;
             this.enabled = false;
         }
-        base.Start();
+        
     }
 
     // Update is called once per frame

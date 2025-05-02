@@ -458,7 +458,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: DungeonController
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 236778833406097170, guid: e22e78ae6ea601244a2221c8631ceac7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -466,6 +467,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 633129429}
+    - targetCorrespondingSourceObject: {fileID: 1885624787403507652, guid: e22e78ae6ea601244a2221c8631ceac7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 633129430}
   m_SourcePrefab: {fileID: 100100000, guid: e22e78ae6ea601244a2221c8631ceac7, type: 3}
 --- !u!1 &633129428 stripped
 GameObject:
@@ -488,6 +493,34 @@ MonoBehaviour:
   playerCount: 2
   courrentPlayerCount: 0
   playerSpawnReady: 0
+--- !u!114 &633129430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633129428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 413731b97d01c574aa699d2681e8556e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noOfRooms: 10
+  entrance: {fileID: 0}
+  rooms: []
+  smallRooms: []
+  stairs: []
+  specialRooms: []
+  alternateEntrances: []
+  hallways: []
+  door: {fileID: 0}
+  roomsLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  dontSelectedEntryGO: {fileID: 0}
+  surface: {fileID: 0}
+  mainCmera: {fileID: 0}
+  entranceRoomName: 
 --- !u!1 &658519080
 GameObject:
   m_ObjectHideFlags: 0

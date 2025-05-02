@@ -97,6 +97,11 @@ public class ItemIcon : MonoBehaviour
         }return true;
     }
 
+    public void PlusItemDurability(float value)
+    {
+        this.item.durability += value;
+        SetSlider();
+    }
     
     
 }
@@ -138,7 +143,7 @@ public class Item
         {
             foreach(ItemEffect effect in this.itemData.effectList)
             {
-                effect.Effect();
+                if (!effect.Effect()) { quantity += 1; break; }
             }
             quantity -= 1;
             UpdateInfo();

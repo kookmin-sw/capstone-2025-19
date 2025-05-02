@@ -69,7 +69,7 @@ public class EnemyHealth : Health
             GetComponent<EnemyController>().DeathTrigger();
 
             Transform player = this.GetComponent<EnemyController>().target;
-            player.GetComponent<PlayerStatus>().GetExpFromEnemy(enemyExp);
+            player.GetComponent<PlayerGetStatus>().GetExpFromEnemy(enemyExp);
         }
     }
 

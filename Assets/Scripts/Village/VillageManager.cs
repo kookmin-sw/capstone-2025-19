@@ -122,7 +122,7 @@ public class VillageManager : MonoBehaviour
         PlayerStatusDBtoCash(auth, db, user);
 
         // Synchronize PlayerQuest
-        QuestDBtoCash(auth, db, user);
+        //QuestDBtoCash(auth, db, user);
         
         // Synchronize money 
         MoneyDBtoCash(auth, db, user);
@@ -153,7 +153,7 @@ public class VillageManager : MonoBehaviour
         PlayerStatusCashtoDB(auth, db, user);
 
         // Synchronize PlayerQuest
-        QuestCashtoDB(auth, db, user);
+        //QuestCashtoDB(auth, db, user);
 
         // Synchronize money 
         MoneyCashtoDB(auth, db, user);

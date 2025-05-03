@@ -6,4 +6,6 @@ public abstract class ItemEffect : ScriptableObject
 {
     public abstract bool Effect();
     public abstract void RemoveEffect();
+
+    public string effectContext;
 }

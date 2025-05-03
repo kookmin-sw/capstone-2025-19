@@ -100,6 +100,7 @@ public class ItemIcon : MonoBehaviour
     public void PlusItemDurability(float value)
     {
         this.item.durability += value;
+        if(this.item.durability > item.itemData.maxItemDurability)this.item.durability = item.itemData.maxItemDurability;
         SetSlider();
     }
     

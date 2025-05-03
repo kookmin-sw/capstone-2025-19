@@ -11,11 +11,11 @@ public class ItemImageInfo : UIInfoData
         switch (item.itemData.itemType)
         {
             case ItemData.ItemType.Weapon:
-                return "weapon status \nName : {ItemName} \nStrength : {plus_strength} \nWeight : {item.itemData.weight} \nDurability : {item.durability} / {item.itemData.maxDurability}";
+                return $"weapon status \nName : {item.itemData.name} \nStrength : attackDamage \nWeight : {item.itemData.Weight} \nDurability : {item.durability} / {item.itemData.maxItemDurability}";
             case ItemData.ItemType.Armor:
                 return "Armor status \nName : {item.itemData.name} \nArmor Point : {armorPoint} \nWeight : {item.itemData.weight} \nDurability : {item.durability} / {item.itemData.maxDurability}";
             case ItemData.ItemType.Potion:
-                return "Use Item \nName : {item.itemData.name} \nItemEffect : {itemEffect} \nQuantity : {item.quantity} / {item.itemData.maxQuantity}";
+                return $"Use Item \nName : {item.itemData.name} \nItemEffect :  \nQuantity : {item.quantity} / {item.itemData.maxQuantity}";
             case ItemData.ItemType.Backpack:
                 return "Container \nName : {item.itemData.name} \nLoadValue : {item.itemData.containerValue}";
             default:

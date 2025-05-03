@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyDetection : MonoBehaviour
 {
-    float detectionRadius = 15f;
+    [SerializeField] float detectionRadius = 15f;
     LayerMask detectionLayer;
 
     void Awake()

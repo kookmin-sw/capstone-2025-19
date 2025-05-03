@@ -18,15 +18,27 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     [Header("Stat_Text")]
     [SerializeField] TextMeshProUGUI LevelText;
     [SerializeField] TextMeshProUGUI ExpText;
+    [SerializeField] TextMeshProUGUI HpText;
+    [SerializeField] TextMeshProUGUI SpText;
     [SerializeField] TextMeshProUGUI ApText;
+    [SerializeField] TextMeshProUGUI WpText;
     [SerializeField] Button LevelUpButton;
     [SerializeField] Button PointDecomposeCompleteBnt;
     [SerializeField] TextMeshProUGUI LevelUpPoint;
 
     [Header("LevelUp")]
+    [SerializeField] GameObject HpPlusButton;
+    [SerializeField] GameObject HpMinusButton;
+    [SerializeField] TextMeshProUGUI HP_Result;
+    [SerializeField] GameObject SpPlusButton;
+    [SerializeField] GameObject SpMinusButton;
+    [SerializeField] TextMeshProUGUI SP_Result;
     [SerializeField] GameObject ApPlusButton;
     [SerializeField] GameObject ApMinusButton;
     [SerializeField] TextMeshProUGUI AP_Result;
+    [SerializeField] GameObject WpPlusButton;
+    [SerializeField] GameObject WpMinusButton;
+    [SerializeField] TextMeshProUGUI WP_Result;
 
     [Header("Stamina")]
     [SerializeField] float recoverSpValue = 20f;
@@ -47,10 +59,11 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public float curHp;
     public float curSp;
 
-    int playerLevel;
+    int playerLevel = 1;
     int needExpPoint; //다음까지 필요한 경험치
 
     int levelPoint; //레벨업 시 얻는 포인트
+    int usedLevelPoint = 0;
 
     //플레이어 스탯 종류 (Dic 저장된)
     //Hp
@@ -79,8 +92,8 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
 
-        SetDictionaryKey();
-        TestLoadPlayerStatus();
+        SetDictionaryKey(); //SetDictionary Before SynchronizeDB
+        //TestLoadPlayerStatus();
     }
 
     public void SetDictionaryKey()
@@ -143,6 +156,11 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
         //show stat to statusCanvas
         UpdateStatusText();
+
+        if ((int)playerStatusValue["Exp"] >= needExpPoint)
+        {
+            LevelUpButton.gameObject.SetActive(true);
+        }
     }
 
     public void InitReal()
@@ -206,7 +224,10 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     {
         LevelText.text = playerLevel.ToString();
         ExpText.text = realValue["Exp"].ToString() + " / " + needExpPoint;
+        HpText.text = realValue["Hp"].ToString();
+        SpText.text = realValue["Sp"].ToString();
         ApText.text = realValue["Ap"].ToString();
+        WpText.text = realValue["Wp"].ToString();
     }
 
 
@@ -297,37 +318,115 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
 
         //+ 옆에 표시할 완료 이후 능력치들
         //주의할 점은 realValue가 아닌 playerStatusValue를 사용해서 계산해야 한다. 
+        HP_Result.text = playerStatusValue["Hp"].ToString();
+        SP_Result.text = playerStatusValue["Sp"].ToString();
         AP_Result.text = playerStatusValue["Ap"].ToString();
+        WP_Result.text = playerStatusValue["Wp"].ToString();
     }
 
     public void Plus_Minus_Button_SetActive_True()
     {
+        HpPlusButton.SetActive(true);
+        HpMinusButton.SetActive(true);
+        SpPlusButton.SetActive(true);
+        SpMinusButton.SetActive(true);
         ApPlusButton.SetActive(true);
         ApMinusButton.SetActive(true);
+        WpPlusButton.SetActive(true);
+        WpMinusButton.SetActive(true);
     }
 
     public void Plus_Minus_Button_SetActive_False()
     {
+        HpPlusButton.SetActive(false);
+        HpMinusButton.SetActive(false);
+        SpPlusButton.SetActive(false);
+        SpMinusButton.SetActive(false);
         ApPlusButton.SetActive(false);
         ApMinusButton.SetActive(false);
+        WpPlusButton.SetActive(false);
+        WpMinusButton.SetActive(false);
     }
 
     #region Stat_plus_minus
 
-    //Ap+버튼을 눌렀을 경우 실행
-    public void ApPlus()
+    //+버튼을 눌렀을 경우 실행
+    public void HpPlus()
     {
-        AP_Result.text = (float.Parse(AP_Result.text) + 1).ToString();
+        if (levelPoint <= 0) return;
+        HP_Result.text = (float.Parse(HP_Result.text) + 1).ToString();
         levelPoint--;
+        usedLevelPoint++;
         LevelUpPoint.text = "LevelPoint : " + levelPoint;
         isLevelPoint0();
     }
 
+    public void HpMinus()
+    {
+        if (usedLevelPoint <= 0) return;
+        HP_Result.text = (float.Parse(HP_Result.text) - 1).ToString();
+        levelPoint++;
+        usedLevelPoint--;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    public void SpPlus()
+    {
+        if (levelPoint <= 0) return;
+        SP_Result.text = (float.Parse(SP_Result.text) + 1).ToString();
+        levelPoint--;
+        usedLevelPoint++;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    public void SpMinus()
+    {
+        if (usedLevelPoint <= 0) return;
+        SP_Result.text = (float.Parse(SP_Result.text) - 1).ToString();
+        levelPoint++;
+        usedLevelPoint--;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    public void ApPlus()
+    {
+        if (levelPoint <= 0) return;
+        AP_Result.text = (float.Parse(AP_Result.text) + 1).ToString();
+        levelPoint--;
+        usedLevelPoint++;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
 
     public void ApMinus()
     {
+        if (usedLevelPoint <= 0) return;
         AP_Result.text = (float.Parse(AP_Result.text) - 1).ToString();
         levelPoint++;
+        usedLevelPoint--;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    public void WpPlus()
+    {
+        if (levelPoint <= 0) return;
+        WP_Result.text = (float.Parse(WP_Result.text) + 1).ToString();
+        levelPoint--;
+        usedLevelPoint++;
+        LevelUpPoint.text = "LevelPoint : " + levelPoint;
+        isLevelPoint0();
+    }
+
+    public void WpMinus()
+    {
+        if (usedLevelPoint <= 0) return;
+        WP_Result.text = (float.Parse(WP_Result.text) - 1).ToString();
+        levelPoint++;
+        usedLevelPoint--;
         LevelUpPoint.text = "LevelPoint : " + levelPoint;
         isLevelPoint0();
     }
@@ -351,13 +450,21 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         playerStatusValue["Exp"] -= needExpPoint;
 
         //바뀐 능력치를 저장
+        playerStatusValue["Hp"] = float.Parse(HP_Result.text);
+        playerStatusValue["Sp"] = float.Parse(SP_Result.text);
         playerStatusValue["Ap"] = float.Parse(AP_Result.text);
+        playerStatusValue["Wp"] = float.Parse(WP_Result.text);
 
         playerLevel++;
+        needExpPoint = playerLevel * (playerLevel + 2);
         StatusUpdate();
         PointDecomposeCompleteBnt.gameObject.SetActive(false);
         LevelUpPoint.gameObject.SetActive(false);
 
+        HP_Result.text = "";
+        SP_Result.text = "";
+        AP_Result.text = "";
+        WP_Result.text = "";
         Plus_Minus_Button_SetActive_False();
     }
 

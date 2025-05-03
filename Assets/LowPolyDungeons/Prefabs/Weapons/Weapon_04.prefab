@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9036903198010864384}
   - component: {fileID: 5782137184438352368}
   - component: {fileID: 7557603553783443724}
+  - component: {fileID: 7150871419524345219}
   m_Layer: 0
   m_Name: Weapon_04
   m_TagString: Untagged
@@ -93,7 +94,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6132653828418631018}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ccf25e4a7ae124b49b2e7a0821281678, type: 3}
   m_Name: 
@@ -147,3 +148,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.7056412, y: 0.63776946, z: 0.19436967}
   m_Center: {x: 0, y: 0.98331577, z: -0.0000004799}
+--- !u!114 &7150871419524345219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6132653828418631018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4217f08cb1637d84295baaaccfbed984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 15

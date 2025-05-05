@@ -5,35 +5,38 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class FireballMove : MonoBehaviour
 {
-    [SerializeField] private float speed = 2f;   // 이동 속도
-    [SerializeField] private float lifeTime = 5f;    // n초 뒤 자동 파괴
+    [SerializeField] float speed = 15f;
+    [SerializeField] float lifeTime = 5f;
 
-    private Rigidbody rb;
-    private float elapsed;
+    Rigidbody rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;    // 직접 위치 제어
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
     }
 
-    private void OnEnable()
+    public void Shot()
     {
-        elapsed = 0f;
-        //Debug.Log("FireBall 발사 OnEnable");
-        //rb.AddForce(transform.forward * speed, ForceMode.VelocityChange);
+        // 발사 타이밍에 코루틴 시작
+        StartCoroutine(MoveCoroutine());
     }
 
-    private void FixedUpdate()
+    IEnumerator MoveCoroutine()
     {
+        float elapsed = 0f;
+        Vector3 dir = transform.forward;   // 발사 순간 방향 고정
 
-        Vector3 nextPos = transform.position + transform.forward * speed * Time.fixedDeltaTime;
-
-        rb.MovePosition(nextPos);
-
-        elapsed += Time.fixedDeltaTime;
-        if (elapsed >= lifeTime)
+        while (elapsed < lifeTime)
         {
-            Destroy(gameObject);
+            Vector3 next = transform.position + dir * speed * Time.fixedDeltaTime;
+            rb.MovePosition(next);
+
+            elapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate(); // 물리 프레임마다 한 번
         }
+
+        Destroy(gameObject);  // 풀링이면 SetActive(false)
     }
 }

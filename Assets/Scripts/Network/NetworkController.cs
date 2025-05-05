@@ -9,7 +9,11 @@ using UnityEngine.UI;
 public class NetworkController : Singleton<NetworkController>
 {
     private NetworkCallback networkCallback;
+    [Header("LoadSceneName")]
+    [SerializeField] private string loadSceneName;
 
+
+    [Space(20)]
 
     [Header("SceneName")]
     [SerializeField] private string singleplaySceneName;
@@ -38,6 +42,12 @@ public class NetworkController : Singleton<NetworkController>
     [SerializeField] private GameObject roomPanel;
     [SerializeField] private Transform readyPlayerPanel;
     [SerializeField] private TextMeshProUGUI roomName;
+
+
+
+
+
+    [HideInInspector] public int playerCount;
     protected override void Awake()
     {
         base.Awake();
@@ -89,6 +99,7 @@ public class NetworkController : Singleton<NetworkController>
         //TODO Firbase Player Name
         //networkCallback.CreateRoom(roomName,InventoryController.Instance.player.name, setPrivate, pwd);
 
+        networkCallback.CreateRoom(roomName, PlayerStatusController.Instance.playerNickname, setPrivate, pwd);
         networkCallback.CreateRoom(roomName,"TestPlayerName", setPrivate, pwd);
         Debug.Log($"Create room {roomName}");
         AllPanelActiveFalse();
@@ -100,10 +111,10 @@ public class NetworkController : Singleton<NetworkController>
 
 
     
-    public void StartButton()
+    public void StartLevel()
     {
         //TODO Load MultiplayScene
-
+        PhotonNetwork.LoadLevel(loadSceneName);
 
     }
 

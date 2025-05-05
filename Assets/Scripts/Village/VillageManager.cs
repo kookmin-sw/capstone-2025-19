@@ -110,6 +110,7 @@ public class VillageManager : MonoBehaviour
             Debug.LogError("User is null");
             return;
         }
+        GetPlayerNickname(auth, db, user);
 
         // Synchronize PlayerStatus
         PlayerStatusDBtoCash(auth, db, user);
@@ -161,6 +162,29 @@ public class VillageManager : MonoBehaviour
         WareHouseCashtoDB(auth, db, user);
     }
 
+    //Get UserNickname
+    public void GetPlayerNickname(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
+    {
+        DocumentReference userRef = db.Collection("Users")
+                                             .Document(user.UserId);
+        userRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to load User: " + task.Exception);
+                return;
+            }
+
+            var doc = task.Result;
+
+            Dictionary<string, object> dict = doc.ToDictionary();
+            PlayerStatusController.Instance.playerNickname = dict["nickname"].ToString();
+
+            Debug.Log($"{PlayerStatusController.Instance.playerNickname}-------------------");
+        });
+
+    }
+
     // PlayerStatus Sync
     #region PlayerStatus
     public void PlayerStatusDBtoCash(FirebaseAuth auth, FirebaseFirestore db, FirebaseUser user)
@@ -174,7 +198,7 @@ public class VillageManager : MonoBehaviour
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Failed to load inventory: " + task.Exception);
+                Debug.LogError("Failed to load PlayerStatus: " + task.Exception);
                 return;
             }
             var doc = task.Result;

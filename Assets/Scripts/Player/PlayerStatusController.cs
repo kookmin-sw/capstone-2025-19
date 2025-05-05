@@ -59,6 +59,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     public float curHp;
     public float curSp;
 
+    public string playerNickname;
     int playerLevel = 1;
     int needExpPoint; //다음까지 필요한 경험치
 

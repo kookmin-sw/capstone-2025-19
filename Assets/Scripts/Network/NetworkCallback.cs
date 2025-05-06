@@ -8,6 +8,7 @@ using UnityEngine;
 public class NetworkCallback : MonoBehaviourPunCallbacks
 {
     public Dictionary<string, PlayerRoom> roomDictionary = new Dictionary<string, PlayerRoom>();
+    public Dictionary<int, GameObject> _playerPanels = new Dictionary<int, GameObject>();
     private readonly string gameVersion = "1"; // 게임 버전
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -45,6 +46,7 @@ public class NetworkCallback : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined lobby");
+        NetworkController.Instance.SetNickName();
     }
 
     public void CreateRoom(string name, string playerName, bool isPrivate, string pwd)
@@ -82,6 +84,37 @@ public class NetworkCallback : MonoBehaviourPunCallbacks
         Debug.Log("Connecting");
         PhotonNetwork.JoinLobby();
     }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("JoinedRoom test");
+        NetworkController.Instance.roomPanel.GetComponent<RoomPanel>().SetRoom();
+        foreach(var kvp in PhotonNetwork.CurrentRoom.Players)
+        {
+            Debug.Log($"player test {kvp.Value.NickName}");
+            NetworkController.Instance.AddPlayerPanel(kvp.Value);
+        }
+
+        if (!PhotonNetwork.CurrentRoom.Players.ContainsKey(PhotonNetwork.LocalPlayer.ActorNumber))
+        {
+            Debug.Log($"Local player {PhotonNetwork.LocalPlayer.NickName}");
+            NetworkController.Instance.AddPlayerPanel(PhotonNetwork.LocalPlayer);
+        }
+            
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"player Enter {newPlayer.NickName}");
+        NetworkController.Instance.AddPlayerPanel(newPlayer);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        NetworkController.Instance.RemovePlayerPanel(otherPlayer);
+    }
+
+
 
     private void Start()
     {

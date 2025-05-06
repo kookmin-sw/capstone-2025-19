@@ -10,9 +10,10 @@ public class DungeonGenerator_M : DungeonGenerator
     {
         Debug.Log("Photon test1");
         //Debug.Log($"SceneManager name = {SceneController.Instance.GetCurrentSceneName()}");
+        NetworkController.Instance.AllPanelActiveFalse();
         if (PhotonNetwork.IsMasterClient)
         {
-
+            networkEventReceiver.playerCount = NetworkController.Instance.playerCount;
             //TODO Host createRoom
             Generate_MultiPlay();
             //StartCoroutine(GenerateMultiplay());

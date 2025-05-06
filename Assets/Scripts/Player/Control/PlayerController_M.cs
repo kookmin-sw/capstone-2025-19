@@ -39,7 +39,9 @@ public class PlayerController_M : PlayerControl.PlayerController
     {
         if (photonView.IsMine)
         {
+            Debug.Log("INputtest1");
             if (PlayerState.Instance.state == PlayerState.State.Die) return;
+            Debug.Log("INputtest2");
             Move();
             GroundedCheck();
             UseItem();
@@ -47,6 +49,7 @@ public class PlayerController_M : PlayerControl.PlayerController
             JumpAndGravity();
             Rolling();
             Attack();
+            Debug.Log("INputtest3");
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
-public class ReadyPlayerPanel : MonoBehaviour
+public class PlayerProfilePanel : MonoBehaviour
 {
     [SerializeField] Image playerProfile;
     [SerializeField] TextMeshProUGUI playerNickName;

@@ -39,9 +39,10 @@ public class NetworkController : Singleton<NetworkController>
     [Space(10)]
 
     [Header("Player Ready Room")]
-    [SerializeField] private GameObject roomPanel;
+    [SerializeField] public GameObject roomPanel;
     [SerializeField] private Transform readyPlayerPanel;
     [SerializeField] private TextMeshProUGUI roomName;
+    [SerializeField] private GameObject playerProfilePrefab;
 
 
 
@@ -53,8 +54,9 @@ public class NetworkController : Singleton<NetworkController>
         base.Awake();
         AllPanelActiveFalse();
         playModeSelectPanel.SetActive(true);
+        
     }
-    private void AllPanelActiveFalse()
+    public void AllPanelActiveFalse()
     {
         playModeSelectPanel.SetActive(false);
         multiplayRoomPanel.SetActive(false);
@@ -74,6 +76,7 @@ public class NetworkController : Singleton<NetworkController>
         multiplayRoomPanel.SetActive(true);
         networkCallback = gameObject.AddComponent<NetworkCallback>();
         networkCallback.JoinedServer();
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public void LeaveLobby()
@@ -86,6 +89,7 @@ public class NetworkController : Singleton<NetworkController>
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+        ClearPlayerPrfilePanel();
         AllPanelActiveFalse();
         multiplayRoomPanel.SetActive(true) ;
     }
@@ -107,14 +111,19 @@ public class NetworkController : Singleton<NetworkController>
         this.roomName.text = roomName;  
     }
 
-
+    public void SetNickName()
+    {
+        PhotonNetwork.NickName = PlayerStatusController.Instance.playerNickname;
+    }
 
 
     
     public void StartLevel()
     {
         //TODO Load MultiplayScene
-        PhotonNetwork.LoadLevel(loadSceneName);
+        playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+        PhotonNetwork.LoadLevel(multiplaySceneName);
+        AllPanelActiveFalse();
 
     }
 
@@ -162,12 +171,44 @@ public class NetworkController : Singleton<NetworkController>
         AllPanelActiveFalse();
         roomPanel.SetActive(true);
         roomName.text = room.Name;
+        Debug.Log("EnterOtherPlayerRoom");
+        PhotonNetwork.JoinRoom(room.Name);
     }
 
     public void EnterPrivateRoom(RoomInfo room)
     {
         passwordPanel.gameObject.SetActive(true);
         passwordPanel.SetRoomInfo(room);
+    }
+
+    public void AddPlayerPanel(Player player)
+    {
+        if (networkCallback._playerPanels.ContainsKey(player.ActorNumber)) return;
+
+        GameObject go = Instantiate(playerProfilePrefab, readyPlayerPanel);
+        PlayerProfilePanel profilePanel = go.GetComponent<PlayerProfilePanel>();
+        profilePanel.SetPlayer(player.NickName, player.ActorNumber);
+        networkCallback._playerPanels[player.ActorNumber] = go;
+        
+    }
+
+    public void RemovePlayerPanel(Player player)
+    {
+        if (!networkCallback._playerPanels.ContainsKey(player.ActorNumber)) return;
+
+        GameObject go = networkCallback._playerPanels[player.ActorNumber];
+        networkCallback._playerPanels.Remove(player.ActorNumber);
+
+        Destroy(go);
+    }
+
+    private void ClearPlayerPrfilePanel()
+    {
+        networkCallback._playerPanels.Clear();
+        foreach(Transform child in readyPlayerPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
 }

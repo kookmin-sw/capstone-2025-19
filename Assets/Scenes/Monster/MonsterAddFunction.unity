@@ -493,6 +493,79 @@ MonoBehaviour:
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
+--- !u!1001 &398037020
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 139245476462238982, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_Name
+      value: Erika Archer With Bow Arrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490932226542573898, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1433263460}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.205418
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 18.152805
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 12.264249
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151132922638938223, guid: 577eb2f93cd7a4443b7c3c54f7784a18,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 577eb2f93cd7a4443b7c3c54f7784a18, type: 3}
 --- !u!114 &411746348 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5773854035583334636, guid: c39d7049e3a3fe249a9f1323d2892bd1,
@@ -1651,6 +1724,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1433263460 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1247657821116606176, guid: f30949b363e3c9c4d8b0ade4fdc8e9f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 755076717618847736}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1462983065
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2651,3 +2730,4 @@ SceneRoots:
   - {fileID: 1120529704}
   - {fileID: 755076717618847736}
   - {fileID: 4765019837030176645}
+  - {fileID: 398037020}

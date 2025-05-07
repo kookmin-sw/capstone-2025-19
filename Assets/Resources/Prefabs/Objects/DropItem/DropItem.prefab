@@ -44,6 +44,8 @@ GameObject:
   - component: {fileID: 8656057898662129665}
   - component: {fileID: 5581074940975749171}
   - component: {fileID: -4240530640438026875}
+  - component: {fileID: 701354795118085080}
+  - component: {fileID: 1919475815410868434}
   m_Layer: 7
   m_Name: DropItem
   m_TagString: Interact
@@ -145,6 +147,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71404ab7a1dbc3346b1c74be5b640f21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &701354795118085080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2831366087711716788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1919475815410868434}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &1919475815410868434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2831366087711716788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &3510314874511325512
 PrefabInstance:
   m_ObjectHideFlags: 0

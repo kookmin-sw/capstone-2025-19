@@ -8,7 +8,7 @@ public class WeaponStats : ScriptableObject
 {
 
     public GameObject weaponPrefab;
-    public AnimatorOverrideController weaponOverride;
+    public string weaponType;
     public float damage;
     public bool isRanged;
     public GameObject projectile;
@@ -17,4 +17,3 @@ public class WeaponStats : ScriptableObject
     public float staminaUsage;
     public float tenacity;
 }
-

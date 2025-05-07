@@ -66,6 +66,93 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
 
 
     [PunRPC]
+    private void LoadWeaponModelRPC(
+                                    int ownerActorNumber,
+                                   string weaponStatsName,
+                                   bool isPlayer,
+                                   int parentViewID,
+                                   PhotonMessageInfo info)
+    {
+        Debug.Log($"photon network test1 {parentViewID}");
+        PhotonView pv = PhotonView.Find(parentViewID);
+        if (pv == null)
+        {
+            return;
+        }
+        // 1) ???? ???? ????
+        UnloadWeaponAndDestroy();
+        Debug.Log($"photon network test2");
+        // 2) ???? Instantiate
+        GameObject weapon = null;
+
+        // ?????? ??? ????
+        weapon = PhotonNetwork.Instantiate(
+            $"Prefabs/PlayerWeapon/Multiplay/{weaponStatsName}",
+            Vector3.zero,
+            Quaternion.identity
+        );
+        WeaponStats weaponStats = Resources.Load<WeaponStats>($"WeaponStats/{weaponStatsName}");
+        /*else
+        {
+            // ????????(???) Instantiate
+            // ???? Resources ???? ???? ?????? ???? ??
+            var prefab = Resources.Load<GameObject>($"Prefabs/PlayerWeapon/Singleplay/{weaponPrefabName}");
+            weapon = Instantiate(prefab);
+        }*/
+
+        // 3) ???? ?????? ?????? ?????? ???? ????
+        if (!weaponStats.isRanged)
+        {
+            DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();
+            weaponCollider.damage = weaponStats.damage;
+            weaponCollider.tenacity = weaponStats.tenacity;
+            // hitEffectName ??????? ????? Resources.Load ?????? ??????? ????? ???? ????
+            weaponCollider.hitEffect = weaponStats.hitEffect;
+            weaponCollider.tag = isPlayer ? "PlayerWeapon" : "EnemyWeapon";
+        }
+
+        // 4) ?÷???? ?????? ???????? ?????? ????????? (overrideControllerName???? ?ε? ????)
+        if (isPlayer)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == ownerActorNumber)
+            {
+                // WeaponHolderSlot?? ????? ĳ????/????????? Animator
+                // ??: (?? ?????? ??? ???? ??? Animator?? ????)
+                var animator = GetComponentInParent<Animator>();
+
+                // ???? ???? RuntimeAnimatorController?? ??? ???
+                /*
+                if (weaponStats.weaponOverride != null)
+                {
+                    animator.runtimeAnimatorController = weaponStats.weaponOverride;
+                }*/
+            }
+        }
+
+        // 5) ?θ? ???? (parentViewID?? ???? ???)
+        if (parentViewID != -1)
+        {
+            if (pv != null)
+            {
+                weapon.transform.SetParent(pv.transform, false);
+            }
+        }
+        else
+        {
+            // parentOverride?? ??????, ???? ???????? transform?? ?????? etc.
+            weapon.transform.SetParent(this.transform, false);
+        }
+
+        weapon.transform.localPosition = Vector3.zero;
+        weapon.transform.localRotation = Quaternion.identity;
+        weapon.transform.localScale = Vector3.one;
+
+        // 6) ???? ???? ????
+        currentWeaponModel = weapon;
+    }
+
+
+    /*[PunRPC]
     protected void LoadWeaponModelRPC(
                                     int ownerActorNumber,
                                    string weaponStatsName,
@@ -92,13 +179,13 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
             Quaternion.identity
         );
         WeaponStats weaponStats = Resources.Load<WeaponStats>($"WeaponStats/{weaponStatsName}");
-        /*else
+        *//*else
         {
             // 오프라인(싱글) Instantiate
             // 만약 Resources 폴더 구조 다르다면 바꿔야 함
             var prefab = Resources.Load<GameObject>($"Prefabs/PlayerWeapon/Singleplay/{weaponPrefabName}");
             weapon = Instantiate(prefab);
-        }*/
+        }*//*
 
         // 3) 근접 무기라면 데미지 컬라이더 정보 세팅
         if (!weaponStats.isRanged)
@@ -148,5 +235,5 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
 
         // 6) 현재 무기 저장
         currentWeaponModel = weapon;
-    }
+    }*/
 }

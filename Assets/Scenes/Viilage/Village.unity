@@ -6809,6 +6809,11 @@ PrefabInstance:
       propertyPath: quantity
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5374736144735227442, guid: a0e032c6b7e31e24d96f4392f5dd4ca0,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5813016356320905506, guid: a0e032c6b7e31e24d96f4392f5dd4ca0,
         type: 3}
       propertyPath: m_Name
@@ -10284,6 +10289,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 701354795118085080, guid: 5c919d174b7003841aa19e7e1a555396,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2831366087711716788, guid: 5c919d174b7003841aa19e7e1a555396,
         type: 3}
       propertyPath: m_Name
@@ -10677,6 +10687,11 @@ PrefabInstance:
         type: 3}
       propertyPath: quantity
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2408639286650479091, guid: 515425f2c0c82934b8ca288f4e12c5dc,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7062798270718473465, guid: 515425f2c0c82934b8ca288f4e12c5dc,
         type: 3}
@@ -12764,6 +12779,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 701354795118085080, guid: 5c919d174b7003841aa19e7e1a555396,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2831366087711716788, guid: 5c919d174b7003841aa19e7e1a555396,
         type: 3}
       propertyPath: m_Name
@@ -12848,6 +12868,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 701354795118085080, guid: 5c919d174b7003841aa19e7e1a555396,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2831366087711716788, guid: 5c919d174b7003841aa19e7e1a555396,
         type: 3}
       propertyPath: m_Name
@@ -13886,6 +13911,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 701354795118085080, guid: 5c919d174b7003841aa19e7e1a555396,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2831366087711716788, guid: 5c919d174b7003841aa19e7e1a555396,
         type: 3}
       propertyPath: m_Name
@@ -19685,6 +19715,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 701354795118085080, guid: 5c919d174b7003841aa19e7e1a555396,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2831366087711716788, guid: 5c919d174b7003841aa19e7e1a555396,
         type: 3}
       propertyPath: m_Name
@@ -20428,6 +20463,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 701354795118085080, guid: 5c919d174b7003841aa19e7e1a555396,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 2831366087711716788, guid: 5c919d174b7003841aa19e7e1a555396,
         type: 3}
       propertyPath: m_Name
@@ -20760,6 +20800,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 701354795118085080, guid: 5c919d174b7003841aa19e7e1a555396,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2831366087711716788, guid: 5c919d174b7003841aa19e7e1a555396,
         type: 3}
       propertyPath: m_Name
@@ -30287,6 +30332,8 @@ MonoBehaviour:
   nickname: {fileID: 1649348269}
   signInButton: {fileID: 1401001703}
   createAccountButton: {fileID: 2008172064}
+  errorPanel: {fileID: 0}
+  errorMessageText: {fileID: 0}
   VillageManager: {fileID: 1422041416}
 --- !u!4 &2129111268 stripped
 Transform:
@@ -30498,6 +30545,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6472424868913577783, guid: a81e0994ff725b54e958c534540db05b,
+        type: 3}
+      propertyPath: m_Name
+      value: GreenPotion_S_DropItem
+      objectReference: {fileID: 0}
     - target: {fileID: 43731276992973116, guid: 04116bce791f3db4db3cfff316fbdfea,
         type: 3}
       propertyPath: m_Enabled
@@ -31530,11 +31582,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VerticalAlignment
       value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 6472424868913577783, guid: a81e0994ff725b54e958c534540db05b,
-        type: 3}
-      propertyPath: m_Name
-      value: GreenPotion_S_DropItem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

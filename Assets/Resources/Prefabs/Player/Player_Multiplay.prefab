@@ -620,6 +620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3d2e06f564dd648a84ccc40e4e8210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationHandler: {fileID: 0}
   parentOverride: {fileID: 2577288928662874371}
   isLeftHandSlot: 0
   isRightHandSlot: 1
@@ -836,7 +837,6 @@ GameObject:
   - component: {fileID: 3959146416002662898}
   - component: {fileID: 651672004039699749}
   - component: {fileID: 2100115003618398015}
-  - component: {fileID: -2019865411779086980}
   - component: {fileID: 6547935425340116392}
   - component: {fileID: 1932956801316164842}
   - component: {fileID: 1825963933665430346}
@@ -908,6 +908,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea218c2f5b0c99949a042180b079785d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oneHandOverride: {fileID: 0}
+  twoHandOverride: {fileID: 0}
+  crossbowOverride: {fileID: 0}
 --- !u!143 &2100115003618398015
 CharacterController:
   m_ObjectHideFlags: 0
@@ -934,51 +937,6 @@ CharacterController:
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.93, z: 0}
---- !u!114 &-2019865411779086980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3246215277211317416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1363527422a65fe47abdb5d5217f28f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoveSpeed: 4
-  SprintSpeed: 5.335
-  RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
-  LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
-  FootstepAudioClips: []
-  FootstepAudioVolume: 0.5
-  JumpHeight: 1.2
-  Gravity: -15
-  JumpTimeout: 0.5
-  FallTimeout: 0.15
-  Grounded: 1
-  GroundedOffset: -0.14
-  GroundedRadius: 0.28
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 1088
-  CinemachineCameraTarget: {fileID: 5714445758708071243}
-  TopClamp: 70
-  BottomClamp: -30
-  CameraAngleOverride: 0
-  LockCameraPosition: 0
-  _cameraDirectionY: -0.3
-  _cameraSmoothing: 50
-  _lockOnSpeed: 2.5
-  _useItemSpeed: 1.5
-  _sprintStaminaUsage: 10
-  _dodgeStaminaUsage: 20
-  _dashDuration: 0.2
-  _dashMaxAmount: 5
-  _ghostDuration: 0.15
-  fadeTime: 3
-  playerGhostEffect: {fileID: 0}
 --- !u!114 &6547935425340116392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -986,7 +944,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3246215277211317416}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa700b7345cdd9d4c9cde8efc17b3f93, type: 3}
   m_Name: 
@@ -997,7 +955,11 @@ MonoBehaviour:
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips: []
+  SwordClip: {fileID: 0}
+  GreatswordClip: {fileID: 0}
+  CrossbowClip: {fileID: 0}
   FootstepAudioVolume: 0.5
+  AttackAudioVolume: 0.5
   JumpHeight: 1.2
   Gravity: -15
   JumpTimeout: 0.5
@@ -1023,6 +985,7 @@ MonoBehaviour:
   _dashMaxAmount: 15
   _ghostDuration: 0.15
   fadeTime: 3
+  mainCamera: {fileID: 0}
   playerGhostEffect: {fileID: 0}
 --- !u!114 &1932956801316164842
 MonoBehaviour:
@@ -1112,11 +1075,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f72de80f928b437438bc71b66672cc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  lockOnImage: {fileID: 0}
   lockOnRadius: 20
   minViewAngle: -70
   maxViewAngle: 70
@@ -1481,6 +1442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3d2e06f564dd648a84ccc40e4e8210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationHandler: {fileID: 0}
   parentOverride: {fileID: 4061447269774372817}
   isLeftHandSlot: 1
   isRightHandSlot: 0

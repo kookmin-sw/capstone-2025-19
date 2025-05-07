@@ -618,6 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3d2e06f564dd648a84ccc40e4e8210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationHandler: {fileID: 0}
   parentOverride: {fileID: 2577288928662874371}
   isLeftHandSlot: 0
   isRightHandSlot: 1
@@ -863,6 +864,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea218c2f5b0c99949a042180b079785d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oneHandOverride: {fileID: 22100000, guid: a36199f037320de4b924ff6b8b278369, type: 2}
+  twoHandOverride: {fileID: 22100000, guid: 30c2168baa00b084a980e4c5d9d2942c, type: 2}
+  crossbowOverride: {fileID: 22100000, guid: 1b4e919ad35e77543b2b74df184ef5a8, type: 2}
 --- !u!143 &2100115003618398015
 CharacterController:
   m_ObjectHideFlags: 0
@@ -907,7 +911,11 @@ MonoBehaviour:
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips: []
+  SwordClip: {fileID: 8300000, guid: 76dc4a8ac2a7b8945a207474908c401f, type: 3}
+  GreatswordClip: {fileID: 8300000, guid: 76dc4a8ac2a7b8945a207474908c401f, type: 3}
+  CrossbowClip: {fileID: 8300000, guid: 76dc4a8ac2a7b8945a207474908c401f, type: 3}
   FootstepAudioVolume: 0.5
+  AttackAudioVolume: 0.5
   JumpHeight: 1.2
   Gravity: -15
   JumpTimeout: 0.5
@@ -1025,7 +1033,7 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2048
   lockOnImage: {fileID: 0}
   lockOnRadius: 20
   minViewAngle: -70
@@ -1253,6 +1261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3d2e06f564dd648a84ccc40e4e8210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationHandler: {fileID: 0}
   parentOverride: {fileID: 4061447269774372817}
   isLeftHandSlot: 1
   isRightHandSlot: 0

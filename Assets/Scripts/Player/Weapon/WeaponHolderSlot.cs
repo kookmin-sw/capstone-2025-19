@@ -7,20 +7,22 @@ using UnityEngine;
 
 public class WeaponHolderSlot : MonoBehaviour
 {
+    public AnimationHandler animationHandler;
     public Transform parentOverride;
     public bool isLeftHandSlot;
     public bool isRightHandSlot;
 
     public GameObject currentWeaponModel;
 
-    protected Animator animator;
+    private Animator animator;
 
-    
+    PhotonView photonView;
 
     protected virtual void Awake()
     {
         animator = GetComponentInParent<Animator>();
-        
+        photonView = GetComponent<PhotonView>();
+        animationHandler = GetComponentInParent<AnimationHandler>();
     }
 
     public void UnloadWeapon()
@@ -35,7 +37,14 @@ public class WeaponHolderSlot : MonoBehaviour
     {
         if (currentWeaponModel != null)
         {
-            Destroy(currentWeaponModel);
+            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            {
+                PhotonNetwork.Destroy(currentWeaponModel);
+            }
+            else
+            {
+                Destroy(currentWeaponModel);
+            }
         }
     }
     public virtual void LoadWeaponModel(WeaponStats weaponStats)
@@ -48,6 +57,7 @@ public class WeaponHolderSlot : MonoBehaviour
             return;
         }
         GameObject weapon = null;
+
         weapon = Instantiate(weaponStats.weaponPrefab) as GameObject;
         if (!weaponStats.isRanged)
         {
@@ -57,8 +67,6 @@ public class WeaponHolderSlot : MonoBehaviour
             weaponCollider.hitEffect = weaponStats.hitEffect;
             weaponCollider.tag = transform.root.tag == "Player" ? "PlayerWeapon" : "EnemyWeapon";
         }
-
-        if (transform.root.tag == "Player") animator.runtimeAnimatorController = weaponStats.weaponOverride;
 
         if (weapon != null)
         {
@@ -71,12 +79,18 @@ public class WeaponHolderSlot : MonoBehaviour
                 weapon.transform.parent = transform;
             }
 
+            if (animationHandler != null)
+            {
+                print("animator updated");
+                animationHandler.UpdateOverride(weaponStats.weaponType);
+            }
             weapon.transform.localPosition = Vector3.zero;
             weapon.transform.localRotation = Quaternion.identity;
             weapon.transform.localScale = Vector3.one;
         }
 
         currentWeaponModel = weapon;
+
 
     }
 

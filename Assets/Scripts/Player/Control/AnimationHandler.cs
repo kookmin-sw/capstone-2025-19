@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class AnimationHandler : MonoBehaviour
 {
+    [Header("Animator Overrides")]
+    public AnimatorOverrideController oneHandOverride;
+    public AnimatorOverrideController twoHandOverride;
+    public AnimatorOverrideController crossbowOverride;
     private Animator animator;
 
     public enum AnimParam
@@ -57,6 +61,25 @@ public class AnimationHandler : MonoBehaviour
 
         print(animator.GetBool("Test"));
         print(animator.GetBool(animParamIDs[AnimParam.Attacking]));
+    }
+
+    public void UpdateOverride(string weaponType)
+    {
+        switch(weaponType)
+        {
+            case "OneHand":
+            print("onehand updated");
+            animator.runtimeAnimatorController = oneHandOverride;
+            break;
+            case "TwoHand":
+            print("twohand updated");
+            animator.runtimeAnimatorController = twoHandOverride;
+            break;
+            case "Crossbow":
+            print("crossbow updated");
+            animator.runtimeAnimatorController = crossbowOverride;
+            break;
+        }
     }
 
     public void SetBool(AnimParam param, bool value)

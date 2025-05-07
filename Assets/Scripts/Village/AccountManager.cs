@@ -8,6 +8,7 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using UnityEngine.SceneManagement;
 using System;
+using TMPro;
 
 public class AccountManager : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class AccountManager : MonoBehaviour
     [SerializeField] InputField nickname;
     [SerializeField] Button signInButton;
     [SerializeField] Button createAccountButton;
+
+    [SerializeField] GameObject errorPanel;
+    [SerializeField] Text errorMessageText;
 
     private bool isLoginProcess;
 
@@ -28,6 +32,7 @@ public class AccountManager : MonoBehaviour
         InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
         isLoginProcess = true;
         nickname.gameObject.SetActive(false);
+        errorPanel.SetActive(false);
     }
 
     void CheckFirebaseReady()
@@ -38,22 +43,21 @@ public class AccountManager : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (!isLoginProcess)
-        {
-            checkNickname();
-        }
-    }
-
     public void SignUp()
     {
+
         if (isLoginProcess)
         {
             Debug.Log("계정 생성 버튼 처음 눌림");
             nickname.gameObject.SetActive(true);
             signInButton.gameObject.SetActive(false);
             isLoginProcess = false;
+            return;
+        }
+
+        if (nickname.text.Trim().Length < 2)
+        {
+            ShowError("닉네임은 2글자 이상이어야 합니다.");
             return;
         }
 
@@ -70,7 +74,31 @@ public class AccountManager : MonoBehaviour
             {
                 if (task.IsFaulted)
                 {
-                    Debug.LogError(task.Exception);
+                    foreach (var e in task.Exception.Flatten().InnerExceptions)
+                    {
+                        if (e is FirebaseException fe)
+                        {
+                            switch ((AuthError)fe.ErrorCode)
+                            {
+                                case AuthError.EmailAlreadyInUse:
+                                    ShowError("이미 사용 중인 이메일입니다.");
+                                    break;
+                                case AuthError.InvalidEmail:
+                                    ShowError("유효하지 않은 이메일 형식입니다.");
+                                    break;
+                                case AuthError.WeakPassword:
+                                    ShowError("비밀번호는 6자 이상이어야 합니다.");
+                                    break;
+                                default:
+                                    ShowError("회원가입 중 오류가 발생했습니다.");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            ShowError("회원가입 중 오류가 발생했습니다.");
+                        }
+                    }
                     return;
                 }
 
@@ -106,6 +134,7 @@ public class AccountManager : MonoBehaviour
 
     public void SignIn()
     {
+
         if (!FirebaseManager.Instance.IsReady)
         {
             Debug.LogError("Firebase is not ready yet!");
@@ -119,7 +148,31 @@ public class AccountManager : MonoBehaviour
             {
                 if (task.IsFaulted)
                 {
-                    Debug.LogError("Sign in failed: " + task.Exception);
+                    foreach (var e in task.Exception.Flatten().InnerExceptions)
+                    {
+                        if (e is FirebaseException fe)
+                        {
+                            switch ((AuthError)fe.ErrorCode)
+                            {
+                                case AuthError.UserNotFound:
+                                    ShowError("존재하지 않는 계정입니다.");
+                                    break;
+                                case AuthError.WrongPassword:
+                                    ShowError("비밀번호가 일치하지 않습니다.");
+                                    break;
+                                case AuthError.InvalidEmail:
+                                    ShowError("유효하지 않은 이메일 형식입니다.");
+                                    break;
+                                default:
+                                    ShowError("로그인 중 오류가 발생했습니다.");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            ShowError("로그인 중 오류가 발생했습니다.");
+                        }
+                    }
                 }
                 else
                 {
@@ -132,17 +185,16 @@ public class AccountManager : MonoBehaviour
             });     
     }
 
-    
-
-    private void checkNickname()
+    void ShowError(string message, float duration = 2f)
     {
-        if (nickname.Equals(""))
-        {
-            createAccountButton.interactable = false;
-        }
-        else
-        {
-            createAccountButton.interactable = true;
-        }
+        StartCoroutine(ShowErrorCoroutine(message, duration));
+    }
+
+    IEnumerator ShowErrorCoroutine(string message, float duration)
+    {
+        errorMessageText.text = message;
+        errorPanel.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        errorPanel.SetActive(false);
     }
 }

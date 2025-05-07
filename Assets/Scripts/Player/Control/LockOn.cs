@@ -41,12 +41,18 @@ public class LockOn : MonoBehaviour
         {
             lockOnImage.gameObject.SetActive(false);
         }
-        mainCamera = GetComponent<PlayerController>().mainCamera;
-        print("Lock Camera is: " + mainCamera.name);
 
-        lockOnImage = PlayerStatusController.Instance.GetComponentInChildren<LockOnImage>().transform;
+        
+        lockOnImage = PlayerStatusController.Instance.lockOnImage.transform;
         lockOnImage.gameObject.SetActive(false);
         print("Lock Image is: " + lockOnImage.name);
+    }
+
+
+    public void Setting()
+    {
+        mainCamera = GetComponent<PlayerController>().mainCamera;
+        print("Lock Camera is: " + mainCamera.name);
     }
 
     // Update is called once per frame
@@ -100,6 +106,7 @@ public class LockOn : MonoBehaviour
     private void FindLockOnTarget()
     {
         Collider[] findTargets = Physics.OverlapSphere(transform.position, lockOnRadius, targetLayer);
+        Debug.Log($"lock on name {findTargets}");
         if (findTargets.Length <= 0)
         {
             return;
@@ -108,6 +115,7 @@ public class LockOn : MonoBehaviour
         foreach (Collider findTarget in findTargets)
         {
             //print("Now locked on: " + findTarget.name);
+            Debug.Log($"lock on name {findTarget.gameObject.name}");
             LockOnTarget target = findTarget.GetComponent<LockOnTarget>();
             print("find: " + target.name);
 

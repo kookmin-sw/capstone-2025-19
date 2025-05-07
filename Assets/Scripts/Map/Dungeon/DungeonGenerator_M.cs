@@ -28,9 +28,9 @@ public class DungeonGenerator_M : DungeonGenerator
             networkEventReceiver.RequestPlayerSpawn();
             StartCoroutine(WaitHostReady());
         }
-        NvigationBake();
+        /*NvigationBake();
         SpawnRandomObject();
-        PlayerSpawn();
+        PlayerSpawn();*/
         isGenerated = true;
     }
 
@@ -161,6 +161,10 @@ public class DungeonGenerator_M : DungeonGenerator
                             int randomSmallRoomIndex = UnityEngine.Random.Range(0, smallRooms.Count);
                             room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/SmallRooms/{smallRooms[randomSmallRoomIndex].name}"
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
+                            if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); i--; continue; }
+                            break;
+                        case EntryPoint.NeedRoomType.TrapRoom:
+                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/TrapMap/TrapMap_M", transform.position, transform.rotation).GetComponent<DungeonPart>();
                             if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); i--; continue; }
                             break;
                             /*case EntryPoint.NeedRoomType.None:

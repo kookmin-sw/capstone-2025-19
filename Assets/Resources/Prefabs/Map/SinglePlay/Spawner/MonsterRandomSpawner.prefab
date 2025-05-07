@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1638906252544119115}
   - component: {fileID: 1418205410403992235}
   - component: {fileID: 7778299208387575959}
-  - component: {fileID: 8997835508279180492}
+  - component: {fileID: -8995667475654110036}
   m_Layer: 12
-  m_Name: PlayerSpawner
+  m_Name: MonsterRandomSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: deab2fc2386afb545a34f41a96e84a1d, type: 2}
+  - {fileID: 2100000, guid: 4b7553f1090daf74da1512a81e380170, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8997835508279180492
+--- !u!114 &-8995667475654110036
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3738408817742546100}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4f915f27b9aed745ba0bb5fdeedaebd, type: 3}
+  m_Script: {fileID: 11500000, guid: 0935836878be0d34cadcf11d9bf9ad2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSpawnArray:

@@ -72,19 +72,25 @@ public class VillageManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
+        Debug.Log("player 생성");
         Quaternion spawnRotation = Quaternion.Euler(0f, 200f, 0f);
         GameObject player = Instantiate(Resources.Load<GameObject>($"Prefabs/Player/Player_Village"), playerSpawnPosition.position, spawnRotation);
+        Debug.Log("player 생성2");
         InventoryController.Instance.SetPlayer(player.GetComponentInChildren<PlayerTrigger>());
         InventoryController.Instance.SetPlayerController(player.GetComponent<PlayerControl.PlayerController>());
+        Debug.Log("player 생성3");
         //TODO Player MainCamera 생성
         //GameObject mainCamera = Instantiate(Resources.Load<GameObject>($"Prefabs/Camera/MainCamera"));
         playerFollowCamera = Instantiate(Resources.Load<GameObject>("Prefabs/Camera/PlayerFollowCamera"));
         CinemachineVirtualCamera virtualCamera = playerFollowCamera.GetComponent<CinemachineVirtualCamera>();
+        Debug.Log("player 생성4");
         virtualCamera.Follow = player.transform.Find("PlayerCameraRoot");
         player.GetComponent<PlayerController>().SetMainCamera(mainCamera);
         //player.GetComponent<PlayerController>().SetCinemachineTarget(player.transform.Find("PlayerCameraRoot").gameObject);
         //카메라 캐릭터에게로 회전
-        OnLoginComplete(); 
+        Debug.Log("player 생성5");
+        OnLoginComplete();
+        Debug.Log("player 생성 완료");
         CloseLoginCanvas();
     }
 
@@ -211,7 +217,7 @@ public class VillageManager : MonoBehaviour
                 initStat.exp = 0;
                 initStat.ap = 10;
                 initStat.sp = 100;
-                initStat.hp = 10;
+                initStat.hp = 109;
                 initStat.wp = 10;
                 PlayerStatusController.Instance.LoadPlayerStatus(initStat);
                 return;

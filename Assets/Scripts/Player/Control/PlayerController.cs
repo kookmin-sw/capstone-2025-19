@@ -157,6 +157,9 @@ namespace PlayerControl
         public void SetMainCamera(GameObject mainCamera)
         {
             this.mainCamera = mainCamera;
+            Debug.Log($"main camera isㅁㄴㅇ {_lockOn}");
+            if(_lockOn == null) { Init(); }
+            _lockOn.Setting();
             Debug.Log($"main camera is {this.mainCamera}");
         }
 
@@ -164,7 +167,7 @@ namespace PlayerControl
         {
             CreateAfterImages();
             Debug.Log("PlayerController is Start");
-            if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            /*if (SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
             {
                 if (!photonView.IsMine)
                 {
@@ -177,20 +180,11 @@ namespace PlayerControl
                     GetComponent<PlayerInput>().enabled = false;
                     this.enabled = false;
                 }
-            }
+            }*/
 
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+            Init();
 
-            animationHandler = GetComponent<AnimationHandler>();
-            _controller = GetComponent<CharacterController>();
-            _input = GetComponent<InputHandler>();
-            _lockOn = GetComponent<LockOn>();
 
-            // reset our timeouts on start
-            _jumpTimeoutDelta = JumpTimeout;
-            _fallTimeoutDelta = FallTimeout;
-
-            
             /*if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
             {
 
@@ -206,6 +200,20 @@ namespace PlayerControl
                     
                     Destroy(this); }
             }*/
+        }
+
+        private void Init()
+        {
+            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+
+            animationHandler = GetComponent<AnimationHandler>();
+            _controller = GetComponent<CharacterController>();
+            _input = GetComponent<InputHandler>();
+            _lockOn = GetComponent<LockOn>();
+
+            // reset our timeouts on start
+            _jumpTimeoutDelta = JumpTimeout;
+            _fallTimeoutDelta = FallTimeout;
         }
 
         public void SetCinemachineTarget(GameObject target)

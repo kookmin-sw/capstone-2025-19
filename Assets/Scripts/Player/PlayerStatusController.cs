@@ -11,6 +11,11 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     [SerializeField] private Transform buffIconList;
     private List<BuffIcon> buffIconList_ = new List<BuffIcon>();
 
+    [Space(10)]
+    [Header("Lock on")]
+    [SerializeField] public LockOnImage lockOnImage;
+
+
     [Header("Slider bar")]
     [SerializeField] Slider HpBar;
     [SerializeField] Slider SpBar;

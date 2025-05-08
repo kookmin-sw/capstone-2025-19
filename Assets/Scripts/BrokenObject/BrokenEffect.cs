@@ -5,21 +5,34 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class BrokenEffect : MonoBehaviour
 {
-    [SerializeField] GameObject BrokenObject;
-    [SerializeField] GameObject FixedObject;
+    [SerializeField] protected GameObject BrokenObject;
+    [SerializeField] protected GameObject FixedObject;
+    [SerializeField] protected float removeTime = 5.0f;
 
-    private void Start()
+    protected void Start()
     {
         BrokenObject.SetActive(false);
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         Debug.Log("Broken Trigger On");
         if(other.CompareTag("PlayerWeapon") || other.CompareTag("Enemy"))
         {
-            BrokenObject.SetActive(true);
-            FixedObject.SetActive(false);
+            ActiveTrigger();
         }
+    }
+
+    protected virtual void ActiveTrigger()
+    {
+        BrokenObject.SetActive(true);
+        FixedObject.SetActive(false);
+        StartCoroutine(removeTimer());
+    }
+
+    protected virtual IEnumerator removeTimer()
+    {
+        yield return new WaitForSeconds(removeTime);
+        Destroy(gameObject);
     }
 }

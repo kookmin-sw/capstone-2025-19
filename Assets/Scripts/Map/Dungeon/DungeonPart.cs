@@ -82,7 +82,57 @@ public class DungeonPart : MonoBehaviour
         entrypoint = resultingEntry;
         return result;
     }
-    
+
+    public bool HasAvailableEntryPointTrapRoom2(out Transform entrypoint)
+    {
+        Transform resultingEntry = null;
+        bool result = false;
+
+        int totalRetries = 100;
+        int retryIndex = 0;
+
+        if (entryPoints.Count == 1)
+        {
+            Transform entry = entryPoints[0];
+            if (entry.TryGetComponent<EntryPoint>(out EntryPoint res))
+            {
+                if (res.dontSetRoom2Entry) { result = false; resultingEntry = null; entrypoint = resultingEntry; return result; }
+                if (res.IsOccupied())
+                {
+                    result = false;
+                    resultingEntry = null;
+                }
+                else
+                {
+                    result = true;
+                    resultingEntry = entry;
+                    res.SetOccupied();
+                }
+                entrypoint = resultingEntry;
+                return result;
+            }
+        }
+        while (resultingEntry == null && retryIndex < totalRetries)
+        {
+
+            int randomEntryIndex = UnityEngine.Random.Range(0, entryPoints.Count);
+            Transform entry = entryPoints[randomEntryIndex];
+            if (entry.TryGetComponent<EntryPoint>(out EntryPoint entryPoint))
+            {
+                if (!entryPoint.IsOccupied() && !entryPoint.dontSetRoom2Entry)
+                {
+                    resultingEntry = entry;
+                    result = true;
+                    entryPoint.SetOccupied();
+                    break;
+                }
+            }
+            retryIndex++;
+        }
+        entrypoint = resultingEntry;
+        return result;
+    }
+
     public void UnuseEntrypoint(Transform entrypoint)
     {
         if(entrypoint.TryGetComponent<EntryPoint>(out EntryPoint entry))

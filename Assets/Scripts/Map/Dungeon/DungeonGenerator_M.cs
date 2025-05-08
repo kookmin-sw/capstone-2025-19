@@ -223,4 +223,24 @@ public class DungeonGenerator_M : DungeonGenerator
         Debug.Log("Generated room is finish");
         isGenerated = true;
     }
+
+    protected override void FillWall()
+    {
+        foreach(DungeonPart dungeonPart in generatedRooms)
+        {
+            foreach(Transform entryPoint_ in dungeonPart.entryPoints)
+            {
+                EntryPoint entryPoint = entryPoint_.GetComponent<EntryPoint>();
+                if (!entryPoint.IsOccupied()) 
+                {
+
+                    PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/FillerWall/{entryPoint.wallObject.name}", entryPoint.entrance.transform.position, entryPoint.entrance.transform.rotation);
+                    PhotonNetwork.Destroy(entryPoint.entrance.gameObject);
+                }
+            }
+        }
+    }
+
+
+
 }

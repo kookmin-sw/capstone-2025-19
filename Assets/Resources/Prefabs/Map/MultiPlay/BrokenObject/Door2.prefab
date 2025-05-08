@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 179787081153782320}
   - component: {fileID: 7496729667675050363}
   - component: {fileID: 2681187491777002213}
-  m_Layer: 7
+  - component: {fileID: 7858776737900798269}
+  - component: {fileID: -4934400708096172854}
+  m_Layer: 15
   m_Name: Door2
   m_TagString: BrokenObject
   m_Icon: {fileID: 0}
@@ -77,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BrokenObject: {fileID: 1333310498924883541}
   FixedObject: {fileID: 1466746554150369451}
-  removeTime: 0
+  removeTime: 5
 --- !u!65 &2681187491777002213
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -99,6 +101,46 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.120203, y: 2.0494118, z: 0.26325393}
   m_Center: {x: -0.53052235, y: 0.07863808, z: -0.10917747}
+--- !u!114 &7858776737900798269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089789054552975068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &-4934400708096172854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089789054552975068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7858776737900798269}
+  - {fileID: 803634630784986567}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &650946031109110273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -244,6 +286,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8061424273341191869, guid: 61b67e1f2848b0941a94165cf041dc88,
         type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8061424273341191869, guid: 61b67e1f2848b0941a94165cf041dc88,
+        type: 3}
       propertyPath: m_TagString
       value: Interact
       objectReference: {fileID: 0}
@@ -254,11 +301,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8061424273341191869, guid: 61b67e1f2848b0941a94165cf041dc88,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7312735697191691296}
+      addedObject: {fileID: 5140146392158974983}
     - targetCorrespondingSourceObject: {fileID: 8061424273341191869, guid: 61b67e1f2848b0941a94165cf041dc88,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3854491546719796481}
+      addedObject: {fileID: 1287566550349311855}
+    - targetCorrespondingSourceObject: {fileID: 8061424273341191869, guid: 61b67e1f2848b0941a94165cf041dc88,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 803634630784986567}
   m_SourcePrefab: {fileID: 100100000, guid: 61b67e1f2848b0941a94165cf041dc88, type: 3}
 --- !u!1 &1466746554150369451 stripped
 GameObject:
@@ -266,7 +317,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8900520865962110486}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7312735697191691296
+--- !u!114 &5140146392158974983
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -278,8 +329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3651cb20e0721a46ab7f23e2b343b6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 3854491546719796481}
---- !u!95 &3854491546719796481
+  animator: {fileID: 1287566550349311855}
+--- !u!95 &1287566550349311855
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -300,6 +351,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &803634630784986567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466746554150369451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: isOpen
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!4 &1466746554150724747 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8061424273340828317, guid: 61b67e1f2848b0941a94165cf041dc88,

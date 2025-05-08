@@ -98,7 +98,7 @@ namespace PlayerControl
 		public void OnInteract(InputValue value)
 		{
 			Debug.Log("Input test");
-			playerTrigger.InteractObject();
+			InventoryController.Instance.player.InteractObject();
 		}
 
 		public void OnUseItem(InputValue value)

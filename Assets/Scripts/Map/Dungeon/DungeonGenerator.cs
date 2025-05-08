@@ -394,21 +394,36 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
 
     protected bool AlignEntry(Transform room1EntryPoint, DungeonPart room2)
     {
-        if(room2.HasAvailableEntryPoint(out Transform room2EntryPoint))
+        if(room2.dungeonPartType == DungeonPart.DungeonPartType.SpecialRoom)
         {
-            AlignRooms(room2.transform, room1EntryPoint, room2EntryPoint);
-            if (HandleIntersection(room2))
+            if (room2.HasAvailableEntryPoint(out Transform room2EntryPoint))
             {
-                room2.UnuseEntrypoint(room2EntryPoint);
-            }
-            else { return true; }
+                AlignRooms(room2.transform, room1EntryPoint, room2EntryPoint);
+                if (HandleIntersection(room2))
+                {
+                    room2.UnuseEntrypoint(room2EntryPoint);
+                }
+                else { return true; }
 
-            foreach(Transform entryPoint in room2.entryPoints)
-            {
-                AlignRooms(room2.transform, room1EntryPoint, entryPoint);
-                if (!HandleIntersection(room2)) { return true; }
+                foreach (Transform entryPoint in room2.entryPoints)
+                {
+                    AlignRooms(room2.transform, room1EntryPoint, entryPoint);
+                    if (!HandleIntersection(room2)) { return true; }
+                }
             }
         }
+        else
+        {
+            if(room2.HasAvailableEntryPointTrapRoom2(out Transform room2EntryPoint)){
+                AlignRooms(room2.transform, room1EntryPoint, room2EntryPoint);
+                if (HandleIntersection(room2))
+                {
+                    room2.UnuseEntrypoint(room2EntryPoint);
+                }
+                else { return true; }
+            }
+        }
+        
         return false;
     }
 
@@ -517,5 +532,10 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
     void Update()
     {
         
+    }
+
+    protected virtual void FillWall()
+    {
+
     }
 }

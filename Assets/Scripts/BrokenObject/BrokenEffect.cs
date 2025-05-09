@@ -33,6 +33,7 @@ public class BrokenEffect : MonoBehaviour
     protected virtual IEnumerator removeTimer()
     {
         yield return new WaitForSeconds(removeTime);
+        
         Destroy(gameObject);
     }
 }

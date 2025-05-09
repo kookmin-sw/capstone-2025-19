@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6121829692111363126}
   - component: {fileID: 8768628352509303564}
-  - component: {fileID: 4244704441898126964}
   - component: {fileID: 3026077401130894165}
   - component: {fileID: 6904558006481338073}
   - component: {fileID: 5815914064974211699}
+  - component: {fileID: -4023933757807548114}
   m_Layer: 15
   m_Name: Door1
   m_TagString: BrokenObject
@@ -59,21 +59,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.118289, y: 2.0073757, z: 0.261626}
   m_Center: {x: -0.51750517, y: 0.010172844, z: -0.10455763}
---- !u!114 &4244704441898126964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1422267348360016439}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edcb291e36de1bf428c4c007096dc839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BrokenObject: {fileID: 4041118042869049883}
-  FixedObject: {fileID: 1645695168250330546}
-  removeTime: 5
 --- !u!54 &3026077401130894165
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -141,6 +126,21 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &-4023933757807548114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422267348360016439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d7a8d0125a0cc4aab6dbb0f462e477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BrokenObject: {fileID: 4041118042869049883}
+  FixedObject: {fileID: 1645695168250330546}
+  removeTime: 5
 --- !u!1001 &776581800595131948
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -384,32 +384,32 @@ PrefabInstance:
     - target: {fileID: 1036818867260378062, guid: bed846ee67b04df48b9c452367caf2e9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2735676892212459810, guid: bed846ee67b04df48b9c452367caf2e9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5394814857022856297, guid: bed846ee67b04df48b9c452367caf2e9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5400375382768438312, guid: bed846ee67b04df48b9c452367caf2e9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5684156149301644461, guid: bed846ee67b04df48b9c452367caf2e9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8818978116892924209, guid: bed846ee67b04df48b9c452367caf2e9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

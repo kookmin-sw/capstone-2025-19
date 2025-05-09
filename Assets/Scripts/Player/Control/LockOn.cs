@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
+//using Microsoft.Unity.VisualStudio.Editor;
 using PlayerControl;
-using Unity.Mathematics;
+//using Unity.Mathematics;
 using UnityEngine;
 
 public class LockOn : MonoBehaviour

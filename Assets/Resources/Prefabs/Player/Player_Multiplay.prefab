@@ -837,7 +837,6 @@ GameObject:
   - component: {fileID: 3959146416002662898}
   - component: {fileID: 651672004039699749}
   - component: {fileID: 2100115003618398015}
-  - component: {fileID: 6547935425340116392}
   - component: {fileID: 1932956801316164842}
   - component: {fileID: 1825963933665430346}
   - component: {fileID: 8462919654099196310}
@@ -849,6 +848,7 @@ GameObject:
   - component: {fileID: 4229471314357284510}
   - component: {fileID: 470243611946263083}
   - component: {fileID: 3101247380512493192}
+  - component: {fileID: 93616666136204007}
   m_Layer: 9
   m_Name: Player_Multiplay
   m_TagString: Player
@@ -937,56 +937,6 @@ CharacterController:
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.93, z: 0}
---- !u!114 &6547935425340116392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3246215277211317416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa700b7345cdd9d4c9cde8efc17b3f93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoveSpeed: 4
-  SprintSpeed: 5.335
-  RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
-  LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
-  FootstepAudioClips: []
-  SwordClip: {fileID: 0}
-  GreatswordClip: {fileID: 0}
-  CrossbowClip: {fileID: 0}
-  FootstepAudioVolume: 0.5
-  AttackAudioVolume: 0.5
-  JumpHeight: 1.2
-  Gravity: -15
-  JumpTimeout: 0.5
-  FallTimeout: 0.15
-  Grounded: 1
-  GroundedOffset: -0.14
-  GroundedRadius: 0.28
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 1088
-  CinemachineCameraTarget: {fileID: 5714445758708071243}
-  TopClamp: 70
-  BottomClamp: -30
-  CameraAngleOverride: 0
-  LockCameraPosition: 0
-  _cameraDirectionY: -0.3
-  _cameraSmoothing: 50
-  _lockOnSpeed: 2.5
-  _useItemSpeed: 1.5
-  _sprintStaminaUsage: 10
-  _dodgeStaminaUsage: 20
-  _dashDuration: 0.3
-  _dashMaxAmount: 15
-  _ghostDuration: 0.15
-  fadeTime: 3
-  mainCamera: {fileID: 0}
-  playerGhostEffect: {fileID: 0}
 --- !u!114 &1932956801316164842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1181,7 +1131,7 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: Speed
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Jump
   - Type: 4
     SynchronizeType: 0
@@ -1254,6 +1204,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4c5285f2c4d69a4eb39c66a20018f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &93616666136204007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3246215277211317416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1363527422a65fe47abdb5d5217f28f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveSpeed: 4
+  SprintSpeed: 5.335
+  RotationSmoothTime: 0.12
+  SpeedChangeRate: 10
+  LandingAudioClip: {fileID: 0}
+  FootstepAudioClips: []
+  SwordClip: {fileID: 0}
+  GreatswordClip: {fileID: 0}
+  CrossbowClip: {fileID: 0}
+  FootstepAudioVolume: 0.5
+  AttackAudioVolume: 0.5
+  JumpHeight: 1.2
+  Gravity: -15
+  JumpTimeout: 0.5
+  FallTimeout: 0.15
+  Grounded: 1
+  GroundedOffset: -0.14
+  GroundedRadius: 0.28
+  GroundLayers:
+    serializedVersion: 2
+    m_Bits: 1088
+  CinemachineCameraTarget: {fileID: 5714445758708071243}
+  TopClamp: 70
+  BottomClamp: -30
+  CameraAngleOverride: 0
+  LockCameraPosition: 0
+  _cameraDirectionY: -0.3
+  _cameraSmoothing: 50
+  _lockOnSpeed: 2.5
+  _useItemSpeed: 1.5
+  _sprintStaminaUsage: 10
+  _dodgeStaminaUsage: 20
+  _dashDuration: 0.2
+  _dashMaxAmount: 5
+  _ghostDuration: 0.15
+  fadeTime: 3
+  animationHandler: {fileID: 651672004039699749}
+  _controller: {fileID: 2100115003618398015}
+  _input: {fileID: 1932956801316164842}
+  mainCamera: {fileID: 0}
+  _lockOn: {fileID: 7003741957633542788}
+  playerGhostEffect: {fileID: 0}
 --- !u!1 &3506197119744677739
 GameObject:
   m_ObjectHideFlags: 0

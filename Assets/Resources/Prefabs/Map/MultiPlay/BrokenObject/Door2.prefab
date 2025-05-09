@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5790909923555390240}
   - component: {fileID: 179787081153782320}
-  - component: {fileID: 7496729667675050363}
   - component: {fileID: 2681187491777002213}
   - component: {fileID: 7858776737900798269}
   - component: {fileID: -4934400708096172854}
+  - component: {fileID: 556331980656270102}
   m_Layer: 15
   m_Name: Door2
   m_TagString: BrokenObject
@@ -65,21 +65,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7496729667675050363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8089789054552975068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edcb291e36de1bf428c4c007096dc839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BrokenObject: {fileID: 1333310498924883541}
-  FixedObject: {fileID: 1466746554150369451}
-  removeTime: 5
 --- !u!65 &2681187491777002213
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -141,6 +126,21 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &556331980656270102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089789054552975068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d7a8d0125a0cc4aab6dbb0f462e477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BrokenObject: {fileID: 1333310498924883541}
+  FixedObject: {fileID: 1466746554150369451}
+  removeTime: 5
 --- !u!1001 &650946031109110273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -203,6 +203,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Door_3_fracture_v2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983907253622805588, guid: 2d2eb460d6235d34b841f70ce684c587,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2057427207728141888, guid: 2d2eb460d6235d34b841f70ce684c587,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3123022357097567941, guid: 2d2eb460d6235d34b841f70ce684c587,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3822099239843962888, guid: 2d2eb460d6235d34b841f70ce684c587,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175133731420194436, guid: 2d2eb460d6235d34b841f70ce684c587,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784283799089570391, guid: 2d2eb460d6235d34b841f70ce684c587,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

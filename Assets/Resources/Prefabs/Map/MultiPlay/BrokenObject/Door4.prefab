@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6574802382593761763}
   - component: {fileID: 1278182951692309944}
   - component: {fileID: -4110123427913322950}
+  - component: {fileID: 4738818683011555554}
   m_Layer: 0
   m_Name: Door4
   m_TagString: Untagged
@@ -141,6 +142,21 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &4738818683011555554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6261390014032190833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d7a8d0125a0cc4aab6dbb0f462e477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BrokenObject: {fileID: 5788521217738462251}
+  FixedObject: {fileID: 8215893652147407906}
+  removeTime: 5
 --- !u!1001 &1929436232324056806
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -149,6 +165,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6408536824559317605}
     m_Modifications:
+    - target: {fileID: 2874424665439531634, guid: ac47be5e2098d0c448ed4810b930ca41,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3312378313814165731, guid: ac47be5e2098d0c448ed4810b930ca41,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4744992782401996919, guid: ac47be5e2098d0c448ed4810b930ca41,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -203,6 +229,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Door_9_fracture_v2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5373438012982907597, guid: ac47be5e2098d0c448ed4810b930ca41,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186367524154348434, guid: ac47be5e2098d0c448ed4810b930ca41,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

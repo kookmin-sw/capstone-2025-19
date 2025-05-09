@@ -14,7 +14,19 @@ public class PlayerController_M : PlayerControl.PlayerController
     protected override void Awake()
     {
         base.Awake();
-        photonView = GetComponent<PhotonView>();
+        photonView = GetComponent<PhotonView>(); if (!photonView.IsMine)
+        {
+            var pi = GetComponent<PlayerInput>();
+            if (pi)
+            {
+                // 1) 모든 장치 언페어
+                pi.user.UnpairDevices();
+                // 2) 입력 비활성
+                pi.DeactivateInput();
+                // 3) 컴포넌트 자체 off
+                pi.enabled = false;
+            }
+        }
     }
     protected override void Start()
     {
@@ -30,6 +42,8 @@ public class PlayerController_M : PlayerControl.PlayerController
             GetComponent<PlayerInput>().enabled = false;
             GetComponent<PlayerInput>().enabled = false;
             this.enabled = false;
+            Debug.Log("false test");
+            Debug.Log($"player name {gameObject.name}");
         }
         
     }
@@ -39,9 +53,7 @@ public class PlayerController_M : PlayerControl.PlayerController
     {
         if (photonView.IsMine)
         {
-            Debug.Log("INputtest1");
             if (PlayerState.Instance.state == PlayerState.State.Die) return;
-            Debug.Log("INputtest2");
             Move();
             GroundedCheck();
             UseItem();
@@ -49,7 +61,6 @@ public class PlayerController_M : PlayerControl.PlayerController
             JumpAndGravity();
             Rolling();
             Attack();
-            Debug.Log("INputtest3");
         }
     }
 

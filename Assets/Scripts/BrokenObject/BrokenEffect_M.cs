@@ -17,22 +17,26 @@ public class BrokenEffect_M : BrokenEffect
     }
     protected override void ActiveTrigger()
     {
-        photonView.RPC("ActiveTriggerRPC", RpcTarget.Others);
+        photonView.RPC("ActiveTriggerRPC", RpcTarget.All);
         BrokenObject.SetActive(true);
         FixedObject.SetActive(false);
+        
     }
 
     protected override IEnumerator removeTimer()
     {
         yield return new WaitForSeconds(removeTime);
-        PhotonNetwork.Destroy(gameObject);
+        Debug.Log($"Destory {gameObject.name}");
+        Destroy(gameObject);
     }
 
     [PunRPC]
     private void ActiveTriggerRPC()
     {
+        Debug.Log("RPC receive");
         BrokenObject.SetActive(true);
         FixedObject.SetActive(false);
+        StartCoroutine(removeTimer());
     }
     
 }

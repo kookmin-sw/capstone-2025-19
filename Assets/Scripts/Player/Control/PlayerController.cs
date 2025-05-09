@@ -129,11 +129,11 @@ namespace PlayerControl
 
         private bool test_useItem;
 
-        private AnimationHandler animationHandler;
-        private CharacterController _controller;
-        private InputHandler _input;
+        [SerializeField] private AnimationHandler animationHandler;
+        [SerializeField] private CharacterController _controller;
+        [SerializeField] private InputHandler _input;
         public GameObject mainCamera;
-        private LockOn _lockOn;
+        [SerializeField] private LockOn _lockOn;
 
 
         private PhotonView photonView;
@@ -182,7 +182,7 @@ namespace PlayerControl
                 }
             }*/
 
-            Init();
+            //Init();
 
 
             /*if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
@@ -210,7 +210,6 @@ namespace PlayerControl
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<InputHandler>();
             _lockOn = GetComponent<LockOn>();
-
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
@@ -342,6 +341,10 @@ namespace PlayerControl
             if (!Grounded) Sprint = MoveSpeed;
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed;
+
+            //if(_input == null) { Init(); }
+
+
             if (_input.sprint && PlayerStatusController.Instance.curSp > 0)
             {
                 targetSpeed = Sprint;

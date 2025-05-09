@@ -474,7 +474,7 @@ public class VillageManager : MonoBehaviour
             {
                 string docId = doc.Id;
                 DBItem localItem = inventory.Find(i => i.itemDocId == docId);
-
+                
                 if (localItem == null)
                 {
                     inventoryRef.Document(docId).DeleteAsync();

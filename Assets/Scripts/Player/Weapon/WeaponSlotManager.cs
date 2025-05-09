@@ -6,7 +6,7 @@ using UnityEngine;
 public class WeaponSlotManager : MonoBehaviour
 {
     WeaponHolderSlot leftHandSlot;
-    WeaponHolderSlot rightHandSlot;
+    [SerializeField] private WeaponHolderSlot rightHandSlot;
 
     DamageCollider leftHandDamageCollider;
     DamageCollider rightHandDamageCollider;
@@ -16,7 +16,7 @@ public class WeaponSlotManager : MonoBehaviour
 
     void Awake()
     {
-        WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
+        /*WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
         foreach(WeaponHolderSlot weaponSlot in weaponHolderSlots)
         {
             if(weaponSlot.isLeftHandSlot)
@@ -27,7 +27,7 @@ public class WeaponSlotManager : MonoBehaviour
             {
                 rightHandSlot = weaponSlot;
             }
-        }
+        }*/
     }
 
     public void LoadWeaponOnSlot(WeaponStats weaponItem, bool isLeft)

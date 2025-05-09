@@ -26,7 +26,7 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
 
     public override void LoadWeaponModel(WeaponStats weaponStats)
     {
-        UnloadWeaponAndDestroy();
+        /*UnloadWeaponAndDestroy();
 
         if (weaponStats == null)
         {
@@ -34,6 +34,9 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
             return;
         }
         GameObject weapon = null;
+
+        weapon = PhotonNetwork.Instantiate($"Prefabs/PlayerWeapon/Multiplay/{weaponStats.weaponPrefab.name}", transform.position, transform.rotation);
+
 
         Debug.Log($"photon network test");
         int ownerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
@@ -43,16 +46,112 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
         PhotonView parentPV = (parentOverride != null)
             ? parentOverride.GetComponent<PhotonView>()
             : transform.GetComponent<PhotonView>();
-
-        if (parentPV != null)
+*/
+        /*if (parentPV != null)
         {
             parentViewID = parentPV.ViewID;
         }
         bool islayer = (transform.root.CompareTag("Player"));
         photonView.RPC(nameof(LoadWeaponModelRPC), RpcTarget.All, ownerActorNumber, weaponStats.name, islayer,
              parentViewID);
+*/
+        UnloadWeaponAndDestroy();
 
+        if (weaponStats == null)
+        {
+            UnloadWeapon();
+            return;
+        }
+        GameObject weapon = null;
+
+        weapon = Instantiate(weaponStats.weaponPrefab) as GameObject;
+        if (photonView.IsMine)
+        {
+            if (!weaponStats.isRanged)
+            {
+                DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();
+                weaponCollider.damage = weaponStats.damage;
+                weaponCollider.tenacity = weaponStats.tenacity;
+                weaponCollider.hitEffect = weaponStats.hitEffect;
+                weaponCollider.tag = transform.root.tag == "Player" ? "PlayerWeapon" : "EnemyWeapon";
+            }
+        }
         
+
+        if (weapon != null)
+        {
+            if (parentOverride != null)
+            {
+                weapon.transform.parent = parentOverride;
+            }
+            else
+            {
+                weapon.transform.parent = transform;
+            }
+
+            if (animationHandler != null)
+            {
+                print("animator updated");
+                animationHandler.UpdateOverride(weaponStats.weaponType);
+            }
+            weapon.transform.localPosition = Vector3.zero;
+            weapon.transform.localRotation = Quaternion.identity;
+            weapon.transform.localScale = Vector3.one;
+        }
+
+        currentWeaponModel = weapon;
+
+
+
+
+
+
+        if (photonView.IsMine && weaponStats != null)
+        {
+            // weaponType 또는 고유 ID 를 string/int 로 보냄
+            photonView.RPC(
+                nameof(RPC_LoadWeaponModel),
+                RpcTarget.OthersBuffered,
+                weaponStats.weaponType.ToString()
+            );
+
+
+        }
+        //Internal_LoadWeapon(weaponStats);
+    }
+
+    protected override void Internal_LoadWeapon(WeaponStats weaponStats)
+    {
+        UnloadWeaponAndDestroy();
+        if (weaponStats == null)
+        {
+            UnloadWeapon();
+            return;
+        }
+
+        var weapon = Instantiate(weaponStats.weaponPrefab);
+
+        weapon.transform.SetParent(parentOverride != null ? parentOverride : transform);
+        weapon.transform.localPosition = Vector3.zero;
+        weapon.transform.localRotation = Quaternion.identity;
+        weapon.transform.localScale = Vector3.one;
+        currentWeaponModel = weapon;
+
+        if (photonView.IsMine)
+        {
+            if (!weaponStats.isRanged)
+            {
+                DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();
+                weaponCollider.damage = weaponStats.damage;
+                weaponCollider.tenacity = weaponStats.tenacity;
+                weaponCollider.hitEffect = weaponStats.hitEffect;
+                weaponCollider.tag = transform.root.tag == "Player" ? "PlayerWeapon" : "EnemyWeapon";
+            }
+        }
+        
+        
+        if (animationHandler != null)
+            animationHandler.UpdateOverride(weaponStats.weaponType);
     }
 
     public override void UnloadWeaponAndDestroy()
@@ -63,6 +162,20 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
         }
         
     }
+
+    [PunRPC]
+    private void RPC_LoadWeaponModel(string weaponTypeName)
+    {
+        // weaponTypeName 으로 WeaponStats 찾아오기
+        WeaponStats stats = Resources.Load<WeaponStats>($"WeaponStats/{weaponTypeName}");
+        Internal_LoadWeapon(stats);
+    }
+
+    /*[PunRPC]
+    private void RPC_LoadAndOverride(string weaponType) 
+    {
+        WeaponStats weapon = Resources.Load<WeaponStats>($"WeaponStats/{weaponType}")
+    }*/
 
 
     [PunRPC]

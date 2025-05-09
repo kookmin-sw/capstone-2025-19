@@ -37,18 +37,12 @@ public class WeaponHolderSlot : MonoBehaviour
     {
         if (currentWeaponModel != null)
         {
-            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
-            {
-                PhotonNetwork.Destroy(currentWeaponModel);
-            }
-            else
-            {
-                Destroy(currentWeaponModel);
-            }
+            Destroy(currentWeaponModel);
         }
     }
     public virtual void LoadWeaponModel(WeaponStats weaponStats)
     {
+        //Internal_LoadWeapon(weaponStats);
         UnloadWeaponAndDestroy();
 
         if (weaponStats == null)
@@ -92,6 +86,38 @@ public class WeaponHolderSlot : MonoBehaviour
         currentWeaponModel = weapon;
 
 
+    }
+
+    protected virtual void Internal_LoadWeapon(WeaponStats weaponStats)
+    {
+        UnloadWeaponAndDestroy();
+        if (weaponStats == null)
+        {
+            UnloadWeapon();
+            return;
+        }
+
+        var weapon = Instantiate(weaponStats.weaponPrefab);
+
+        weapon.transform.SetParent(parentOverride != null ? parentOverride : transform);
+        weapon.transform.localPosition = Vector3.zero;
+        weapon.transform.localRotation = Quaternion.identity;
+        weapon.transform.localScale = Vector3.one;
+        currentWeaponModel = weapon;
+
+
+        if (!weaponStats.isRanged)
+        {
+            DamageCollider weaponCollider = weapon.GetComponentInChildren<DamageCollider>();
+            weaponCollider.damage = weaponStats.damage;
+            weaponCollider.tenacity = weaponStats.tenacity;
+            weaponCollider.hitEffect = weaponStats.hitEffect;
+            weaponCollider.tag = transform.root.tag == "Player" ? "PlayerWeapon" : "EnemyWeapon";
+        }
+
+        // 여기서 Override Controller 적용
+        if (animationHandler != null)
+            animationHandler.UpdateOverride(weaponStats.weaponType);
     }
 
     

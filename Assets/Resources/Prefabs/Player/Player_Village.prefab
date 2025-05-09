@@ -941,6 +941,11 @@ MonoBehaviour:
   _dashMaxAmount: 15
   _ghostDuration: 0.15
   fadeTime: 3
+  animationHandler: {fileID: 0}
+  _controller: {fileID: 0}
+  _input: {fileID: 0}
+  mainCamera: {fileID: 0}
+  _lockOn: {fileID: 0}
   playerGhostEffect: {fileID: 0}
 --- !u!114 &1932956801316164842
 MonoBehaviour:
@@ -1030,11 +1035,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f72de80f928b437438bc71b66672cc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 2048
-  lockOnImage: {fileID: 0}
   lockOnRadius: 20
   minViewAngle: -70
   maxViewAngle: 70
@@ -1054,6 +1057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef1a0b314d40e5b44908162dbe2e77b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightHandSlot: {fileID: 8941042478878875695}
 --- !u!114 &4490464932535565750
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,8 +6,10 @@ using UnityEngine;
 public class DungeonGenerator_M : DungeonGenerator
 {
     [SerializeField] private string entranceRoomName;
+    PhotonView photonView;
     public override void StartGeneration()
     {
+        photonView = GetComponent<PhotonView>();
         Debug.Log("Photon test1");
         //Debug.Log($"SceneManager name = {SceneController.Instance.GetCurrentSceneName()}");
         NetworkController.Instance.AllPanelActiveFalse();
@@ -16,6 +18,7 @@ public class DungeonGenerator_M : DungeonGenerator
             networkEventReceiver.playerCount = NetworkController.Instance.playerCount;
             //TODO Host createRoom
             Generate_MultiPlay();
+            FillWall();
             //StartCoroutine(GenerateMultiplay());
             NvigationBake();
             PlayerSpawn();
@@ -235,10 +238,21 @@ public class DungeonGenerator_M : DungeonGenerator
                 {
 
                     PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/FillerWall/{entryPoint.wallObject.name}", entryPoint.entrance.transform.position, entryPoint.entrance.transform.rotation);
-                    PhotonNetwork.Destroy(entryPoint.entrance.gameObject);
+                    PhotonView entryPhoton = entryPoint.entrance.gameObject.GetComponent<PhotonView>();
+                    Debug.Log(entryPoint.entrance.gameObject);
+                    Debug.Log($"is null? {entryPhoton.ViewID}");
+                    photonView.RPC(nameof(DestoryWall), RpcTarget.All, entryPhoton.ViewID);
+
                 }
             }
         }
+    }
+
+    [PunRPC]
+    private void DestoryWall(int childViewID)
+    {
+        GameObject entranceGO = PhotonView.Find(childViewID).gameObject;
+        entranceGO.SetActive(false);
     }
 
 

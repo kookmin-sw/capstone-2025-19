@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class WeaponSlotManager : MonoBehaviour
 {
-    WeaponHolderSlot leftHandSlot;
-    [SerializeField] private WeaponHolderSlot rightHandSlot;
+    protected WeaponHolderSlot leftHandSlot;
+    [SerializeField] protected WeaponHolderSlot rightHandSlot;
 
-    DamageCollider leftHandDamageCollider;
-    DamageCollider rightHandDamageCollider;
+    protected DamageCollider leftHandDamageCollider;
+    protected DamageCollider rightHandDamageCollider;
 
-    ProjectileShooter leftShooter;
-    ProjectileShooter rightShooter;
+    protected ProjectileShooter leftShooter;
+    protected ProjectileShooter rightShooter;
 
-    void Awake()
+    protected virtual void Awake()
     {
         /*WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
         foreach(WeaponHolderSlot weaponSlot in weaponHolderSlots)
@@ -50,22 +50,22 @@ public class WeaponSlotManager : MonoBehaviour
 
     #region Handle Weapon's Damage Collider
 
-    private void LoadLeftWeaponDamageCollider()
+    protected void LoadLeftWeaponDamageCollider()
     {
         leftHandDamageCollider = leftHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
     }
 
-    private void LoadLeftProejctileShooter()
+    protected void LoadLeftProejctileShooter()
     {
         leftShooter = rightHandSlot.currentWeaponModel.GetComponentInChildren<ProjectileShooter>();
     }
 
-    private void LoadRightWeaponDamageCollider()
+    protected void LoadRightWeaponDamageCollider()
     {
         rightHandDamageCollider = rightHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
     }
 
-    private void LoadRightProejctileShooter()
+    protected void LoadRightProejctileShooter()
     {
         rightShooter = rightHandSlot.currentWeaponModel.GetComponentInChildren<ProjectileShooter>();
     }
@@ -82,7 +82,7 @@ public class WeaponSlotManager : MonoBehaviour
         else if (leftShooter != null) leftShooter.Shoot();
     }
 
-    public void CloseRightDamageCollider()
+    public virtual void CloseRightDamageCollider()
     {
         rightHandDamageCollider.UnableDamageCollider();
     }

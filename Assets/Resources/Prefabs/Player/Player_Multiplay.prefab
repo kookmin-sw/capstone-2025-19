@@ -840,7 +840,6 @@ GameObject:
   - component: {fileID: 1825963933665430346}
   - component: {fileID: 8462919654099196310}
   - component: {fileID: 7003741957633542788}
-  - component: {fileID: 2021596787898974255}
   - component: {fileID: 4490464932535565750}
   - component: {fileID: 3446109753406492648}
   - component: {fileID: 3008122999662212160}
@@ -848,6 +847,7 @@ GameObject:
   - component: {fileID: 470243611946263083}
   - component: {fileID: 3101247380512493192}
   - component: {fileID: 93616666136204007}
+  - component: {fileID: 6657857999637415878}
   m_Layer: 9
   m_Name: Player_Multiplay
   m_TagString: Player
@@ -1034,19 +1034,6 @@ MonoBehaviour:
   isFindTarget: 0
   currentTarget: {fileID: 0}
   targetEnemies: []
---- !u!114 &2021596787898974255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3246215277211317416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef1a0b314d40e5b44908162dbe2e77b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rightHandSlot: {fileID: 1823391218581566560}
 --- !u!114 &4490464932535565750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1131,10 +1118,10 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: Speed
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Jump
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Grounded
   - Type: 4
     SynchronizeType: 1
@@ -1161,7 +1148,7 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: Rolling
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Interacting
   - Type: 4
     SynchronizeType: 1
@@ -1179,7 +1166,7 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: Die
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: DashAttack
   - Type: 9
     SynchronizeType: 1
@@ -1188,9 +1175,9 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: Test
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 2
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 2
     LayerIndex: 1
 --- !u!114 &3101247380512493192
 MonoBehaviour:
@@ -1258,6 +1245,19 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   _lockOn: {fileID: 7003741957633542788}
   playerGhostEffect: {fileID: 0}
+--- !u!114 &6657857999637415878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3246215277211317416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f081e08578a21e948ac7ae7b97901b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightHandSlot: {fileID: 1823391218581566560}
 --- !u!1 &3506197119744677739
 GameObject:
   m_ObjectHideFlags: 0

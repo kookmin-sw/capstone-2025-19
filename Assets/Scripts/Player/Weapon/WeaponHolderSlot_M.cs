@@ -112,7 +112,7 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
             photonView.RPC(
                 nameof(RPC_LoadWeaponModel),
                 RpcTarget.OthersBuffered,
-                weaponStats.weaponType.ToString()
+                weaponStats.name
             );
 
 
@@ -167,7 +167,9 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
     private void RPC_LoadWeaponModel(string weaponTypeName)
     {
         // weaponTypeName 으로 WeaponStats 찾아오기
+        Debug.Log($"RPC Load weaponModel {weaponTypeName}");
         WeaponStats stats = Resources.Load<WeaponStats>($"WeaponStats/{weaponTypeName}");
+        Debug.Log($"Load WeaponStats {stats}");
         Internal_LoadWeapon(stats);
     }
 

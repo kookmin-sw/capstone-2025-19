@@ -12,6 +12,11 @@ public class NetworkController : Singleton<NetworkController>
     [Header("LoadSceneName")]
     [SerializeField] private string loadSceneName;
 
+    [Space(20)]
+    [Header("Server Rate")]
+    [SerializeField] private int sendRate = 30;
+    [SerializeField] private int serializationRate = 20;
+
 
     [Space(20)]
 
@@ -54,7 +59,9 @@ public class NetworkController : Singleton<NetworkController>
         base.Awake();
         AllPanelActiveFalse();
         playModeSelectPanel.SetActive(true);
-        
+
+        PhotonNetwork.SendRate = sendRate;
+        PhotonNetwork.SerializationRate = serializationRate;
     }
     public void AllPanelActiveFalse()
     {

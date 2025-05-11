@@ -11,6 +11,7 @@ public class DropItemPanel : ItemPanel
             InventoryController.Instance.CreateDropItem(itemIcon);
             InventoryController.Instance.dropItemList.Add(itemIcon.dropItem.GetComponent<DropItem>());
         }
+        Debug.Log($"InsertItem test");
         base.InsertItem(itemIcon);
     }
     public override void TakeOutItem(ItemPanel itemPanel, ItemIcon itemIcon)

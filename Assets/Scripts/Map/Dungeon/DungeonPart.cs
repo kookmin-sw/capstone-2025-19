@@ -11,7 +11,7 @@ public class DungeonPart : MonoBehaviour
         Hallway,
         Stair,
         SpecialRoom,
-
+        BossRoom,
     }
 
     public enum RoomUse
@@ -29,6 +29,7 @@ public class DungeonPart : MonoBehaviour
     [SerializeField] List<MonsterRandomSpawner> spawnMonsterList;
     [SerializeField] public List<Collider> colliderList;
     [SerializeField] public List<Transform> playerSpawnPoints;
+    [SerializeField] public List<EscapePotalTransform> escapePotalSpawnPoints;
     
     // chest object randomSpawn List
     //TODO EnemySpawn Point functiion

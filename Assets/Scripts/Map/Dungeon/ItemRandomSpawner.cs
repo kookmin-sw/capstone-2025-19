@@ -18,7 +18,7 @@ public class ItemRandomSpawner : MonoBehaviour
         
     }
 
-    public void SpawnItem()
+    public virtual void SpawnItem()
     {
         foreach(var data in spawnArray)
         {

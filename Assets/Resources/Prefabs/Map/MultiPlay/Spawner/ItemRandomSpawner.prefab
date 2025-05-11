@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8490978041684351001}
   - component: {fileID: 3421668015570543465}
   - component: {fileID: 3092415333282258440}
-  - component: {fileID: 702583963261630858}
+  - component: {fileID: -4390048788132424867}
   m_Layer: 12
   m_Name: ItemRandomSpawner
   m_TagString: Untagged
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &702583963261630858
+--- !u!114 &-4390048788132424867
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,11 +93,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3865530042381665139}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b45cf0d4752c8984e9f44d5aa1ef0c47, type: 3}
+  m_Script: {fileID: 11500000, guid: f646e5d66766da74ebba697200e0b1c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spawnArray:
     keys: []
     values: []
-    foldout: 1
-  spawnRange: 0.5
+    foldout: 0
+  spawnRange: 0
+  spawnArray:
+    keys: []
+    values: []
+    foldout: 0
+  spawnRange: 0

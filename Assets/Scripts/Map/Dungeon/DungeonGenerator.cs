@@ -13,7 +13,8 @@ using Unity.AI.Navigation;
 abstract public class DungeonGenerator : Singleton<DungeonGenerator>
 {
     [Header("던전 구성 요소")]
-    [SerializeField, Tooltip("생성될 방 개수")] protected int noOfRooms = 10;
+    [SerializeField, Tooltip("생성될 방 개수 + 플레이어 인원")] protected int noOfRooms = 10;
+    [SerializeField, Tooltip("생성될 포탈 개수_보통 플레이어 인원 + 1")] protected int potalCount = 2;
     [Space(10)]
     [SerializeField, Tooltip("시작지점 방")] protected GameObject entrance; //던전의 시작지점 방
     [SerializeField, Tooltip("일반적인 방")] protected List<GameObject> rooms;
@@ -40,6 +41,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
 
 
     protected DungeonPart playerSpawnDungeonPart;
+    protected DungeonPart bossDungeonPart;
     protected NetworkEventReceiver networkEventReceiver;
 
     [HideInInspector] public NavMeshSurface surface;
@@ -461,6 +463,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
             Debug.Log("Wait host ready");
             yield return new WaitForSeconds(1f);
         }
+        NvigationBake();
         InventoryController.Instance.SetPlayer(player_.transform.Find("Trigger").GetComponent<PlayerTrigger>());
         InventoryController.Instance.SetPlayerInventory();
     }
@@ -535,6 +538,16 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
     }
 
     protected virtual void FillWall()
+    {
+
+    }
+
+    public virtual void EnterBossRoom()
+    {
+
+    }
+
+    protected virtual void SetEscapePotal()
     {
 
     }

@@ -272,7 +272,7 @@ namespace PlayerControl
 
         protected virtual void LateUpdate()
         {
-            if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")
+            if(SceneController.Instance.IsMultiplay())
             {
                 if (photonView.IsMine)
                 {

@@ -23,6 +23,11 @@ public class DungeonGenerator_M : DungeonGenerator
             NvigationBake();
             PlayerSpawn();
             SpawnRandomObject();
+            for(int i = 0; i < potalCount; i++)
+            {
+                SetEscapePotal();
+            }
+            
         }
         else
         {
@@ -95,7 +100,8 @@ public class DungeonGenerator_M : DungeonGenerator
             {
                 //지금 당장은 처음 만든 방이 플레이어 스폰 방임
                 Debug.Log("Photon test");
-                GameObject generatedRoom = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Entrance/{entranceRoomName}", transform.position, transform.rotation);
+                GameObject generatedRoom = PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/Entrance/{entranceRoomName}", transform.position, transform.rotation);
+                //GameObject generatedRoom = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Entrance/{entranceRoomName}", transform.position, transform.rotation);
                 //GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation); //여기에 있는 entrance가 던전의 시작점이 될것임
                 generatedRoom.transform.SetParent(null);
                 //멀티플레이 요소임
@@ -141,33 +147,35 @@ public class DungeonGenerator_M : DungeonGenerator
                         case EntryPoint.NeedRoomType.Stair:
                             int randomStairIndex = UnityEngine.Random.Range(0, stairs.Count);
                             Debug.Log($"random value test {randomStairIndex},{stairs.Count}");
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Stairs/{stairs[randomStairIndex].name}"
+                            room2 = PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/Stairs/{stairs[randomStairIndex].name}"
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
+                            /*room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Stairs/{stairs[randomStairIndex].name}"
+                                , transform.position, transform.rotation).GetComponent<DungeonPart>();*/
 
                             if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); i--; continue; }
                             break;
                         case EntryPoint.NeedRoomType.Hallway:
                             int randomHallwaysIndex = UnityEngine.Random.Range(0, hallways.Count);
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Hallways/{hallways[randomHallwaysIndex].name}"
+                            room2 = PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/Hallways/{hallways[randomHallwaysIndex].name}"
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
 
                             if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); i--; continue; }
                             break;
                         case EntryPoint.NeedRoomType.Room:
                             int randomRoomsIndex = UnityEngine.Random.Range(0, rooms.Count);
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Rooms/{rooms[randomRoomsIndex].name}"
+                            room2 = PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/Rooms/{rooms[randomRoomsIndex].name}"
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
 
                             if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); i--; continue; }
                             break;
                         case EntryPoint.NeedRoomType.SmallRoom:
                             int randomSmallRoomIndex = UnityEngine.Random.Range(0, smallRooms.Count);
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/SmallRooms/{smallRooms[randomSmallRoomIndex].name}"
+                            room2 = PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/SmallRooms/{smallRooms[randomSmallRoomIndex].name}"
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
                             if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); i--; continue; }
                             break;
                         case EntryPoint.NeedRoomType.TrapRoom:
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/TrapMap/TrapMap_M", transform.position, transform.rotation).GetComponent<DungeonPart>();
+                            room2 = PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/TrapMap/TrapMap_M", transform.position, transform.rotation).GetComponent<DungeonPart>();
                             if (!AlignEntry(room1EntryPoint, room2)) { room1.UnuseEntrypoint(room1EntryPoint); PhotonNetwork.Destroy(room2.gameObject); i--; continue; }
                             break;
                             /*case EntryPoint.NeedRoomType.None:
@@ -237,7 +245,7 @@ public class DungeonGenerator_M : DungeonGenerator
                 if (!entryPoint.IsOccupied()) 
                 {
 
-                    PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/FillerWall/{entryPoint.wallObject.name}", entryPoint.entrance.transform.position, entryPoint.entrance.transform.rotation);
+                    PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/FillerWall/{entryPoint.wallObject.name}", entryPoint.entrance.transform.position, entryPoint.entrance.transform.rotation);
                     PhotonView entryPhoton = entryPoint.entrance.gameObject.GetComponent<PhotonView>();
                     Debug.Log(entryPoint.entrance.gameObject);
                     Debug.Log($"is null? {entryPhoton.ViewID}");
@@ -245,6 +253,38 @@ public class DungeonGenerator_M : DungeonGenerator
 
                 }
             }
+        }
+    }
+
+    public override void EnterBossRoom()
+    {
+        
+    }
+
+    protected override void SetEscapePotal()
+    {
+        int totalTryCount = 100;
+        int tryCount = 0;
+        DungeonPart escapeRoom = null;
+        while (tryCount < totalTryCount && escapeRoom == null)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, generatedRooms.Count);
+            escapeRoom = generatedRooms[randomIndex];
+            if (escapeRoom.roomUse == DungeonPart.RoomUse.PlayerSpawn ||
+                escapeRoom.dungeonPartType == DungeonPart.DungeonPartType.Hallway ||
+                escapeRoom.dungeonPartType == DungeonPart.DungeonPartType.BossRoom )
+            {
+                escapeRoom = null;
+                tryCount++;
+                continue;
+            }
+            if (escapeRoom.escapePotalSpawnPoints.Count == 0) { escapeRoom = null; tryCount++; continue; }
+            int randomEscapeIndex = UnityEngine.Random.Range(0, escapeRoom.escapePotalSpawnPoints.Count);
+            if (escapeRoom.escapePotalSpawnPoints[randomEscapeIndex].isUse) { escapeRoom = null; tryCount++; continue; }
+            escapeRoom.escapePotalSpawnPoints[randomEscapeIndex].isUse = true;
+            PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/Potal/EscapePotal",
+                escapeRoom.escapePotalSpawnPoints[randomEscapeIndex].transform.position, escapeRoom.escapePotalSpawnPoints[randomEscapeIndex].transform.rotation);
+            break;
         }
     }
 

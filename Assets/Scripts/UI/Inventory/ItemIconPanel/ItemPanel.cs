@@ -25,11 +25,15 @@ public class ItemPanel : MonoBehaviour
             //TODO 드래그 하고 있는 사이 다른 사람이 먹었거나 아이템이 멀리 떨어지게 되었거나
             return;
         }*/
-
-        if(itemIcon.itemPanel != null)
+        Debug.Log($"InsertTest 1");
+        /*DropItemPanel dropItemPanel = itemIcon.itemPanel as DropItemPanel;
+        DropItemPanel dropItemPanelTest = this.GetComponent<DropItemPanel>();*/
+        if(itemIcon.itemPanel != null &&(itemIcon.itemPanel != this))
         {
+            Debug.Log($"InsertTest 2");
             itemIcon.itemPanel.TakeOutItem(this, itemIcon);
         }
+        Debug.Log($"InsertTest 3");
         /*DropItemPanel dropItemPanel = itemIcon.itemPanel as DropItemPanel;
         DropItemPanel thisItemPanel = this as DropItemPanel;
         InventoryPanel inventoryPanel = itemIcon.itemPanel as InventoryPanel;
@@ -43,7 +47,7 @@ public class ItemPanel : MonoBehaviour
         {
             InventoryController.Instance.inventory.Remove(itemIcon.item);
         }*/
-        if(scrollRect != null)
+        if (scrollRect != null)
         {
             itemIcon.transform.SetParent(scrollRect.content);
         }

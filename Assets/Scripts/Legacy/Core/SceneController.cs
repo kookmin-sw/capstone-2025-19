@@ -8,6 +8,7 @@ public class SceneController : Singleton<SceneController>
     Scene currentScene;
 
     List<GameObject> removeGameObjectList = new List<GameObject>();
+    public bool isMultiplay = false;
 
     // Start is called before the first frame update
 
@@ -28,6 +29,8 @@ public class SceneController : Singleton<SceneController>
         currentScene = SceneManager.GetActiveScene();
         return currentScene.name;
     }
+
+    public bool IsMultiplay() { return isMultiplay; }
 
     public void LoadScene(string sceneName)
     {

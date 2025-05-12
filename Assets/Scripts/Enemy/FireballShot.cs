@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class FireballShot : StateMachineBehaviour
@@ -22,11 +23,16 @@ public class FireballShot : StateMachineBehaviour
           + Vector3.up * heightOffset;                        // 약간 위
 
         // ② 파이어볼 생성
-        GameObject go = Object.Instantiate(
+        /*GameObject go = Object.Instantiate(
             fireballPrefab,
             spawnPos,
             animator.transform.rotation       // 몬스터가 보는 방향
-        );
+        );*/
+
+        GameObject go = PhotonNetwork.InstantiateRoomObject("Prefabs/Enemys/MultiPlay/Fireball", spawnPos, animator.transform.rotation);
+
+
+
 
         loadedFireball = go.GetComponent<FireballMove>();
         Debug.Log("파이어볼 생성");

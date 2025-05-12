@@ -66,12 +66,16 @@ public class Forge : MonoBehaviour
 
     public void Repair()
     {
+        //Debug.Log($"curMoney : {InventoryController.Instance.money}");
         curItem.durability = curItem.itemData.maxItemDurability;
         InventoryController.Instance.money -= cost;
+        
+        //Debug.Log($"After Repair Money : {InventoryController.Instance.money}");
     }
 
     public void Cancel()
     {
         ForgeCanvas.SetActive(false);
+        RepairButton.interactable = true;
     }
 }

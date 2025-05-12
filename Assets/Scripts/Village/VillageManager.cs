@@ -388,7 +388,7 @@ public class VillageManager : MonoBehaviour
             else
             {
                 Debug.Log("No money field in user document. Setting money to 0.");
-                InventoryController.Instance.money = 0;
+                InventoryController.Instance.money = 10000;
             }
         });
     }

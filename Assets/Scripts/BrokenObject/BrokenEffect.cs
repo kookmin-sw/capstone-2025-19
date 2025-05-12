@@ -8,6 +8,7 @@ public class BrokenEffect : MonoBehaviour
     [SerializeField] protected GameObject BrokenObject;
     [SerializeField] protected GameObject FixedObject;
     [SerializeField] protected float removeTime = 5.0f;
+    [HideInInspector] public bool isBroken = false;
 
     protected void Start()
     {
@@ -27,6 +28,7 @@ public class BrokenEffect : MonoBehaviour
     {
         BrokenObject.SetActive(true);
         FixedObject.SetActive(false);
+        isBroken = true;
         StartCoroutine(removeTimer());
     }
 

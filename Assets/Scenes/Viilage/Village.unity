@@ -3619,6 +3619,41 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: HpPlus
       objectReference: {fileID: 0}
+    - target: {fileID: 3328564584174774673, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.52900004
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328564584174774673, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.80755556
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328564584174774673, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.70862967
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328564584174774673, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 7.9000244
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328564584174774673, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -2.1209106
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328564584174774673, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -5.1101074
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328564584174774673, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.1300049
+      objectReference: {fileID: 0}
     - target: {fileID: 3931344382103475938, guid: 04116bce791f3db4db3cfff316fbdfea,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -3709,6 +3744,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: InventoryController (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6739324462840544703, guid: 04116bce791f3db4db3cfff316fbdfea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6771970020565902682, guid: 04116bce791f3db4db3cfff316fbdfea,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3775,7 +3815,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1957773066763816196, guid: 04116bce791f3db4db3cfff316fbdfea, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04116bce791f3db4db3cfff316fbdfea, type: 3}
@@ -14244,6 +14285,11 @@ PrefabInstance:
       propertyPath: PointDecomposeCompleteBnt
       value: 
       objectReference: {fileID: 854900358}
+    - target: {fileID: 1431339408900377468, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3196716182077723365, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -24448,6 +24494,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LoginCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3189640373850219446, guid: 071a8d2eac982ce489af92d1dd9902c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3542882716836462800, guid: 071a8d2eac982ce489af92d1dd9902c9,
         type: 3}

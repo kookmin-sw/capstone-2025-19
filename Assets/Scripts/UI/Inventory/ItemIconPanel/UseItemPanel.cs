@@ -29,6 +29,8 @@ public class UseItemPanel : ItemPanel
         itemIcon.transform.SetParent(transform);
         useItemIcon = itemIcon;
         Debug.Log($"useItemPanel {itemIcon.item.itemData}");
+
+        PlayerStatusController.Instance.useItemShortCut.SetItem(itemIcon.item);
         //TODO UseItem panel 에 적용
         
     }
@@ -51,7 +53,24 @@ public class UseItemPanel : ItemPanel
     {
         base.TakeOutItem(itemPanel, itemIcon);
         useItemIcon = null;
+        PlayerStatusController.Instance.useItemShortCut.SetItem(null);
         //TODO UseItem slot 비우기
         
+    }
+
+    public void SetItem()
+    {
+        PlayerStatusController.Instance.useItemShortCut.SetItem(useItemIcon.item);
+    }
+
+    public override void RemoveItem(ItemIcon itemIcon)
+    {
+        useItemIcon = null;
+        PlayerStatusController.Instance.useItemShortCut.SetItem(null);
+    }
+
+    public ItemIcon GetItemIcon()
+    {
+        return useItemIcon; 
     }
 }

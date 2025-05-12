@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using PlayerControl;
+using RPGCharacterAnims.Lookups;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 public class PlayerController_M : PlayerControl.PlayerController
 {
     protected PhotonView photonView;
     protected bool photonIsMine = true;
+    protected WeaponStats weaponStats;
     // Start is called before the first frame update
 
     protected override void Awake()
@@ -41,7 +44,7 @@ public class PlayerController_M : PlayerControl.PlayerController
             GetComponent<LockOn>().enabled = false;
             GetComponent<PlayerInput>().enabled = false;
             GetComponent<PlayerInput>().enabled = false;
-            this.enabled = false;
+            //this.enabled = false;
             Debug.Log("false test");
             Debug.Log($"player name {gameObject.name}");
         }
@@ -64,11 +67,44 @@ public class PlayerController_M : PlayerControl.PlayerController
         }
     }
 
+    protected override void Attack()
+    {
+        if (_input.attack)
+        {
+            WeaponStats weapon = InventoryController.Instance.weaponPanel.GetWeapon();
+            print(weapon);
+            _input.attack = false;
+            if (!Grounded) return;
+            if (PlayerStatusController.Instance.curSp <= 0) return;
+            if (weapon == null) return;
+            if (!animationHandler.GetBool(AnimationHandler.AnimParam.Blocking)
+                || animationHandler.GetBool(AnimationHandler.AnimParam.CanDoCombo))
+            {
+                if (!weapon.isRanged) animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
+                else animationHandler.SetTrigger(AnimationHandler.AnimParam.RangedAttack);
+                photonView.RPC(nameof(RpcAnimator), RpcTarget.OthersBuffered);
+
+                animationHandler.RootMotion(true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
+                animationHandler.SetBool(AnimationHandler.AnimParam.Attacking, true);
+                PlayerStatusController.Instance.UseStamina(weapon.staminaUsage);
+            }
+        }
+    }
+
     protected override void LateUpdate()
     {
         if (photonView.IsMine)
         {
             CameraRotation();
         }
+    }
+
+    [PunRPC]
+    private void RpcAnimator()
+    {
+        if (!weaponStats.isRanged) animationHandler.SetTrigger(AnimationHandler.AnimParam.Attack);
+        else animationHandler.SetTrigger(AnimationHandler.AnimParam.RangedAttack);
     }
 }

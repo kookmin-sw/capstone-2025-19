@@ -218,6 +218,12 @@ public class NetworkController : Singleton<NetworkController>
         }
     }
 
+    public void EnterVillage()
+    {
+        PhotonNetwork.LeaveRoom();
+        SceneController.Instance.LoadScene("Village");
+    }
+
 }
 
 

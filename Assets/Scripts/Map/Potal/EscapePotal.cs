@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class EscapePotal : MonoBehaviour
@@ -22,7 +23,7 @@ public class EscapePotal : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //TODO Enter Vileage
-            SceneController.Instance.LoadScene("Villiage");
+            NetworkController.Instance.EnterVillage();
 
         }
     }

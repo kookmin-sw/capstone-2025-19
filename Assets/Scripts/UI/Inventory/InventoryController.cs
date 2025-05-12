@@ -577,6 +577,7 @@ public class InventoryController : Singleton<InventoryController>
     {
         //Scene 이동 시 Inventory 내에서 적용 해야 할 아이템 적용 시키기
         weaponPanel.SetWeapon();
+        useItemPanel.SetItem();
     }
 
     public bool WeaponRepair(float repairValue)
@@ -584,6 +585,16 @@ public class InventoryController : Singleton<InventoryController>
         if(weaponPanel.GetWeapon() == null) { return false; }
         weaponPanel.GetWeaponItemIcon().PlusItemDurability(repairValue);
         return true;
+    }
+
+    public void AllClearInventory()
+    {
+        weaponPanel.TakeOutItem(dropItemPanel, weaponPanel.GetWeaponItemIcon());
+        useItemPanel.TakeOutItem(dropItemPanel, useItemPanel.GetItemIcon());
+        foreach(ItemIcon itemIcon in inventoryList)
+        {
+            inventoryPanel.TakeOutItem(dropItemPanel, itemIcon);
+        }
     }
 
 }

@@ -17,10 +17,10 @@ public class BrokenEffect_M : BrokenEffect
     }
     protected override void ActiveTrigger()
     {
-        photonView.RPC("ActiveTriggerRPC", RpcTarget.All);
+        photonView.RPC("ActiveTriggerRPC", RpcTarget.OthersBuffered);
         BrokenObject.SetActive(true);
         FixedObject.SetActive(false);
-        
+        isBroken = true;
     }
 
     protected override IEnumerator removeTimer()
@@ -36,7 +36,10 @@ public class BrokenEffect_M : BrokenEffect
         Debug.Log("RPC receive");
         BrokenObject.SetActive(true);
         FixedObject.SetActive(false);
+        isBroken = true;
         StartCoroutine(removeTimer());
     }
+
+    
     
 }

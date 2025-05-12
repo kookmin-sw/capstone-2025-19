@@ -35,7 +35,14 @@ public class ItemIcon : MonoBehaviour
 
     public void RemoveItemIcon()
     {
-        GetComponent<ItemIconInteract>().DestroyItemAlpha();
+        if(itemPanel as UseItemPanel) {
+            Debug.Log("UseItem panel");
+            PlayerStatusController.Instance.useItemShortCut.SetItem(null); }
+        if(TryGetComponent<ItemIconInteract>(out ItemIconInteract itemIconInteract))
+        {
+            itemIconInteract.DestroyItemAlpha();
+        }
+        //GetComponent<ItemIconInteract>().DestroyItemAlpha();
         if (itemPanel != null) { itemPanel.RemoveItem(this); }
         dropItem = null;
         Destroy(gameObject);
@@ -67,6 +74,10 @@ public class ItemIcon : MonoBehaviour
         }else if(item.itemData.itemType == ItemData.ItemType.Weapon)
         {
             durabilitySlider.value = this.item.durability;
+        }
+        if(itemPanel as UseItemPanel)
+        {
+            PlayerStatusController.Instance.useItemShortCut.SetSlider();
         }
     }
 

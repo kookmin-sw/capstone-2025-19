@@ -129,14 +129,14 @@ namespace PlayerControl
 
         private bool test_useItem;
 
-        [SerializeField] private AnimationHandler animationHandler;
-        [SerializeField] private CharacterController _controller;
-        [SerializeField] private InputHandler _input;
+        [SerializeField] protected AnimationHandler animationHandler;
+        [SerializeField] protected CharacterController _controller;
+        [SerializeField] protected InputHandler _input;
         public GameObject mainCamera;
-        [SerializeField] private LockOn _lockOn;
+        [SerializeField] protected LockOn _lockOn;
 
 
-        private PhotonView photonView;
+        
         private bool photonIsMine = true;
 
         [SerializeField] PlayerGhostEffect playerGhostEffect;
@@ -151,7 +151,7 @@ namespace PlayerControl
             {
                 mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
-            photonView = GetComponent<PhotonView>();
+            
         }
 
         public void SetMainCamera(GameObject mainCamera)
@@ -272,18 +272,8 @@ namespace PlayerControl
 
         protected virtual void LateUpdate()
         {
-            if(SceneController.Instance.IsMultiplay())
-            {
-                if (photonView.IsMine)
-                {
-                    CameraRotation();
-                }
-            }
-            else
-            {
-                CameraRotation();
-            }
             
+            CameraRotation();
         }
 
         protected void GroundedCheck()
@@ -303,6 +293,7 @@ namespace PlayerControl
             Debug.Log($"test {_threshold}");
             Debug.Log($"test {LockCameraPosition}");*/
             // if there is an input and camera position is not fixed
+            if(PlayerState.Instance.state == PlayerState.State.Inventory) { return; }
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
@@ -449,7 +440,7 @@ namespace PlayerControl
             }
         }
 
-        protected void Attack()
+        protected virtual void Attack()
         {
             if (_input.attack)
             {
@@ -500,6 +491,8 @@ namespace PlayerControl
             {
                 _input.useItem = false;
                 // 대충 아이템 확인하는 조건문 들어가야함
+                if (!PlayerStatusController.Instance.useItemShortCut.UseItem()) { return; }
+
                 if (animationHandler.GetBool(AnimationHandler.AnimParam.Blocking) || !Grounded) return;
                 animationHandler.SetTrigger(AnimationHandler.AnimParam.UseItem);
                 animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);

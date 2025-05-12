@@ -10,10 +10,13 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     [Header("BuffIcon")]
     [SerializeField] private Transform buffIconList;
     private List<BuffIcon> buffIconList_ = new List<BuffIcon>();
+    [SerializeField] public UseItemShortCut useItemShortCut;
+    [SerializeField] public Transform deadStatePanel;
 
     [Space(10)]
     [Header("Lock on")]
     [SerializeField] public LockOnImage lockOnImage;
+
 
 
     [Header("Slider bar")]

@@ -53,6 +53,13 @@ public class VillageManager : MonoBehaviour
 
     void Start()
     {
+        if (FirebaseManager.Instance.isLoginComplete)
+        {
+            LoginCanvas.SetActive(false);
+            SpawnPlayer();
+            SynchronizeDBtoCash();
+            return;
+        }
         Hp_Sp_Canvas.SetActive(false);
     }
 

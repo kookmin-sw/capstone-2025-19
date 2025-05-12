@@ -148,17 +148,21 @@ public class WeaponHolderSlot_M : WeaponHolderSlot
                 weaponCollider.tag = transform.root.tag == "Player" ? "PlayerWeapon" : "EnemyWeapon";
             }
         }
-        
-        
+
+        if (photonView.IsMine)
+        {
+            
+        }
         if (animationHandler != null)
             animationHandler.UpdateOverride(weaponStats.weaponType);
+
     }
 
     public override void UnloadWeaponAndDestroy()
     {
         if (currentWeaponModel != null)
         {
-            PhotonNetwork.Destroy(currentWeaponModel);
+            Destroy(currentWeaponModel);
         }
         
     }

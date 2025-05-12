@@ -69,7 +69,11 @@ public class Forge : MonoBehaviour
         //Debug.Log($"curMoney : {InventoryController.Instance.money}");
         curItem.durability = curItem.itemData.maxItemDurability;
         InventoryController.Instance.money -= cost;
-        
+        InventoryController.Instance.SetMoney();
+
+        DurabilitySlider.value = curItem.durability / curItem.itemData.maxItemDurability;
+        cost = 100 * (int)(100 - 100 * DurabilitySlider.value);
+        RepairCost.text = cost + " Gold";
         //Debug.Log($"After Repair Money : {InventoryController.Instance.money}");
     }
 

@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class BrokenEffect : MonoBehaviour
 {
+    [SerializeField] protected AudioClip breakSound;
+    [SerializeField] [Range(0, 1)] protected float breakVolume = 1f;
     [SerializeField] protected GameObject BrokenObject;
     [SerializeField] protected GameObject FixedObject;
     [SerializeField] protected float removeTime = 5.0f;
@@ -32,8 +34,8 @@ public class BrokenEffect : MonoBehaviour
 
     protected virtual IEnumerator removeTimer()
     {
+        AudioSource.PlayClipAtPoint(breakSound, transform.position, breakVolume);
         yield return new WaitForSeconds(removeTime);
-        
         Destroy(gameObject);
     }
 }

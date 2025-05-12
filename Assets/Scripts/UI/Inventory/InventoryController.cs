@@ -22,6 +22,9 @@ public class InventoryController : Singleton<InventoryController>
 
     }
 
+    [SerializeField] AudioClip inventoryOpenSound;
+    [SerializeField] [Range(0,1)] float inventoryOpenVolume = 1f;
+
     private InventoryState _state = InventoryState.Inventory;
 
     [SerializeField] CanvasGroup canvasGroup;
@@ -65,7 +68,6 @@ public class InventoryController : Singleton<InventoryController>
     ItemIcon selectedItemIcon;
 
     DropItem testDropITem;
-
 
     [HideInInspector]
     public List<Item> inventory = new List<Item>();
@@ -497,6 +499,7 @@ public class InventoryController : Singleton<InventoryController>
     {
         if (PlayerState.Instance.state == PlayerState.State.Inventory)
         {
+            AudioSource.PlayClipAtPoint(inventoryOpenSound, player.transform.position, inventoryOpenVolume);
             canvasGroup.alpha = 1;
         }
         else

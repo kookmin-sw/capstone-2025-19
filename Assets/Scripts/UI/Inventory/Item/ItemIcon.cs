@@ -114,8 +114,6 @@ public class Item
     public int quantity = 1;
     public float durability = 1f;
 
-    
-
 
     public Item(ItemData itemData, int quantity, float durability)
     {
@@ -146,6 +144,7 @@ public class Item
             {
                 if (!effect.Effect()) { quantity += 1; break; }
             }
+            AudioSource.PlayClipAtPoint(itemData.useItemSound, InventoryController.Instance.player.transform.position, itemData.useItemVolume);
             quantity -= 1;
             UpdateInfo();
         }

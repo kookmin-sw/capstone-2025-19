@@ -36,6 +36,7 @@ namespace PlayerControl
         public AudioClip[] FootstepAudioClips;
         public AudioClip SwordClip;
         public AudioClip GreatswordClip;
+        public AudioClip GreatswordLastClip;
         public AudioClip CrossbowClip;
 
         [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
@@ -477,7 +478,11 @@ namespace PlayerControl
         public void PlayAttackClip()
         {
             WeaponStats weapon = InventoryController.Instance.weaponPanel.GetWeapon();
-            if (weapon == null) return;
+            if (weapon == null)
+            {
+                print("weapon is null!");
+                return;
+            }
             switch (weapon.weaponType)
             {
                 case "OneHand":
@@ -492,6 +497,10 @@ namespace PlayerControl
                     AudioSource.PlayClipAtPoint(CrossbowClip, transform.TransformPoint(_controller.center), AttackAudioVolume);
                     break;
             }
+        }
+        public void PlayGreatSwordLast()
+        {
+            AudioSource.PlayClipAtPoint(GreatswordLastClip, transform.TransformPoint(_controller.center), AttackAudioVolume);
         }
 
         protected void UseItem()

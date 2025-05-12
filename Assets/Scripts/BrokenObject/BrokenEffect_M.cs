@@ -5,11 +5,7 @@ using UnityEngine;
 
 public class BrokenEffect_M : BrokenEffect
 {
-
     PhotonView photonView;
-
-    
-
 
     private void Awake()
     {
@@ -25,6 +21,7 @@ public class BrokenEffect_M : BrokenEffect
 
     protected override IEnumerator removeTimer()
     {
+        AudioSource.PlayClipAtPoint(breakSound, transform.position, breakVolume);
         yield return new WaitForSeconds(removeTime);
         Debug.Log($"Destory {gameObject.name}");
         Destroy(gameObject);

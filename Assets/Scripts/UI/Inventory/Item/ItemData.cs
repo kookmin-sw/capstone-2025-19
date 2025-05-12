@@ -15,6 +15,9 @@ public class ItemData : ScriptableObject
         
 
     }
+    public AudioClip useItemSound;
+    [Range(0, 1)] public float useItemVolume=1f;
+
     public ItemType itemType;
 
     public Sprite itemIcon;

@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 public class DropItem : MonoBehaviour
 {
     [SerializeField] protected Transform itemModelPosition;
+    [SerializeField] AudioClip pickupSound;
+    [SerializeField] [Range(0, 1)] float pickupVolume;
     protected GameObject itemModel;
     public GameObject itemIcon = null;
     
@@ -67,6 +69,7 @@ public class DropItem : MonoBehaviour
     public virtual void RemoveDropItem()
     {
         itemIcon = null;
+        AudioSource.PlayClipAtPoint(pickupSound, transform.position, pickupVolume);
         InventoryController.Instance.dropItemList.Remove(this);
         gameObject.SetActive(false);
 
@@ -90,7 +93,7 @@ public class DropItem : MonoBehaviour
     [PunRPC]
     private void RequestUpdateItemPhoton_(Item item)
     {
-        if (PhotonNetwork.IsMasterClient) // ¸¶½ºÅÍ¿¡¼­ ½ÇÇà
+        if (PhotonNetwork.IsMasterClient) // ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             UpdateItemPhoton_(item);
             photonView.RPC("UpdateItemPhoton", RpcTarget.AllBuffered, item);

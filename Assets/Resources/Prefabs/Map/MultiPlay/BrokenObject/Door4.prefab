@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6408536824559317605}
   - component: {fileID: 5522288770595158544}
-  - component: {fileID: 4840069347720965751}
   - component: {fileID: 6574802382593761763}
   - component: {fileID: 1278182951692309944}
   - component: {fileID: -4110123427913322950}
@@ -66,21 +65,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4840069347720965751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6261390014032190833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edcb291e36de1bf428c4c007096dc839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BrokenObject: {fileID: 5788521217738462251}
-  FixedObject: {fileID: 8215893652147407906}
-  removeTime: 5
 --- !u!65 &6574802382593761763
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -154,6 +138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d7a8d0125a0cc4aab6dbb0f462e477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  breakSound: {fileID: 8300000, guid: e8c49f12c2d33e9439868e37e742c83f, type: 3}
+  breakVolume: 1
   BrokenObject: {fileID: 5788521217738462251}
   FixedObject: {fileID: 8215893652147407906}
   removeTime: 5
@@ -365,6 +351,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3651cb20e0721a46ab7f23e2b343b6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  openSound: {fileID: 8300000, guid: 5c427cf6eec2cf24b8d713675fca5613, type: 3}
+  openVolume: 1
   animator: {fileID: 8513572058400934092}
 --- !u!95 &8513572058400934092
 Animator:

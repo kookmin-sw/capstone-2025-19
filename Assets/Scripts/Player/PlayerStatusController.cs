@@ -12,6 +12,7 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
     private List<BuffIcon> buffIconList_ = new List<BuffIcon>();
     [SerializeField] public UseItemShortCut useItemShortCut;
     [SerializeField] public Transform deadStatePanel;
+    [SerializeField] public PlayerDeadPanel deadPanel;
 
     [Space(10)]
     [Header("Lock on")]

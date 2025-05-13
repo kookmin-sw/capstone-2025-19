@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class SceneController : Singleton<SceneController>
 {
+    [SerializeField] private float waitToLoadTime = 5f;
     Scene currentScene;
 
     List<GameObject> removeGameObjectList = new List<GameObject>();
     public bool isMultiplay = false;
+
+    string nextSceneName;
 
     // Start is called before the first frame update
 
@@ -34,9 +37,42 @@ public class SceneController : Singleton<SceneController>
 
     public void LoadScene(string sceneName)
     {
+        nextSceneName = sceneName;
+        UIFadeController.Instance.FadeToBlack(LoadSceneRoutine);
+        //StartCoroutine(LoadSceneRoutine(sceneName));
+    }
+
+    /*private IEnumerator LoadSceneRoutine(string sceneName)
+    {
+        while(waitToLoadTime >= 0)
+        {
+            waitToLoadTime -= Time.deltaTime;
+            yield return null;
+        }
         SceneManager.LoadScene(sceneName);
         currentScene = SceneManager.GetActiveScene();
+        UIFadeController.Instance.FadeToClear();
+    }*/
+
+    private void LoadSceneRoutine()
+    {
+        SceneManager.LoadScene(nextSceneName);
+        currentScene = SceneManager.GetActiveScene();
+        UIFadeController.Instance.FadeToClear();
     }
+
+    
+
+    /*public void FadeOutScene()
+    {
+        UIFadeController.Instance.FadeToBlack(TestFunction);
+    }*/
+
+    public void FadeInScene()
+    {
+        UIFadeController.Instance.FadeToClear();
+    }
+
 
     public void SubscribeGo(GameObject go)
     {

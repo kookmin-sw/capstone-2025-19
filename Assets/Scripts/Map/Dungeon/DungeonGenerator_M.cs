@@ -295,6 +295,12 @@ public class DungeonGenerator_M : DungeonGenerator
         entranceGO.SetActive(false);
     }
 
+    [PunRPC]
+    private void ReadyScreen()
+    {
+        UIFadeController.Instance.FadeToClear();
+    }
+
 
 
 }

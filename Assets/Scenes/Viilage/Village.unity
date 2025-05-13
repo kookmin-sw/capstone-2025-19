@@ -2839,7 +2839,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa018ce387e2a60419386925787d35df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
 --- !u!4 &200709857
 Transform:
   m_ObjectHideFlags: 0
@@ -14285,11 +14284,6 @@ PrefabInstance:
       propertyPath: PointDecomposeCompleteBnt
       value: 
       objectReference: {fileID: 854900358}
-    - target: {fileID: 1431339408900377468, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3196716182077723365, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -29276,11 +29270,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6472424868913577783, guid: a81e0994ff725b54e958c534540db05b,
-        type: 3}
-      propertyPath: m_Name
-      value: GreenPotion_S_DropItem
-      objectReference: {fileID: 0}
     - target: {fileID: 43731276992973116, guid: 04116bce791f3db4db3cfff316fbdfea,
         type: 3}
       propertyPath: m_Enabled
@@ -30313,6 +30302,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VerticalAlignment
       value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 6472424868913577783, guid: a81e0994ff725b54e958c534540db05b,
+        type: 3}
+      propertyPath: m_Name
+      value: GreenPotion_S_DropItem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

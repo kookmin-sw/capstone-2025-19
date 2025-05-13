@@ -71,6 +71,7 @@ public class PlayerState : Singleton<PlayerState>
             case State.Die:
                 this.state = State.Die;
                 InventoryController.Instance.SetInventoryCanvas();
+                PlayerStatusController.Instance.deadPanel.SetDeath();
                 break;
             default: break;
         }

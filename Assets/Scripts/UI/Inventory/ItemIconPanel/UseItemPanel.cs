@@ -60,7 +60,10 @@ public class UseItemPanel : ItemPanel
 
     public void SetItem()
     {
-        PlayerStatusController.Instance.useItemShortCut.SetItem(useItemIcon.item);
+        if(useItemIcon != null)
+            PlayerStatusController.Instance.useItemShortCut.SetItem(useItemIcon.item);
+        else
+            PlayerStatusController.Instance.useItemShortCut.SetItem(null);
     }
 
     public override void RemoveItem(ItemIcon itemIcon)

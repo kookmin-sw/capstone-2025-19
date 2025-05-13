@@ -17,7 +17,7 @@ public class Portal : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             if(sceneName == null) { Debug.LogError("sceneName is null");return; }
-            SceneManager.LoadScene(sceneName);
+            SceneController.Instance.LoadScene(sceneName);
         }
     }
 }

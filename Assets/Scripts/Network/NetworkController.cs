@@ -220,6 +220,11 @@ public class NetworkController : Singleton<NetworkController>
 
     public void EnterVillage()
     {
+        UIFadeController.Instance.FadeToBlack(EnterVillageAction);
+    }
+
+    private void EnterVillageAction()
+    {
         PhotonNetwork.LeaveRoom();
         SceneController.Instance.LoadScene("Village");
     }

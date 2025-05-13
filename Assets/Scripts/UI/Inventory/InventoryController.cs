@@ -105,7 +105,7 @@ public class InventoryController : Singleton<InventoryController>
         
     }
 
-    private void SetMoney()
+    public void SetMoney()
     {
         moneyPanel.SetMoney(money);
     }
@@ -496,7 +496,7 @@ public class InventoryController : Singleton<InventoryController>
 
     public void SetInventoryCanvas()
     {
-        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
         {
             canvasGroup.alpha = 1;
         }

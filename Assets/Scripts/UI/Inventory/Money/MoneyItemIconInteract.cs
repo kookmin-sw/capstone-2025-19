@@ -15,7 +15,7 @@ public class MoneyItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHand
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
         {
             rectTransform = Instantiate(itemIconAlphaPrefab, InventoryController.Instance.itemIconParent).GetComponent<RectTransform>();
             rectTransform.transform.position = transform.position;
@@ -26,13 +26,13 @@ public class MoneyItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHand
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
             rectTransform.anchoredPosition += eventData.delta;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
         {
             if (InventoryController.Instance.SelectedItemPanel != null && InventoryController.Instance.SelectedItemPanel is InventoryPanel)
             {

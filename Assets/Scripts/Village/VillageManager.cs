@@ -58,6 +58,7 @@ public class VillageManager : MonoBehaviour
             LoginCanvas.SetActive(false);
             SpawnPlayer();
             SynchronizeDBtoCash();
+            InventoryController.Instance.SetPlayerInventory();
             return;
         }
         Hp_Sp_Canvas.SetActive(false);

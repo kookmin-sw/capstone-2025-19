@@ -105,6 +105,11 @@ public class PlayerStatusController : Singleton<PlayerStatusController>
         //TestLoadPlayerStatus();
     }
 
+    public float GetRealValue(string key)
+    {
+        return realValue[key];
+    }
+
     public void SetDictionaryKey()
     {
         playerStatusValue["Exp"] = 0;

@@ -246,7 +246,7 @@ namespace PlayerControl
             {
                 
             }*/
-            if (PlayerState.Instance.state == PlayerState.State.Die) return;
+            if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Die) return;
             Move();
             GroundedCheck();
             UseItem();
@@ -293,7 +293,7 @@ namespace PlayerControl
             Debug.Log($"test {_threshold}");
             Debug.Log($"test {LockCameraPosition}");*/
             // if there is an input and camera position is not fixed
-            if(PlayerState.Instance.state == PlayerState.State.Inventory) { return; }
+            if(PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory) { return; }
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
@@ -527,7 +527,8 @@ namespace PlayerControl
             playerGhostEffect.Create(true);
             animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
             animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
-            PlayerState.Instance.state = PlayerState.State.Invincible;
+            PlayerState.Instance.ChangeState(PlayerState.State.Invincible);
+            //PlayerState.Instance.state = PlayerState.State.Invincible;
             
             while (delta < _dashDuration)
             {
@@ -546,7 +547,8 @@ namespace PlayerControl
             animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, false);
             animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, false);
             animationHandler.ResetTrigger(AnimationHandler.AnimParam.Rolling);
-            PlayerState.Instance.state = PlayerState.State.Idle;
+            PlayerState.Instance.ChangeState(PlayerState.State.Idle);
+            //PlayerState.Instance.state = PlayerState.State.Idle;
         }
 
         protected void JumpAndGravity()
@@ -613,7 +615,8 @@ namespace PlayerControl
         #region Dying
         public void DeathTrigger()
         {
-            PlayerState.Instance.state = PlayerState.State.Die;
+            //PlayerState.Instance.state = PlayerState.State.Die;
+            PlayerState.Instance.ChangeState(PlayerState.State.Die);
             StopAllCoroutines();
             StartCoroutine(DecayAndVanish(fadeTime));
         }

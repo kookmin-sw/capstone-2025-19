@@ -25,7 +25,7 @@ public class PlayerInventoryInput : MonoBehaviour
 
     public void SetInventory()
     {
-        if(PlayerState.Instance.state == PlayerState.State.Inventory)
+        if(PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
         {
             PlayerState.Instance.ChangeState(PlayerState.State.Idle);
         }

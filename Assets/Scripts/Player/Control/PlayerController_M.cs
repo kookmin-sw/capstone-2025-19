@@ -56,7 +56,7 @@ public class PlayerController_M : PlayerControl.PlayerController
     {
         if (photonView.IsMine)
         {
-            if (PlayerState.Instance.state == PlayerState.State.Die) return;
+            if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Die) return;
             Move();
             GroundedCheck();
             UseItem();

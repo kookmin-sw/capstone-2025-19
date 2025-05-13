@@ -45,10 +45,10 @@ public class TestPlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (PlayerState.Instance.state == PlayerState.State.Inventory) { PlayerState.Instance.ChangeState(PlayerState.State.Idle); } 
-            else if (PlayerState.Instance.state == PlayerState.State.Idle) { PlayerState.Instance.ChangeState(PlayerState.State.Inventory); }
+            if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory) { PlayerState.Instance.ChangeState(PlayerState.State.Idle); } 
+            else if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Idle) { PlayerState.Instance.ChangeState(PlayerState.State.Inventory); }
         }
-        if (PlayerState.Instance.state == PlayerState.State.Inventory) { return; }
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory) { return; }
         float horizontal = 0f;
         float vertical = 0f;
         

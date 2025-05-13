@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Photon.Realtime;
 using PlayerControl;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
 
         #region CancelCases
         // #1: when entity is invincible
-        if (PlayerState.Instance.state == PlayerState.State.Invincible || PlayerState.Instance.state == PlayerState.State.Die) return;
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Invincible || PlayerState.Instance.GetCurrentState() == PlayerState.State.Die) return;
 
         // #2: when my tenacity is larger than attacker's
         if (attackerWeapon != null && myWeaponCollider != null)
@@ -47,7 +48,8 @@ public class PlayerHealth : MonoBehaviour
         
         if (!isStun) animationHandler.SetTrigger(AnimationHandler.AnimParam.Hit);
         else animationHandler.SetTrigger(AnimationHandler.AnimParam.Stun);
-        PlayerState.Instance.state = PlayerState.State.Invincible;
+        //PlayerState.Instance.state = PlayerState.State.Invincible;
+        PlayerState.Instance.ChangeState(PlayerState.State.Invincible);
         animationHandler.SetBool(AnimationHandler.AnimParam.Interacting, true);
         animationHandler.SetBool(AnimationHandler.AnimParam.Blocking, true);
         #endregion
@@ -81,5 +83,12 @@ public class PlayerHealth : MonoBehaviour
         }
 
         Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
+    }
+
+    public void TakeDeathDamage(DamageCollider damageCollider, Vector3 contactPos, ParticleSystem hitEffect, bool isStun)
+    {
+        float damage = PlayerStatusController.Instance.GetRealValue("Hp");
+        TakeDamage(damage, damageCollider, contactPos, hitEffect, isStun);
+        TakeDamage(damage, damageCollider, contactPos, hitEffect, isStun);
     }
 }

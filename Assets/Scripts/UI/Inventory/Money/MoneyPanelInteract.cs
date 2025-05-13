@@ -12,7 +12,7 @@ public class MoneyPanelInteract : MonoBehaviour, IDragHandler, IBeginDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
         {
             if (InventoryController.Instance.money > 0)
             {
@@ -26,13 +26,13 @@ public class MoneyPanelInteract : MonoBehaviour, IDragHandler, IBeginDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (PlayerState.Instance.state == PlayerState.State.Inventory && InventoryController.Instance.money > 0)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory && InventoryController.Instance.money > 0)
             rectTransform.anchoredPosition += eventData.delta;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (PlayerState.Instance.state == PlayerState.State.Inventory && InventoryController.Instance.money > 0)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory && InventoryController.Instance.money > 0)
         {
             if (InventoryController.Instance.SelectedItemPanel != null && InventoryController.Instance.SelectedItemPanel is DropItemPanel)
             {

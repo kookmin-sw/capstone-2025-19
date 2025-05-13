@@ -80,7 +80,7 @@ namespace PlayerControl
 
         public void OnInventory(InputValue value)
         {
-            if (PlayerState.Instance.state == PlayerState.State.Inventory)
+            if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
 			{
 				InventoryController.Instance.SetStoreInventory(false);
 				PlayerState.Instance.ChangeState(PlayerState.State.Idle);

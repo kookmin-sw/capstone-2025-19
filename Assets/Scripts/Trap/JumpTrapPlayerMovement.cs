@@ -72,18 +72,18 @@ public class JumpTrapMovement : MonoBehaviour
         // Tab 키로 상태 전환 (Inventory 열기/닫기)
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (PlayerState.Instance.state == PlayerState.State.Inventory)
+            if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
             {
                 PlayerState.Instance.ChangeState(PlayerState.State.Idle);
             }
-            else if (PlayerState.Instance.state == PlayerState.State.Idle)
+            else if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Idle)
             {
                 PlayerState.Instance.ChangeState(PlayerState.State.Inventory);
             }
         }
 
         // 인벤토리 상태면 이동 불가
-        if (PlayerState.Instance.state == PlayerState.State.Inventory)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory)
             return;
 
         float horizontal = 0f;

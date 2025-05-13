@@ -32,9 +32,10 @@ public class ExitInteraction : StateMachineBehaviour
             animator.applyRootMotion = false;
         }
 
-        if (PlayerState.Instance.state == PlayerState.State.Invincible)
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Invincible)
         {
-            PlayerState.Instance.state = PlayerState.State.Idle;
+            //PlayerState.Instance.GetCurrentState() = PlayerState.State.Idle;
+            PlayerState.Instance.ChangeState(PlayerState.State.Idle);
         }
     }
     

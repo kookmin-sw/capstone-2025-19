@@ -28,10 +28,10 @@ public class VillagePlayerMove : MonoBehaviour
         float vertical = 0f;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (PlayerState.Instance.state == PlayerState.State.Inventory) { PlayerState.Instance.ChangeState(PlayerState.State.Idle); }
-            else if (PlayerState.Instance.state == PlayerState.State.Idle) { PlayerState.Instance.ChangeState(PlayerState.State.Inventory); }
+            if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory) { PlayerState.Instance.ChangeState(PlayerState.State.Idle); }
+            else if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Idle) { PlayerState.Instance.ChangeState(PlayerState.State.Inventory); }
         }
-        if (PlayerState.Instance.state == PlayerState.State.Inventory) { return; }
+        if (PlayerState.Instance.GetCurrentState() == PlayerState.State.Inventory) { return; }
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) vertical += 1f;
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) vertical -= 1f;
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) horizontal -= 1f;

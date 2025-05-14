@@ -105,6 +105,12 @@ public class InventoryController : Singleton<InventoryController>
         
     }
 
+    public void LoadMoney(int money)
+    {
+        this.money = money;
+        SetMoney();
+    }
+
     public void SetMoney()
     {
         moneyPanel.SetMoney(money);

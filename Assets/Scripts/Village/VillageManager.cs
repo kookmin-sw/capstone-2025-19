@@ -390,13 +390,13 @@ public class VillageManager : MonoBehaviour
             if (snapshot.Exists && snapshot.ContainsField("money"))
             {
                 int money = Convert.ToInt32(snapshot.GetValue<long>("money"));
-                InventoryController.Instance.money = money;
+                InventoryController.Instance.LoadMoney(money);
                 Debug.Log("Money loaded: " + money);
             }
             else
             {
                 Debug.Log("No money field in user document. Setting money to 0.");
-                InventoryController.Instance.money = 0;
+                InventoryController.Instance.LoadMoney(10000);
             }
         });
     }

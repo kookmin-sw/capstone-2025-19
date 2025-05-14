@@ -28,4 +28,12 @@ public class BossController_M : BossController
     {
         
     }
+
+    public override void DieData()
+    {
+
+
+    }
+
+    
 }

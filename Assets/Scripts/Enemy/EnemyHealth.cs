@@ -1,26 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EnemyHealth : Health
 {
-    private Animator animator;
-    private EnemyState enemyState;
+
+    protected Animator animator;
+    protected EnemyState enemyState;
     public Slider hpBar;
     public int enemyExp;
+    protected PhotonView photonView;
+    [SerializeField] protected float removeTime = 5.0f;
 
-    void Awake()
+    protected void Awake()
     {
         animator = GetComponent<Animator>();
         enemyState = GetComponent<EnemyState>();
+        photonView = GetComponent<PhotonView>();
     }
-    void UpdateHpBar()
+    protected void UpdateHpBar()
     {
         hpBar.value = currentHealth / maxHealth;
     }
 
-    public void TakeDamage(float damage, DamageCollider attackerWeapon, Vector3 contactPos, ParticleSystem hitEffect)
+    public virtual void TakeDamage(float damage, DamageCollider attackerWeapon, Vector3 contactPos, ParticleSystem hitEffect)
     {
         DamageCollider myWeaponCollider = GetComponentInChildren<DamageCollider>();
         
@@ -63,17 +68,24 @@ public class EnemyHealth : Health
         // die
         if (currentHealth <= 0)
         {
-            animator.ResetTrigger("Hit");
-            currentHealth = 0;
-            animator.SetTrigger("Die");
-            GetComponent<EnemyController>().DeathTrigger();
-
-            Transform player = this.GetComponent<EnemyController>().target;
-            player.GetComponent<PlayerGetStatus>().GetExpFromEnemy(enemyExp);
+            enemyState.ChangeState(EnemyState.State.Die);
+            photonView.RPC(nameof(ReceiveDieState), RpcTarget.OthersBuffered);
         }
     }
 
-    IEnumerator WaitForParticleEnd(ParticleSystem particle, Vector3 position)
+    public virtual void DieActive()
+    {
+        animator.ResetTrigger("Hit");
+        currentHealth = 0;
+        animator.SetTrigger("Die");
+        GetComponent<EnemyController>().DeathTrigger();
+
+        Transform player = this.GetComponent<EnemyController>().target;
+        player.GetComponent<PlayerGetStatus>().GetExpFromEnemy(enemyExp);
+        StartCoroutine(RemoveMonsterBody());
+    }
+
+    protected IEnumerator WaitForParticleEnd(ParticleSystem particle, Vector3 position)
     {
         ParticleSystem ps = Instantiate(particle, position, Quaternion.identity);
         ps.Play(); 
@@ -84,6 +96,18 @@ public class EnemyHealth : Health
         }
 
         Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
+    }
+
+    protected IEnumerator RemoveMonsterBody()
+    {
+        yield return new WaitForSeconds(removeTime);
+        Destroy(gameObject);
+    }
+
+    [PunRPC]
+    private void ReceiveDieState()
+    {
+        enemyState.ChangeState(EnemyState.State.Die);
     }
 
 }

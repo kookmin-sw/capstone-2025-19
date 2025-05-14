@@ -15,6 +15,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
     [Header("던전 구성 요소")]
     [SerializeField, Tooltip("생성될 방 개수 + 플레이어 인원")] protected int noOfRooms = 10;
     [SerializeField, Tooltip("생성될 포탈 개수_보통 플레이어 인원 + 1")] protected int potalCount = 2;
+    [SerializeField] protected BossRoom bossRoom;
     [Space(10)]
     [SerializeField, Tooltip("시작지점 방")] protected GameObject entrance; //던전의 시작지점 방
     [SerializeField, Tooltip("일반적인 방")] protected List<GameObject> rooms;
@@ -47,6 +48,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
     [HideInInspector] public NavMeshSurface surface;
     public GameObject mainCmera;
 
+    protected int bossCount = 1;
     // Start is called before the first frame update
     protected override void Awake()
     {
@@ -544,11 +546,23 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
 
     public virtual void EnterBossRoom()
     {
-
+        Debug.Log($"potal test 2 {InventoryController.Instance.playerController.transform.position}");
+        InventoryController.Instance.playerController.transform.position = bossRoom.playerSpawnPoint.position;
+        Debug.Log($"potal test 3 {InventoryController.Instance.playerController.transform.position}");
     }
 
     protected virtual void SetEscapePotal()
     {
 
     }
+
+    public void CountBossKill()
+    {
+        bossCount -= 1;
+        if (bossCount <= 0)
+        {
+            bossRoom.SpawnEscapePotal();
+        }
+    }
+
 }

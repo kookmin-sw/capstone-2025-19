@@ -24,6 +24,7 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
             { (byte)NetworkEventCode.CountClientPlayer, CountClientPlayer },
             { (byte)NetworkEventCode.ReceiveReady, ChangePlayerReady },
             { (byte)NetworkEventCode.ClientReady,CountClientPlayer  },
+            { (byte)NetworkEventCode.BossDie,CountBossKill  },
 
         };
     }
@@ -34,6 +35,7 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
         CountClientPlayer = 3,
         ReceiveReady = 4,
         ClientReady = 5,
+        BossDie = 6,
 
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
@@ -140,6 +142,11 @@ public class NetworkEventReceiver : MonoBehaviour, IOnEventCallback
     private void ChangePlayerReady(EventData photonEvent)
     {
         playerSpawnReady = true;
+    }
+
+    private void CountBossKill(EventData photonEvent)
+    {
+
     }
 
     IEnumerable WaitForplayerReady()

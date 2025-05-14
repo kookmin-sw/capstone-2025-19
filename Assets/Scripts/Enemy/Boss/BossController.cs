@@ -137,6 +137,11 @@ abstract public class BossController : MonoBehaviour
         animator.SetBool("Attacking", true);
     }
 
+    public virtual void DieData()
+    {
+
+    }
+
     #region Attack
     public void EnableAttack()
     {

@@ -168,6 +168,7 @@ MonoBehaviour:
     - 0.8
     - 1
     foldout: 1
+  dontSetRoom2Entry: 0
   testCube: {fileID: 0}
 --- !u!1 &2136317762696972953
 GameObject:
@@ -241,6 +242,7 @@ MonoBehaviour:
   - {fileID: 1206926378289176819}
   - {fileID: 3274424492069388354}
   - {fileID: 8754623585739312589}
+  escapePotalSpawnPoints: []
   entryPoints:
   - {fileID: 8530986879602189697}
   - {fileID: 8714900777038918379}
@@ -664,6 +666,7 @@ MonoBehaviour:
     - 0.8
     - 1
     foldout: 1
+  dontSetRoom2Entry: 0
   testCube: {fileID: 0}
 --- !u!1 &7147709808661377004
 GameObject:
@@ -790,7 +793,7 @@ GameObject:
   m_Component:
   - component: {fileID: 634168230992307341}
   - component: {fileID: 2933562855769239498}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

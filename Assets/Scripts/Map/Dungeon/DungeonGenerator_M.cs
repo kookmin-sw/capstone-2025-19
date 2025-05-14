@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -6,6 +7,8 @@ using UnityEngine;
 public class DungeonGenerator_M : DungeonGenerator
 {
     [SerializeField] private string entranceRoomName;
+    
+    
     PhotonView photonView;
     public override void StartGeneration()
     {
@@ -23,6 +26,7 @@ public class DungeonGenerator_M : DungeonGenerator
             NvigationBake();
             PlayerSpawn();
             SpawnRandomObject();
+            BossRoomSetting();
             for(int i = 0; i < potalCount; i++)
             {
                 SetEscapePotal();
@@ -42,7 +46,16 @@ public class DungeonGenerator_M : DungeonGenerator
         isGenerated = true;
     }
 
+    private void BossRoomSetting()
+    {
+        bossRoom.SpawnBossMonster();
+        bossCount = bossRoom.bossSpawnList.Count;
 
+        foreach(DungeonPart room in generatedRooms)
+        {
+            
+        }
+    }
 
     protected override IEnumerator WaitOtherPlayerEnter(GameObject player)
     {
@@ -94,6 +107,7 @@ public class DungeonGenerator_M : DungeonGenerator
 
     protected void Generate_MultiPlay()
     {
+        //noOfRooms += NetworkController.Instance.playerCount;
         for (int i = 0; i < noOfRooms - alternateEntrances.Count; i++)
         {
             if (generatedRooms.Count < 1) //酒流 积己等 规捞 绝促搁
@@ -244,7 +258,8 @@ public class DungeonGenerator_M : DungeonGenerator
                 EntryPoint entryPoint = entryPoint_.GetComponent<EntryPoint>();
                 if (!entryPoint.IsOccupied()) 
                 {
-
+                    Debug.Log($"entry point {entryPoint}");
+                    Debug.Log($"entry point wall object name {entryPoint.wallObject}");
                     PhotonNetwork.InstantiateRoomObject($"Prefabs/Map/MultiPlay/FillerWall/{entryPoint.wallObject.name}", entryPoint.entrance.transform.position, entryPoint.entrance.transform.rotation);
                     PhotonView entryPhoton = entryPoint.entrance.gameObject.GetComponent<PhotonView>();
                     Debug.Log(entryPoint.entrance.gameObject);
@@ -258,7 +273,18 @@ public class DungeonGenerator_M : DungeonGenerator
 
     public override void EnterBossRoom()
     {
-        
+        Debug.Log($"potal test 2 {InventoryController.Instance.playerController.transform.position}");
+        InventoryController.Instance.playerController.GetComponent<CharacterController>().enabled = false;
+        InventoryController.Instance.playerController.transform.position = bossRoom.playerSpawnPoint.position;
+        Debug.Log($"potal test 3 {InventoryController.Instance.playerController.transform.position}");
+        StartCoroutine(WaitForMove());
+
+    }
+    private IEnumerator WaitForMove()
+    {
+        yield return new WaitForSeconds(1f);
+        InventoryController.Instance.playerController.GetComponent<CharacterController>().enabled = true;
+
     }
 
     protected override void SetEscapePotal()

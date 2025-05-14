@@ -135,6 +135,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bossroom
       objectReference: {fileID: 0}
+    - target: {fileID: 2657817463615165510, guid: 0264d00d0807e484782b46f9bb6393c7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657817463615165510, guid: 0264d00d0807e484782b46f9bb6393c7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -32.619
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657817463615165510, guid: 0264d00d0807e484782b46f9bb6393c7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656787232742460576, guid: 0264d00d0807e484782b46f9bb6393c7,
+        type: 3}
+      propertyPath: potalSpawnPoint
+      value: 
+      objectReference: {fileID: 225188288}
+    - target: {fileID: 3656787232742460576, guid: 0264d00d0807e484782b46f9bb6393c7,
+        type: 3}
+      propertyPath: playerSpawnPoint
+      value: 
+      objectReference: {fileID: 1008240313}
     - target: {fileID: 7673330233104115099, guid: 0264d00d0807e484782b46f9bb6393c7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -187,9 +212,66 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7673330233104115099, guid: 0264d00d0807e484782b46f9bb6393c7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1008240313}
+    - targetCorrespondingSourceObject: {fileID: 7673330233104115099, guid: 0264d00d0807e484782b46f9bb6393c7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 225188288}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0264d00d0807e484782b46f9bb6393c7, type: 3}
+--- !u!4 &2305434 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7673330233104115099, guid: 0264d00d0807e484782b46f9bb6393c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2305433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2305435 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3656787232742460576, guid: 0264d00d0807e484782b46f9bb6393c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2305433}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729bbd0d345ee1d4285b6fcfe5384eaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &225188287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 225188288}
+  m_Layer: 0
+  m_Name: PotalSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &225188288
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225188287}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -7.51, y: -34.7, z: 17.16189}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2305434}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &633129427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -431,6 +513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noOfRooms: 1
   potalCount: 2
+  bossRoom: {fileID: 2305435}
   entrance: {fileID: 0}
   rooms: []
   smallRooms: []
@@ -445,7 +528,7 @@ MonoBehaviour:
   dontSelectedEntryGO: {fileID: 0}
   surface: {fileID: 0}
   mainCmera: {fileID: 0}
-  entranceRoomName: TestRoom
+  entranceRoomName: TrapMap_M
 --- !u!114 &633129431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,6 +625,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1008240312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1008240313}
+  m_Layer: 0
+  m_Name: PlayerSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1008240313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008240312}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.32, y: -33.539, z: -33.566}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2305434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1211266297
 GameObject:

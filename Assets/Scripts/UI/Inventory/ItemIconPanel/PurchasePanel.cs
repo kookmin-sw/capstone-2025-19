@@ -78,6 +78,7 @@ public class PurchasePanel : MonoBehaviour
             InventoryController.Instance.inventoryPanel.InsertItem(_itemIcon);
         }
         InventoryController.Instance.money -= totalPrice;
+        InventoryController.Instance.SetMoney();
         ClearPurchasePanel();
     }
 

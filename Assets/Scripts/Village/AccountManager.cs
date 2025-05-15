@@ -29,6 +29,11 @@ public class AccountManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (FirebaseManager.Instance.isLoginComplete)
+        {
+
+            return;
+        }
         InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
         isLoginProcess = true;
         nickname.gameObject.SetActive(false);
@@ -126,6 +131,9 @@ public class AccountManager : MonoBehaviour
                         Debug.Log("Firestore에 유저 정보 저장 완료!");
                         VillageManager.GetComponent<VillageManager>().SpawnPlayer();
                         VillageManager.GetComponent<VillageManager>().SynchronizeDBtoCash();
+
+                        //Firebase Controller에 로그인 했다는 표시하기
+                        FirebaseManager.Instance.isLoginComplete = true;
                     }
                 });
             });
@@ -181,6 +189,9 @@ public class AccountManager : MonoBehaviour
                     FirebaseManager.Instance.isLoginComplete = true;
                     VillageManager.GetComponent<VillageManager>().SpawnPlayer();
                     VillageManager.GetComponent<VillageManager>().SynchronizeDBtoCash();
+
+                    //Firebase Controller에 로그인 했다는 표시하기
+                        FirebaseManager.Instance.isLoginComplete = true;
                 }
             });     
     }

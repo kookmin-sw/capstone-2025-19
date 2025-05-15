@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=Discord&logoColor=white">
 </p>
 
-## ⭐[프로젝트 개발에 실제로 사용한 GitHub 주소](https://github.com/KookminCapstoneProject/dogsoul, "github link")⭐
+## ⭐[프로젝트 개발에 실제로 사용한 GitHub 주소](https://github.com/KookminCapstoneProject/dogsoul)⭐
 
 <br/>
 

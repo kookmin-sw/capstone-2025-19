@@ -85,10 +85,11 @@ public class PlayerHealth : MonoBehaviour
         Destroy(ps.gameObject, ps.main.duration + ps.main.startLifetime.constantMax);
     }
 
-    public void TakeDeathDamage(DamageCollider damageCollider, Vector3 contactPos, ParticleSystem hitEffect, bool isStun)
+    public void TakeDeathDamage(DamageCollider damageCollider = null , ParticleSystem hitEffect = null, bool isStun = true)
     {
         float damage = PlayerStatusController.Instance.GetRealValue("Hp");
-        TakeDamage(damage, damageCollider, contactPos, hitEffect, isStun);
-        TakeDamage(damage, damageCollider, contactPos, hitEffect, isStun);
+        Vector3 vector3 = Vector3.zero;
+        TakeDamage(damage, damageCollider, vector3, hitEffect, isStun);
+        TakeDamage(damage, damageCollider, vector3, hitEffect, isStun);
     }
 }

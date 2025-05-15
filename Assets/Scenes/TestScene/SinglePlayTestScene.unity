@@ -185,25 +185,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerStatusController
       objectReference: {fileID: 0}
-    - target: {fileID: 5081086552363569882, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
+    - target: {fileID: 3580194935690824846, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
         type: 3}
-      propertyPath: m_AnchorMax.x
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5081086552363569882, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
         type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5081086552363569882, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
+        type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6513158614967928438, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6513158614967928438, guid: d542a6fab1d0a1a48a9aff261aa2a8e2,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -315,6 +320,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FollowCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 4533057047943354344, guid: a35a66a144f11ac4286b7b01e050862d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5506860625879892770, guid: a35a66a144f11ac4286b7b01e050862d,
         type: 3}
       propertyPath: m_Follow
@@ -388,6 +398,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_SinglePlay
       objectReference: {fileID: 0}
+    - target: {fileID: 3246215277211317416, guid: 19cc8ac62043f7f44b050f9b1676833d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7058942455756510878, guid: 19cc8ac62043f7f44b050f9b1676833d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -449,6 +464,77 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1475416266}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1624051054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1624051056}
+  - component: {fileID: 1624051055}
+  m_Layer: 0
+  m_Name: Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1624051055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624051054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c59fae25a8770ca4092c50a2dcab8323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noOfRooms: 20
+  potalCount: 2
+  bossRoom: {fileID: 0}
+  entrance: {fileID: 2484360320992799949, guid: 06c6f7ea3ced6c248a6344303300bbd6,
+    type: 3}
+  rooms:
+  - {fileID: 2597701822076250434, guid: 01eae5d570543244a8ae14f27af2aefb, type: 3}
+  - {fileID: 5660710018642529458, guid: a4cceea495c13e34e96950b8c7effae5, type: 3}
+  - {fileID: 2484360320992799949, guid: 06c6f7ea3ced6c248a6344303300bbd6, type: 3}
+  smallRooms:
+  - {fileID: 5248829835548127269, guid: 9046e9c0b94ee3c4c95cfedba627698f, type: 3}
+  stairs:
+  - {fileID: 1382099109642499120, guid: ac213de8d3851ac42872628f82bb912e, type: 3}
+  specialRooms: []
+  alternateEntrances: []
+  hallways:
+  - {fileID: 2136317762696972953, guid: c1e08d4e8add6b141be17dc0f02c4840, type: 3}
+  - {fileID: 8515470845408962666, guid: d69307717acaa344081118e17c3b371a, type: 3}
+  - {fileID: 975602598891651452, guid: 00d3cd24905af624ca98dce1d0dcdf02, type: 3}
+  - {fileID: 1055053789658726513, guid: b3cd734c64bb9774c9173fab1886ffef, type: 3}
+  door: {fileID: 0}
+  roomsLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  dontSelectedEntryGO: {fileID: 0}
+  surface: {fileID: 0}
+  mainCmera: {fileID: 0}
+--- !u!4 &1624051056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624051054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1000, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1671113027
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,6 +665,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SceneController
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675404170382912601, guid: 7c1cbd17de3b6274991b36484b3532a1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9022317676703109803, guid: 7c1cbd17de3b6274991b36484b3532a1,
         type: 3}
@@ -804,6 +895,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerState
       objectReference: {fileID: 0}
+    - target: {fileID: 5661755267328469120, guid: 1fe9d4ed039cab847960465a613783d9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -820,47 +916,47 @@ PrefabInstance:
     - target: {fileID: 156619270134621642, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 156619270134621642, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 156619270134621642, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 2024050896655838726, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2024050896655838726, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2024050896655838726, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 3403891044679244505, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3403891044679244505, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3403891044679244505, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 3456744230748476746, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
@@ -915,42 +1011,47 @@ PrefabInstance:
     - target: {fileID: 5043689062966342405, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5043689062966342405, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5985163633757186673, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6192522308225976169, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6192522308225976169, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7451082686187757341, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7451082686187757341, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8711863200956817966, guid: 80074627f05985649b4d6e2cf5857410,
         type: 3}
       propertyPath: m_Name
       value: InventoryController
+      objectReference: {fileID: 0}
+    - target: {fileID: 8711863200956817966, guid: 80074627f05985649b4d6e2cf5857410,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -970,3 +1071,4 @@ SceneRoots:
   - {fileID: 1776301452}
   - {fileID: 2000178873}
   - {fileID: 505609748}
+  - {fileID: 1624051056}

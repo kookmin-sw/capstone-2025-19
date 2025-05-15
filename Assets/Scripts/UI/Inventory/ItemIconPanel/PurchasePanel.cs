@@ -15,6 +15,8 @@ public class PurchasePanel : MonoBehaviour
     List<StoreItemIcon> itemList = new List<StoreItemIcon>();
     int totalPrice = 0;
 
+    private List<ItemIcon> playerItemIconList = new List<ItemIcon>();
+
 
  
 
@@ -95,5 +97,21 @@ public class PurchasePanel : MonoBehaviour
         totalPrice = 0;
         priceText.text = totalPrice.ToString();
         itemList.Clear();
+    }
+
+    public void InsertPlayerItem(ItemIcon itemIcon)
+    {
+        if (itemList.Count > 0) { return ; }
+
+
+        return ;
+    }
+
+    public void ResetPlayerItem()
+    {
+        foreach(ItemIcon itemIcon in playerItemIconList)
+        {
+            InventoryController.Instance.inventoryPanel.InsertItem(itemIcon);
+        }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BrokenEffect_M : BrokenEffect
 {
-
+    [SerializeField] InteractGo interactGo;
     PhotonView photonView;
 
     
@@ -21,6 +21,7 @@ public class BrokenEffect_M : BrokenEffect
         BrokenObject.SetActive(true);
         FixedObject.SetActive(false);
         isBroken = true;
+        if(interactGo != null) { InventoryController.Instance.player.interactGoList.Remove(interactGo); }
     }
 
     protected override IEnumerator removeTimer()
@@ -37,6 +38,7 @@ public class BrokenEffect_M : BrokenEffect
         BrokenObject.SetActive(true);
         FixedObject.SetActive(false);
         isBroken = true;
+        if (interactGo != null) { InventoryController.Instance.player.interactGoList.Remove(interactGo); }
         StartCoroutine(removeTimer());
     }
 

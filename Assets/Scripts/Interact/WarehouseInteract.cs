@@ -14,15 +14,17 @@ public class WarehouseInteract : InteractGo
     }
     public override void InteractObject()
     {
+        Debug.Log($"ware house test");
         active = true;
         InventoryController.Instance.SetChestItemPanel(ref itemList, this);
     }
     public override void CloseInteract()
     {
-        if (active)
+        PlayerState.Instance.ChangeState(PlayerState.State.Idle);
+        /*if (active)
         {
             InventoryController.Instance.DisableChestItempanel();
-        }
+        }*/
         
     }
 

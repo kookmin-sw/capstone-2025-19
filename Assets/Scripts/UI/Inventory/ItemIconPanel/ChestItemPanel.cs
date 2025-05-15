@@ -9,7 +9,7 @@ public class ChestItemPanel : ItemPanel
     public void OnEnable()
     {
         //TODO player의 상태가 Inventory_Chest 상태가 아니면 activeFalse;
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
     public override void InsertItem(ItemIcon itemIcon)
     {

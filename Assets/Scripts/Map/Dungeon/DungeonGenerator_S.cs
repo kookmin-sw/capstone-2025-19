@@ -7,10 +7,7 @@ public class DungeonGenerator_S : DungeonGenerator
 {
     public override void StartGeneration()
     {
-        /*NvigationBake();
-            Generate();
-            SpawnRandomObject();
-            PlayerSpawn();*/
+        StartGenerationServerRpc();
     }
 
     protected override void PlayerSpawn()
@@ -36,12 +33,13 @@ public class DungeonGenerator_S : DungeonGenerator
 
     protected override void StartGenerationServerRpc()
     {
-        Generate();
+        StartCoroutine(GenerateCoroutine());
+        /*Generate();
 
         NvigationBake();
         SpawnRandomObject();
         PlayerSpawn();
-        isGenerated = true;
+        isGenerated = true;*/
     }
 
     protected override IEnumerator WaitOtherPlayerEnter(GameObject player)

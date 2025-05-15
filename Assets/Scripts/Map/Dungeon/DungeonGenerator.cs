@@ -78,16 +78,16 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
     abstract protected void StartGenerationServerRpc();
     
 
-    protected IEnumerator GenerateMultiplay()
+    protected IEnumerator GenerateCoroutine()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         for (int i = 0; i < noOfRooms - alternateEntrances.Count; i++)
         {
             if (generatedRooms.Count < 1) //아직 생성된 방이 없다면
             {
                 //지금 당장은 처음 만든 방이 플레이어 스폰 방임
                 Debug.Log("Photon test");
-                GameObject generatedRoom = PhotonNetwork.Instantiate("Prefabs/Map/Entrance", transform.position, transform.rotation);
+                GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation);
                 //GameObject generatedRoom = Instantiate(entrance, transform.position, transform.rotation); //여기에 있는 entrance가 던전의 시작점이 될것임
                 generatedRoom.transform.SetParent(null);
                 //멀티플레이 요소임
@@ -120,7 +120,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
                         case EntryPoint.NeedRoomType.Stair:
                             int randomStairIndex = UnityEngine.Random.Range(0, stairs.Count);
                             Debug.Log($"random value test {randomStairIndex},{stairs.Count}");
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Stairs/{stairs[randomStairIndex].name}"
+                            room2 = Instantiate(stairs[randomStairIndex]
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
 
                             
@@ -128,13 +128,13 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
                             if (!aligned)
                             {
                                 room1.UnuseEntrypoint(room1EntryPoint);
-                                PhotonNetwork.Destroy(room2.gameObject);
+                                Destroy(room2.gameObject);
                                 continue;
                             }
                             break;
                         case EntryPoint.NeedRoomType.Hallway:
                             int randomHallwaysIndex = UnityEngine.Random.Range(0, hallways.Count);
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Hallways/{hallways[randomHallwaysIndex].name}"
+                            room2 = Instantiate(hallways[randomHallwaysIndex]
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
 
                             
@@ -142,13 +142,13 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
                             if (!aligned)
                             {
                                 room1.UnuseEntrypoint(room1EntryPoint);
-                                PhotonNetwork.Destroy(room2.gameObject);
+                                Destroy(room2.gameObject);
                                 continue;
                             }
                             break;
                         case EntryPoint.NeedRoomType.Room:
                             int randomRoomsIndex = UnityEngine.Random.Range(0, rooms.Count);
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/Rooms/{rooms[randomRoomsIndex].name}"
+                            room2 = Instantiate(rooms[randomRoomsIndex]
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
 
                             
@@ -156,7 +156,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
                             if (!aligned)
                             {
                                 room1.UnuseEntrypoint(room1EntryPoint);
-                                PhotonNetwork.Destroy(room2.gameObject);
+                                Destroy(room2.gameObject);
                                 continue;
                             }
                             break;
@@ -164,7 +164,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
                             int randomRoom2Index_ = UnityEngine.Random.Range(0, allRoomsModules.Count);
                             int randomRoom2Index__ = UnityEngine.Random.Range(0, allRoomsModules[randomRoom2Index_].Count);
                             Debug.Log("None test");
-                            room2 = PhotonNetwork.Instantiate($"Prefabs/Map/MultiPlay/AllRooms/{allRoomsModules[randomRoom2Index_][randomRoom2Index__]}"
+                            room2 = Instantiate(allRoomsModules[randomRoom2Index_][randomRoom2Index__]
                                 , transform.position, transform.rotation).GetComponent<DungeonPart>();
 
                             
@@ -172,7 +172,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
                             if (!aligned)
                             {
                                 room1.UnuseEntrypoint(room1EntryPoint);
-                                PhotonNetwork.Destroy(room2.gameObject);
+                                Destroy(room2.gameObject);
                                 continue;
                             }
                             break;
@@ -363,7 +363,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
         if (room2.HasAvailableEntryPoint(out Transform room2EntryPoint))
         {
             AlignRooms(room2.transform, room1EntryPoint, room2EntryPoint);
-            yield return new WaitForSeconds(1f); // 정렬 직후 대기
+            yield return new WaitForSeconds(2f); // 정렬 직후 대기
 
             if (HandleIntersection(room2))
             {
@@ -378,7 +378,7 @@ abstract public class DungeonGenerator : Singleton<DungeonGenerator>
             foreach (Transform entryPoint in room2.entryPoints)
             {
                 AlignRooms(room2.transform, room1EntryPoint, entryPoint);
-                yield return new WaitForSeconds(1f); // 다른 포인트 정렬 후 대기
+                yield return new WaitForSeconds(2f); // 다른 포인트 정렬 후 대기
 
                 if (!HandleIntersection(room2))
                 {

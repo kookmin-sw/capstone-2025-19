@@ -182,7 +182,7 @@ namespace PlayerControl
                 }
             }*/
 
-            //Init();
+            Init();
 
 
             /*if(SceneController.Instance.GetCurrentSceneName() == "MultiPlayTestScene")

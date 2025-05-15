@@ -509,6 +509,9 @@ public class InventoryController : Singleton<InventoryController>
         else
         {
             canvasGroup.alpha = 0;
+            //warehouseCanvasGroup.gameObject.SetActive(false);
+            storeCanvas.gameObject.SetActive(false);
+            chestItemPanel.gameObject.SetActive(false);
         }
 
     }
@@ -563,9 +566,10 @@ public class InventoryController : Singleton<InventoryController>
     public void SetChestItemPanel(ref List<Item> itemList, WarehouseInteract warehouse)
     {
         //TODO player의 상태 Inventory_Chest로 변경
-        
+        PlayerState.Instance.ChangeState(PlayerState.State.Inventory);
         chestItemPanel.gameObject.SetActive(true);
         chestItemPanel.SetWarehouse(warehouse);
+        //dropItemPanel.gameObject.SetActive(false);
         foreach(Item item in itemList)
         {
             CreateItemIcon(item);
@@ -602,5 +606,7 @@ public class InventoryController : Singleton<InventoryController>
             inventoryPanel.TakeOutItem(dropItemPanel, itemIcon);
         }
     }
+
+    
 
 }

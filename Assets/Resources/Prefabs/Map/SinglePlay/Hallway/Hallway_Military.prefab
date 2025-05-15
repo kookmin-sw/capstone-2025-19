@@ -160,6 +160,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   needRoomType: 1
+  entrance: {fileID: 0}
+  wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
+  dontSetRoom2Entry: 0
   testCube: {fileID: 0}
 --- !u!1 &2136317762696972953
 GameObject:
@@ -216,11 +223,12 @@ MonoBehaviour:
   dungeonPartType: 1
   fillerWall: {fileID: 0}
   roomUse: 0
-  spawnPoint: {fileID: 0}
   spawnItemList: []
   spawnMonsterList: []
   colliderList:
   - {fileID: 2933562855769239498}
+  playerSpawnPoints: []
+  escapePotalSpawnPoints: []
   entryPoints:
   - {fileID: 8530986879602189697}
   - {fileID: 8714900777038918379}
@@ -562,6 +570,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   needRoomType: 1
+  entrance: {fileID: 0}
+  wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
+  dontSetRoom2Entry: 0
   testCube: {fileID: 0}
 --- !u!1 &9036374180929661043
 GameObject:
@@ -573,7 +588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 634168230992307341}
   - component: {fileID: 2933562855769239498}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

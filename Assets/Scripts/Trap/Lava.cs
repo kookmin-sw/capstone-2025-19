@@ -11,6 +11,7 @@ public class Lava : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //other.GetComponent<PlayerHealth>().TakeDeathDamage();
+            other.GetComponent<PlayerHealth>().TakeDeathDamage();
         }
     }
 }

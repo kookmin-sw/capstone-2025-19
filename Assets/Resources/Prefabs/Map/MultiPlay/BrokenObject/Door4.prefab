@@ -81,6 +81,7 @@ MonoBehaviour:
   BrokenObject: {fileID: 5788521217738462251}
   FixedObject: {fileID: 8215893652147407906}
   removeTime: 5
+  isBroken: 0
 --- !u!65 &6574802382593761763
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -157,6 +158,8 @@ MonoBehaviour:
   BrokenObject: {fileID: 5788521217738462251}
   FixedObject: {fileID: 8215893652147407906}
   removeTime: 5
+  isBroken: 0
+  interactGo: {fileID: 1115240836025548311}
 --- !u!1001 &1929436232324056806
 PrefabInstance:
   m_ObjectHideFlags: 0

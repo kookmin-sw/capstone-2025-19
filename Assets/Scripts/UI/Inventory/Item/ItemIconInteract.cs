@@ -61,6 +61,8 @@ public class ItemIconInteract : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             else if( InventoryController.Instance.purchasePanelBool)
             {
                 //TODO purchase 패널에 넣을 경우
+
+                InventoryController.Instance.purchasePanel.InsertPlayerItem(itemIcon);
             }
             Destroy(rectTransform.gameObject);
             rectTransform = null;

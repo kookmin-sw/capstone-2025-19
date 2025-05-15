@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2514240232473274639}
   - component: {fileID: 2074145044814797169}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,13 +108,14 @@ MonoBehaviour:
   dungeonPartType: 0
   fillerWall: {fileID: 0}
   roomUse: 0
-  spawnPoint: {fileID: 0}
   spawnItemList: []
   spawnMonsterList: []
   colliderList:
   - {fileID: 4634119972173128515}
   - {fileID: 2074145044814797169}
   - {fileID: 656892528201841576}
+  playerSpawnPoints: []
+  escapePotalSpawnPoints: []
   entryPoints:
   - {fileID: 6566032439797175427}
   - {fileID: 1978515429668973845}
@@ -164,6 +165,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   needRoomType: 3
+  entrance: {fileID: 0}
+  wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
+  dontSetRoom2Entry: 0
   testCube: {fileID: 0}
 --- !u!1 &3903210325262321254
 GameObject:
@@ -243,7 +251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1832875020255592466}
   - component: {fileID: 4634119972173128515}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,7 +304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3379559320751146743}
   - component: {fileID: 656892528201841576}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,6 +392,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   needRoomType: 3
+  entrance: {fileID: 0}
+  wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
+  dontSetRoom2Entry: 0
   testCube: {fileID: 0}
 --- !u!1 &7646952090031309754
 GameObject:
@@ -430,6 +445,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   needRoomType: 2
+  entrance: {fileID: 0}
+  wallObject: {fileID: 0}
+  needRoomArray:
+    keys: 
+    values: []
+    foldout: 0
+  dontSetRoom2Entry: 0
   testCube: {fileID: 0}
 --- !u!1 &8213612001448749179
 GameObject:

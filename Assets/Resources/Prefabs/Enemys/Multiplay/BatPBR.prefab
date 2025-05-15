@@ -903,6 +903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ed75e02b84de441a257ddf5f541d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyHealth: {fileID: 0}
   state: 0
 --- !u!114 &5827531663527092147
 MonoBehaviour:
@@ -921,6 +922,7 @@ MonoBehaviour:
   currentHealth: 0
   hpBar: {fileID: 3550092556528338670}
   enemyExp: 0
+  removeTime: 5
 --- !u!114 &5381121236124047874
 MonoBehaviour:
   m_ObjectHideFlags: 0

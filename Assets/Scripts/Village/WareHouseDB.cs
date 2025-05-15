@@ -27,9 +27,9 @@ public class WareHouseDB : MonoBehaviour
     void Start()
     {
         // 일정 주기로 Firebase가 준비되었는지 검사
-        InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
+        /*InvokeRepeating(nameof(CheckFirebaseReady), 0.5f, 0.5f);
 
-        LoadWareHouseFromFirestore();
+        LoadWareHouseFromFirestore();*/
     }
 
     void CheckFirebaseReady()

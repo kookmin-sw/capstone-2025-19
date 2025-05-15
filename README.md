@@ -177,7 +177,7 @@ DogSoul 프로젝트는 소울라이크의 핵심적인 게임 요소를 모두 
     </tr>
     <tr align="center">
         <td>
-            <span style="font-size: 12px;">maiju@kookmin.ac.kr</span>
+            <span style="font-size: 12px;">anzuroid@kookmin.ac.kr</span>
         </td>
         <td>
             <span style="font-size: 12px;">dup06570@kookmin.ac.kr</span>

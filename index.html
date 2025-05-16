@@ -197,9 +197,9 @@
       }
 
       /* ---------- VIDEO ---------- */
-      .video-wrapper {
+      /* .video-wrapper {
         position: relative;
-        padding-bottom: 56.25%; /* 16:9 */
+        padding-bottom: 56.25%;
         height: 0;
         overflow: hidden;
         border-radius: 8px;
@@ -213,6 +213,21 @@
         left: 0;
         width: 100%;
         height: 100%;
+      } */
+      /* 반응형 16:9 비율 유지 */
+      .video-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 9 ÷ 16 × 100 */
+      }
+
+      .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
       }
 
       /* ---------- TEAM ---------- */
@@ -277,7 +292,7 @@
       <div class="hero-inner">
         <div class="hero-text">
           <h1>DogSoul</h1>
-          <p>ARPG 멀티플레이 게임 {간단히 한줄 게임 소개}</p>
+          <h3>ARPG 멀티플레이 게임</h3>
           <a href="#about" class="btn-primary">BeginnerGain 알아보기</a>
         </div>
         <div class="hero-image">
@@ -294,14 +309,24 @@
       <div class="section-inner">
         <h2 class="section-title">DogSoul 소개</h2>
         <p style="max-width: 680px; margin: 0 auto 2.5rem; line-height: 1.8">
-          Dark soul의 아류작(?)으로 기존 다크소울 게임에 멀티플레이와 매번
-          새로운 맵이라는 흥미 요소를 더한 게임입니다. 던전 속에서 다양한
-          몬스터를 잡고 레벨업을 하며 팀원과의 협력을 통해 보스 몬스터를
-          무찌르고 던전을 클리어합시다.
+          기존 다크소울 게임에 멀티플레이와 매번 새로운 맵이라는 흥미 요소를
+          더한 게임입니다. 던전 속에서 다양한 몬스터를 잡고 레벨업을 하며
+          팀원과의 협력을 통해 보스 몬스터를 무찌르고 던전을 클리어합시다.
         </p>
         <div class="grid grid-2" style="margin-top: 3rem">
           <!-- LEFT: FEATURE IMAGE -->
-          <img src="page_image/feature.png" alt="주요 기능 이미지" />
+          <div class="video-wrapper">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/Y-ziEo-giXQ?start=1&autoplay=1&mute=1&loop=1&playlist=Y-ziEo-giXQ&controls=0&rel=0&playsinline=1"
+              title="DogSoul 시연 영상"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
 
           <!-- RIGHT: FEATURE LIST -->
           <ul class="feature-list">
@@ -371,6 +396,14 @@
       <h2 class="section-title">게임 흐름도</h2>
       <img
         src="page_image/gameflow.png"
+        alt="시스템 아키텍처"
+        class="arch-img"
+      />
+
+      <br />
+      <h2 class="section-title">시스템 구조도</h2>
+      <img
+        src="page_image/systemStructure.png"
         alt="시스템 아키텍처"
         class="arch-img"
       />

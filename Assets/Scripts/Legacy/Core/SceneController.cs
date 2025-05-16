@@ -33,7 +33,10 @@ public class SceneController : Singleton<SceneController>
         return currentScene.name;
     }
 
-    public bool IsMultiplay() { return isMultiplay; }
+    public bool IsMultiplay() {
+        currentScene = SceneManager.GetActiveScene();
+        if (currentScene.name == "Village") return false;
+        return true; }
 
     public void LoadScene(string sceneName)
     {

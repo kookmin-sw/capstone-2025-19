@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ItemRandomSpawner_M : ItemRandomSpawner
 {
-    [SerializeField] SerializableArray<ItemData, float> spawnArray;
     [SerializeField] float spawnRange = 0;
     // Start is called before the first frame update
     void Start()

@@ -17,7 +17,6 @@ public class BrokenEffect : MonoBehaviour
 
     protected void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Broken Trigger On");
         if(other.CompareTag("PlayerWeapon") || other.CompareTag("Enemy"))
         {
             ActiveTrigger();

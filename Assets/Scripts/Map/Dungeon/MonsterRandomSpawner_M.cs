@@ -8,6 +8,7 @@ public class MonsterRandomSpawner_M : MonsterRandomSpawner
     public override void SetSpawn()
     {
         //MultiplayScene
+        Debug.Log("Monster spawn test");
         foreach (var dictionary in monsterSpawnArray)
         {
             float randomValue = UnityEngine.Random.Range(0f, 1f);

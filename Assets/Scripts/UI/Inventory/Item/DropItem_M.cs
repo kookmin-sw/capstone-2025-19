@@ -16,16 +16,16 @@ public class DropItem_M : DropItem
     public override void SetItem(Item item)
     {
         string itemData = ChangeData(item);
-        DebugText.Instance.Debug($"set item {itemData}");
+        //DebugText.Instance.Debug($"set item {itemData}");
         if (PhotonNetwork.IsMasterClient)//마스터 클라이언트일 경우
         {
             UpdateItem(item);
-            DebugText.Instance.Debug($"Set Item {itemData} masterClient");
+            //DebugText.Instance.Debug($"Set Item {itemData} masterClient");
             photonView.RPC("UpdateItemPhoton", RpcTarget.OthersBuffered, itemData);
         }
         else// 기본 클라이언트일 경우
         {
-            DebugText.Instance.Debug($"Set item {itemData} client");
+            //DebugText.Instance.Debug($"Set item {itemData} client");
             photonView.RPC("RequestUpdateItemPhoton", RpcTarget.MasterClient, itemData);//마스터 클라이언트에게 변경 요청
         }
     }

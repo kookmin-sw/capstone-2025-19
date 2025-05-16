@@ -47,6 +47,7 @@ public class DropItem : MonoBehaviour
 
         if(itemModel != null) { Destroy(itemModel); itemModel = null; }
 
+        Debug.Log($"spaw item {item.itemData.name}");
         itemModel = Instantiate(Resources.Load<GameObject>($"Prefabs/Objects/DropItem/DropItemModel/{item.itemData.name}_DropItem"));
         itemModel.transform.position = itemModelPosition.position;
         itemModel.transform.SetParent(itemModelPosition.transform);

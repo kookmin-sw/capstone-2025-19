@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DogSoul - ARPG 멀티플레이 게임</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --brand-gradient-start: #f0f4ff;
+        --brand-gradient-end: #f5e5e1;
+        --brand-dark: #060b16;
+        --brand-accent: #6366f1;
+        --text-light: #ffffff;
+        --text-dark: #0f172a;
+        --max-width: 1100px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      /* ---------- HERO ---------- */
+      .hero {
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start) 0%,
+          var(--gradient-end) 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5rem 1rem;
+        min-height: 75vh;
+      }
+
+      .hero-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 3rem;
+        max-width: 1200px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .hero-text {
+        flex: 1 1 340px;
+        text-align: left;
+      }
+
+      .hero-text h1 {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      .hero-text p {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+      }
+
+      .btn-primary {
+        display: inline-block;
+        background: var(--primary);
+        color: #fff;
+        padding: 0.9rem 2.4rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
+      }
+
+      .hero-image {
+        flex: 0 1 320px;
+        text-align: center;
+      }
+
+      .hero-image img {
+        max-width: 320px;
+        width: 100%;
+        height: auto;
+        border-radius: 1rem;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* ---------- SECTION ---------- */
+      section {
+        padding: 90px 20px;
+      }
+
+      .dark-section {
+        background: var(--brand-dark);
+        color: var(--text-light);
+      }
+
+      .section-inner {
+        max-width: var(--max-width);
+        margin: 0 auto;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 2.5rem;
+        text-align: center;
+      }
+
+      /* ---------- GRID UTILS ---------- */
+      .grid {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        align-items: center;
+      }
+
+      /* ---------- FEATURES ---------- */
+      .feature-list {
+        list-style: none;
+      }
+
+      .feature-item {
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .feature-item svg {
+        min-width: 24px;
+        height: 24px;
+        color: var(--brand-accent);
+        margin-top: 4px;
+      }
+
+      /* ---------- TECH STACK TAGS ---------- */
+      .tech-tags {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .tag {
+        padding: 0.35rem 0.9rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 2px solid var(--brand-accent);
+        color: var(--brand-accent);
+      }
+
+      /* ---------- ARCH IMAGE ---------- */
+      .arch-img {
+        max-width: 720px;
+        margin: 2rem auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      }
+
+      /* ---------- VIDEO ---------- */
+      .video-wrapper {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+        overflow: hidden;
+        border-radius: 8px;
+        max-width: 640px;
+        margin: 0 auto;
+      }
+
+      .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* ---------- TEAM ---------- */
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 2rem;
+        justify-items: center;
+        margin-top: 3rem;
+      }
+
+      .member-card img {
+        width: 96px;
+        height: 96px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 0.6rem;
+      }
+
+      .member-card h4 {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .member-card span {
+        font-size: 0.8rem;
+        color: #64748b;
+      }
+
+      /* ---------- DOCUMENT LINKS ---------- */
+      .docs-list {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 2.5rem;
+      }
+
+      .docs-list a {
+        font-weight: 600;
+        color: var(--brand-accent);
+        border-bottom: 2px solid transparent;
+        transition: border-color 0.3s;
+      }
+
+      .docs-list a:hover {
+        border-color: var(--brand-accent);
+      }
+
+      /* ---------- FOOTER ---------- */
+      footer {
+        text-align: center;
+        font-size: 0.9rem;
+        padding: 30px 20px;
+        background: #f1f5f9;
+        color: #475569;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h1>DogSoul</h1>
+          <p>ARPG 멀티플레이 게임 {간단히 한줄 게임 소개}</p>
+          <a href="#about" class="btn-primary">BeginnerGain 알아보기</a>
+        </div>
+        <div class="hero-image">
+          <img
+            src="page_image/PlayerProfile3.png"
+            alt="BeginnerGain Fox Mascot"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRO SECTION -->
+    <section id="intro" class="dark-section">
+      <div class="section-inner">
+        <h2 class="section-title">DogSoul 소개</h2>
+        <p style="max-width: 680px; margin: 0 auto 2.5rem; line-height: 1.8">
+          Dark soul의 아류작(?)으로 기존 다크소울 게임에 멀티플레이와 매번
+          새로운 맵이라는 흥미 요소를 더한 게임입니다. 던전 속에서 다양한
+          몬스터를 잡고 레벨업을 하며 팀원과의 협력을 통해 보스 몬스터를
+          무찌르고 던전을 클리어합시다.
+        </p>
+        <div class="grid grid-2" style="margin-top: 3rem">
+          <!-- LEFT: FEATURE IMAGE -->
+          <img src="page_image/feature.png" alt="주요 기능 이미지" />
+
+          <!-- RIGHT: FEATURE LIST -->
+          <ul class="feature-list">
+            <li class="feature-item">
+              <!-- diamond icon -->
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 9l9 13L21 9l-9-7-9 7z" />
+              </svg>
+              <div>
+                <strong>ARPG</strong><br />던전을 돌며 몬스터와 전투를 벌입니다
+              </div>
+            </li>
+            <li class="feature-item">
+              <!-- paper plane icon -->
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+              <div>
+                <strong>멀티플레이</strong><br />팀원과 함께 던전을 탐험합니다.
+              </div>
+            </li>
+            <li class="feature-item">
+              <!-- monitor icon -->
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M4 6h16v12H4z" />
+                <path d="M0 0h24v24H0z" fill="none" />
+              </svg>
+              <div>
+                <strong>무기 & 아이템</strong><br />플레이어에게 장착 가능한
+                여러 무기와 버프 포션이 있습니다.
+              </div>
+            </li>
+            <li class="feature-item">
+              <!-- heart icon -->
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                />
+              </svg>
+              <div>
+                <strong>절차적 맵 생성</strong><br />던전에 들어갈 때마다 맵이
+                달라집니다.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section>
+      <div class="section-inner">
+        <h2 class="section-title">기술 스택</h2>
+        <div class="tech-tags" style="margin-bottom: 3rem">
+          <span class="tag">Unity</span>
+          <span class="tag">Photon</span>
+          <span class="tag">Firebase</span>
+          <span class="tag">Blender</span>
+        </div>
+      </div>
+      <img
+        src="page_image/systemArchitecture.png"
+        alt="시스템 아키텍처"
+        class="arch-img"
+      />
+      <br />
+      <h2 class="section-title">게임 흐름도</h2>
+      <img
+        src="page_image/gameflow.png"
+        alt="시스템 아키텍처"
+        class="arch-img"
+      />
+    </section>
+
+    <!-- VIDEO DEMO -->
+    <section class="dark-section">
+      <div class="section-inner">
+        <h2 class="section-title">시연 영상</h2>
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/nfTQb6o6I-A"
+            title="YouTube video"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM -->
+    <section>
+      <div class="section-inner">
+        <!-- DOCS -->
+        <h2 style="text-align: center; font-size: 1.4rem">Document</h2>
+        <div class="docs-list">
+          <a href="#" target="_blank">발표자료.pdf</a>
+          <a href="#" target="_blank">최종보고서.docx</a>
+          <a href="#" target="_blank">포스터.png</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      &copy; 2025 BeginnerGain Team. All rights reserved. | Published with
+      GitHub Pages
+    </footer>
+
+    <!-- OPTIONAL: smooth scroll JS -->
+    <script>
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          const hash = this.getAttribute("href");
+          if (hash.length > 1) {
+            e.preventDefault();
+            document.querySelector(hash).scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

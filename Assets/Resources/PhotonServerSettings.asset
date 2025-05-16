@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
   AppSettings:
-    AppIdRealtime: 812343c9-5f46-4550-97dd-3e3c04f43507
+    AppIdRealtime: 1253b9ae-0720-418f-bbb7-d9b68ee4bcf2
     AppIdFusion: 
     AppIdChat: 
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
+    FixedRegion: kr
     Server: 
     Port: 0
     ProxyServer: 
@@ -40,6 +40,31 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - SyncAnimator
+  - DisableObject
+  - CheckViewID
+  - DisableItemRPC
+  - DestroyObjectRPC
+  - SetItem_
+  - UpdatePhoton
+  - RequestUpdatePhoton
+  - RequestDestroyDropItem
+  - RequestUpdateItemPhoton
+  - UpdateItemPhoton
+  - RequestUpdateItemPhoton_
+  - RemoveItemIcon
+  - SetActiveFalse
+  - DeactivateDropItem
+  - RequestDeactivateDropItem
+  - ActiavateDropItemPhoton
+  - RequestActivateDropItemphoton
+  - LoadWeaponModelRPC
+  - ActiveTriggerRPC
+  - RPC_LoadWeaponModel
+  - DestoryWall
+  - RpcAnimator
+  - ShootArrow
+  - ReadyScreen
+  - ReceiveDieState
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1

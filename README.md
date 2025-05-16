@@ -9,8 +9,6 @@
     <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=Discord&logoColor=white">
 </p>
 
-## ⭐[프로젝트 개발에 실제로 사용한 GitHub 주소](https://github.com/KookminCapstoneProject/dogsoul, "github link")⭐
-
 <br/>
 
 ## 목차
@@ -81,6 +79,7 @@ DogSoul 프로젝트는 소울라이크의 핵심적인 게임 요소를 모두 
 | 몬스터 락온      | 마우스 스크롤 버튼 |
 | 인벤토리 및 스탯 | `Tab` 키           |
 | 아이템 습득      | `E` 키             |
+| 아이템 사용      | `R` 키             |
 
 플레이어는 던전 내부에서 몬스터를 처치하여 골드, 아이템, 경험치를 얻을 수 있습니다.
 
@@ -176,7 +175,7 @@ DogSoul 프로젝트는 소울라이크의 핵심적인 게임 요소를 모두 
     </tr>
     <tr align="center">
         <td>
-            <span style="font-size: 12px;">maiju@kookmin.ac.kr</span>
+            <span style="font-size: 12px;">anzuroid@kookmin.ac.kr</span>
         </td>
         <td>
             <span style="font-size: 12px;">dup06570@kookmin.ac.kr</span>

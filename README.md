@@ -125,7 +125,7 @@ DogSoul 프로젝트는 소울라이크의 핵심적인 게임 요소를 모두 
 
 ## 설치 및 실행 방법
 
-실행 파일 다운 : https://drive.google.com/file/d/108P5d6etxmiQljVl1KiFmFGRjYnZolwY/view?usp=drive_link
+실행 파일 다운 : https://drive.google.com/file/d/1uXbBtp5nLucaNXUi42FeXgneSKAveVSe/view?usp=drive_link
 
 위 파일을 다운 받아 압축을 푼 후 Capstone.exe파일을 실행
 <br/>
@@ -192,6 +192,8 @@ DogSoul 프로젝트는 소울라이크의 핵심적인 게임 요소를 모두 
 
 ### [중간 발표 자료](https://drive.google.com/file/d/1Vmv6iBsbB8VlCRFKenB9870GVwMNi2CF/view?usp=drive_link)
 
-### [포스터](https://drive.google.com/file/d/1dOfH-m189FW3eaaC6oxpWvB2z3Og-TL3/view?usp=drive_link)
+### [포스터](https://drive.google.com/file/d/11mpk3Tsxkw9QCLglm6B-E2cKU2yvcZ2y/view?usp=drive_link)
 
-### [수행 결과 보고서]()
+### [수행 결과 보고서](https://drive.google.com/file/d/1nn6FXb4qtOsVaX9hljZGhsMaMlD-5Stp/view?usp=drive_link)
+
+### [최종 발표 자료](https://drive.google.com/file/d/1NogX5OinjijQcfx6yS0mp0nzu6KPb47w/view?usp=drive_link)
